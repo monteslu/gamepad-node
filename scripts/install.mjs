@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 import https from 'https';
-import tar from 'tar';
+import { extract } from 'tar';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, '..');
@@ -73,7 +73,7 @@ async function tryDownloadPrebuilt() {
 		fs.writeFileSync(tmpFile, buffer);
 
 		// Extract
-		await tar.extract({
+		await extract({
 			file: tmpFile,
 			cwd: buildDir,
 		});
