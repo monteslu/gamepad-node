@@ -11,11 +11,13 @@ This directory contains automated workflows for testing gamepad-node.
 **Purpose:** Continuous integration testing
 
 **What it does:**
-- Tests on macOS, Linux, and Windows
+- Tests on Linux (ubuntu-latest)
 - Tests with Node.js 20 and 22
 - Runs linting (ESLint)
 - Runs unit tests (37 tests)
 - Runs smoke tests to verify API works
+
+**Note:** Since gamepad-node is pure JavaScript using @kmamal/sdl (which provides prebuilt binaries for all platforms), we only test on Linux. Cross-platform compatibility is handled by @kmamal/sdl.
 
 ## Publishing to npm
 
