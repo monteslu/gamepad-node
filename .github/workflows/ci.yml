@@ -27,5 +27,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test:unit
+
       - name: Run smoke test
         run: npm run test:smoke
