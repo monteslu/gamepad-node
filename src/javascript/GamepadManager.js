@@ -14,18 +14,17 @@ export class GamepadManager extends EventEmitter {
     constructor() {
         super();
 
-        // Load platform-specific SDL mappings
+        // Load platform-specific SDL mappings for vendor/product matching on joysticks
         const platformMap = {
             'darwin': 'sdl_mappings_darwin.json',
             'linux': 'sdl_mappings_linux.json',
             'win32': 'sdl_mappings_win32.json'
         };
 
-        let sdlMappings = [];
         const platform = process.platform;
         const mappingFile = platformMap[platform];
 
-        // Build GUID -> mapping data and vendor/product index
+        // Build GUID -> mapping data and vendor/product index for joystick fallback
         this._guidToMapping = new Map(); // GUID -> {name, mapping, source}
         this._vendorProductIndex = new Map(); // vendor/product ID -> array of {guid, name, mapping, source}
 
@@ -34,9 +33,8 @@ export class GamepadManager extends EventEmitter {
             if (fs.existsSync(mappingPath)) {
                 try {
                     const mappingsData = JSON.parse(fs.readFileSync(mappingPath, 'utf-8'));
-                    sdlMappings = mappingsData.map(m => m.mapping);
 
-                    // Build lookups for runtime vendor/product matching
+                    // Build lookups for runtime vendor/product matching on joysticks
                     mappingsData.forEach(m => {
                         // Store full mapping data by GUID
                         this._guidToMapping.set(m.guid, {
@@ -60,31 +58,16 @@ export class GamepadManager extends EventEmitter {
                         }
                     });
 
-                    console.log(`Loading ${sdlMappings.length} SDL controller mappings for ${platform}`);
+                    console.log(`Loaded ${mappingsData.length} SDL mappings for joystick vendor/product matching`);
                 } catch (err) {
                     console.warn('Failed to load SDL mappings:', err.message);
                 }
             }
         }
 
-        // Build list of GUIDs that should use joystick mode instead of SDL's gamecontroller mode
-        // ONLY force joystick mode for exact GUID matches, not vendor/product matches
-        // (Vendor/product matching is used as a fallback in JavaScript layer)
-        const forceJoystickGuids = new Set();
-
-        // Only add exact GUID matches with cross-platform mappings
-        for (const [guid, data] of this._guidToMapping.entries()) {
-            if (data.source && !data.source.startsWith(platform)) {
-                forceJoystickGuids.add(guid);
-            }
-        }
-
-        const forceJoystickArray = Array.from(forceJoystickGuids);
-        if (forceJoystickArray.length > 0) {
-            console.log(`Forcing ${forceJoystickArray.length} GUIDs to use joystick mode (cross-platform mappings)`);
-        }
-
-        this._native = new native.GamepadManager(sdlMappings, forceJoystickArray);
+        // Pass path to gamecontrollerdb.txt for SDL to load natively
+        const gamecontrollerdbPath = path.join(__dirname, 'controllers', 'gamecontrollerdb.txt');
+        this._native = new native.GamepadManager(gamecontrollerdbPath);
         this._pollInterval = null;
         this._hapticActuators = new Map();
         this._loggedVendorMatches = new Set(); // Track logged vendor/product matches

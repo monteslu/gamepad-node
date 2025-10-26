@@ -6,19 +6,19 @@ gamepad-node uses a **dual-mode** approach to support both standard and non-stan
 
 ### 1. SDL_GameController (Preferred)
 - Used when SDL recognizes the device as a standard game controller
+- SDL loads community [gamecontrollerdb.txt](https://github.com/mdqinc/SDL_GameControllerDB) (2134 mappings) on startup
+- Combined with SDL's built-in mappings (~1000 compiled-in) = 2100+ total supported controllers
 - Provides **standard button/axis mapping** (A, B, X, Y, triggers, sticks, etc.)
 - Supports **advanced features**: vibration, touchpads (PS4/PS5), sensors
 - Maps to `state.is_controller = true`
-- **Exception**: Devices with cross-platform SDL mappings are forced to joystick mode for better mapping consistency
 
-### 2. SDL_Joystick (Fallback + Enhanced)
+### 2. SDL_Joystick (Fallback)
 - Used when SDL doesn't recognize the device as a standard controller
-- Also used when we have better mappings than SDL's built-in database
-- Provides **raw button/axis data** (remapped via our mapping layers)
+- Provides **raw button/axis data** (remapped via JavaScript mapping layers)
 - **No advanced features** (no vibration, no touchpads)
 - Mapping priority:
-  1. SDL platform-specific mappings (exact GUID or vendor/product match)
-  2. EmulationStation database
+  1. Vendor/product ID matching from SDL mappings (for cross-platform joystick support)
+  2. EmulationStation database (321 controllers)
   3. Fallback (Xbox 360/PS4 style)
 - Maps to `state.is_controller = false`
 
@@ -29,23 +29,20 @@ gamepad-node uses a **dual-mode** approach to support both standard and non-stan
 for (int i = 0; i < num_joysticks; i++) {
     SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(i);
     std::string guid_str = GetGUIDString(guid);
+    bool is_controller = SDL_IsGameController(i);
 
-    // Check if we should force joystick mode for better cross-platform mapping
-    if (ShouldForceJoystick(guid_str)) {
-        AddJoystick(i);  // ✅ Use joystick mode - we have better mapping
-    } else if (SDL_IsGameController(i)) {
+    if (is_controller) {
         AddController(i);  // ✅ Priority: Use controller if SDL recognizes it
     } else {
-        AddJoystick(i);    // ⚠️ Fallback: Raw joystick with our mappings
+        AddJoystick(i);    // ⚠️ Fallback: Raw joystick with JavaScript mappings
     }
 }
 ```
 
 **Why this order matters:**
-- Force joystick mode for controllers with cross-platform SDL mappings (better consistency)
-- If not forced, prefer SDL_GameController (more features + SDL's mapping)
-- Fallback to joystick mode with our enhanced mapping layers
-- Advanced features only work on controllers (not forced joysticks)
+- SDL natively recognizes 2100+ controllers after loading gamecontrollerdb.txt
+- SDL_GameController provides more features (vibration, platform-specific drivers)
+- Only unknown devices fall back to joystick mode with JavaScript-based mapping
 
 ## Safety Checks (MUST BE ENFORCED)
 

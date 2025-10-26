@@ -40,12 +40,11 @@ gamepad.buttons[2].pressed // Might be jump
 
 ## The gamepad-node Solution
 
-gamepad-node ensures **EVERY controller gets `mapping: "standard"`** through a four-tier approach:
+gamepad-node ensures **EVERY controller gets `mapping: "standard"`** through a three-tier approach:
 
-1. **SDL2 GameController** (~500 controllers) - SDL remaps to standard when recognized
-2. **SDL Platform Mappings** - Cross-platform mappings via exact GUID or vendor/product match
-3. **EmulationStation database** (291 controllers) - Database configs remap to standard
-4. **Fallback mappings** (everything else) - Xbox 360/PS4 style remapping to standard
+1. **SDL_GameController** (2100+ controllers) - SDL loads community gamecontrollerdb.txt and handles mapping natively
+2. **EmulationStation database** (321 controllers) - For joysticks SDL doesn't recognize, remap via database configs
+3. **Fallback mappings** (everything else) - Xbox 360/PS4 style remapping for unknown joysticks
 
 ```javascript
 // gamepad-node with same "unknown" controller
@@ -129,33 +128,30 @@ if (!jsMap) {
 
 ## How We Ensure ALL Controllers Get `mapping: "standard"`
 
-gamepad-node uses a four-tier approach:
+gamepad-node uses a three-tier approach:
 
-### Tier 1: SDL2 GameController (~500 controllers)
-- SDL2 has built-in database of ~500 controllers
-- SDL automatically remaps to standard layout via SDL_GameController API
-- Only used when SDL recognizes device AND we don't have better mapping
-- Result: `mapping: "standard"` ✅
+### Tier 1: SDL_GameController (2100+ controllers)
+- SDL2 has ~1000 controllers built-in (compiled into the library)
+- We load [SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB) (2134 community mappings) on startup
+- SDL automatically filters by platform and applies correct mappings
+- SDL handles remapping in native C code → `mapping: "standard"` ✅
+- Full feature support: vibration, platform-specific drivers (XInput, DirectInput, IOKit)
+- Covers Xbox, PlayStation, Switch, 8BitDo, Logitech, and thousands more
 
-### Tier 2: SDL Platform Mappings (cross-platform coverage)
-- Platform-specific SDL mapping files (darwin, linux, win32)
-- Exact GUID match forces joystick mode to use our mapping
-- Vendor/product ID matching (characters 8-19 of GUID) for cross-platform support
-- Only applied to joysticks to avoid overriding SDL's good controller mappings
-- Result: `mapping: "standard"` ✅
+### Tier 2: EmulationStation Database (321 controllers)
+- Knulli EmulationStation - 283 retro gaming controllers
+- Batocera EmulationStation - 38 additional controllers
+- For joysticks SDL doesn't recognize (SDL_IsGameController = false)
+- Vendor/product ID matching for cross-platform support
+- JavaScript remaps raw button indices to standard layout → `mapping: "standard"` ✅
 
-### Tier 3: EmulationStation Database (291 controllers)
-- Knulli EmulationStation - 276 retro gaming controllers
-- Batocera EmulationStation - 15 additional controllers
-- We remap raw button indices to standard layout
-- Result: `mapping: "standard"` ✅
-
-### Tier 4: Fallback Mappings (everything else)
+### Tier 3: Fallback Mappings (everything else)
 - Xbox 360 style fallback (default)
 - PlayStation 4 style fallback (for Sony controllers)
+- For brand new/exotic joysticks not in any database
 - Result: `mapping: "standard"` ✅
 
-**Total coverage:** Tier 1 + Tier 2 + Tier 3 + Tier 4 = **ALL controllers supported**
+**Total coverage:** Tier 1 + Tier 2 + Tier 3 = **ALL controllers supported**
 
 ## Advantages Over Browsers
 

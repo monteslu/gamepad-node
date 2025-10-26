@@ -55,12 +55,6 @@ private:
     std::map<SDL_JoystickID, GamepadState> gamepads_;
     int next_index_;
 
-    // GUIDs that should be forced to use SDL_Joystick instead of SDL_GameController
-    // (because we have better mappings than SDL's built-in database)
-    std::set<std::string> force_joystick_guids_;
-
-    bool ShouldForceJoystick(const std::string& guid);
-
     // Event callbacks
     Napi::FunctionReference on_connected_;
     Napi::FunctionReference on_disconnected_;

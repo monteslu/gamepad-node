@@ -151,35 +151,32 @@ Installation automatically downloads the appropriate prebuilt binary for your pl
 - Games must implement per-controller configuration UI
 
 **Our Solution:**
-gamepad-node ensures **every controller gets `mapping: "standard"`** through four tiers:
-1. **SDL GameController** (~500 controllers) - SDL2 remaps to standard layout when recognized
-2. **SDL Platform Mappings** - Cross-platform mappings via exact GUID or vendor/product ID matching
-3. **Database Mapped** (291 controllers) - EmulationStation configs remap to standard layout
-4. **Fallback** (everything else) - Xbox 360/PS4 style remapping to standard layout
+gamepad-node ensures **every controller gets `mapping: "standard"`** through three tiers:
+1. **SDL_GameController** (2100+ controllers) - SDL loads community gamecontrollerdb.txt and handles mapping natively
+2. **EmulationStation Database** (321 controllers) - For joysticks SDL doesn't recognize, remap via EmulationStation configs
+3. **Fallback** (everything else) - Xbox 360/PS4 style remapping for unknown joysticks
 
 **Result:** Your game code always sees predictable button indices. No configuration UI needed!
 
-📋 **See [MAPPED_CONTROLLERS.md](./docs/MAPPED_CONTROLLERS.md) for controllers with database mappings**
+📋 **See [MAPPED_CONTROLLERS.md](./docs/MAPPED_CONTROLLERS.md) for full list of 2455+ supported controllers**
 
 ### How It Works
 
-1. **SDL_GameController** - Recognized controllers (Xbox, PlayStation, Switch)
-   - SDL remaps to standard layout → `mapping: "standard"`
-   - Full feature support: vibration, touchpads (future)
-   - Exception: Devices with cross-platform SDL mappings use joystick mode for consistency
+1. **SDL_GameController** - Natively recognized controllers (~2100+ total)
+   - SDL loads [gamecontrollerdb.txt](https://github.com/mdqinc/SDL_GameControllerDB) (2134 community mappings)
+   - Combined with SDL's built-in mappings (~1000 compiled-in)
+   - SDL handles remapping in native code → `mapping: "standard"`
+   - Full feature support: vibration, platform-specific drivers (XInput, DirectInput, IOKit)
+   - Includes Xbox, PlayStation, Switch, 8BitDo, and many more
 
-2. **SDL Platform Mappings** - Cross-platform controller support
-   - Exact GUID match forces joystick mode to use our mapping
-   - Vendor/product ID matching (characters 8-19 of GUID) for joystick-only devices
-   - Prevents vendor/product matches from overriding SDL's good controller mappings
-   - Remap to standard layout → `mapping: "standard"`
+2. **SDL_Joystick with EmulationStation Database** - 321 controllers SDL doesn't recognize
+   - Look up by GUID + name from Knulli (283) + Batocera (38) databases
+   - Vendor/product ID matching for cross-platform support
+   - JavaScript remaps raw button indices to standard layout → `mapping: "standard"`
 
-3. **SDL_Joystick with Database** - 291 controllers in EmulationStation database
-   - Look up by GUID + name
-   - Remap raw button indices to standard layout → `mapping: "standard"`
-
-4. **SDL_Joystick with Fallback** - Everything else
-   - Use Xbox 360 or PS4 style remapping → `mapping: "standard"`
+3. **SDL_Joystick with Fallback** - Unknown joysticks
+   - Xbox 360 or PS4 style remapping → `mapping: "standard"`
+   - Ensures compatibility even with brand new/exotic controllers
 
 **Result:** Games always see `mapping: "standard"` with predictable button indices (A=0, B=1, X=2, Y=3, etc.)
 
@@ -237,12 +234,13 @@ This project builds on excellent work from the gaming and emulation communities:
   - [node-sdl](https://github.com/kmamal/node-sdl) - Comprehensive SDL2 bindings that inspired this implementation
   - [build-sdl](https://github.com/kmamal/build-sdl) - Cross-platform prebuilt SDL2 binaries (used by this project)
   - Made it possible to bring native SDL2 performance to Node.js with zero-config installation
-- **[SDL2](https://www.libsdl.org/)** - Cross-platform game controller support with ~500 built-in controller mappings
-- **[Knulli](https://knulli.org/)** - Retro gaming distribution with extensive EmulationStation controller configs (276 controllers)
-- **[Batocera](https://batocera.org/)** - Retro gaming platform with additional controller mappings (15 controllers)
+- **[SDL2](https://www.libsdl.org/)** - Cross-platform game controller support with ~1000 built-in controller mappings
+- **[SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB)** - Community-sourced database of 2134 game controller mappings maintained by [@mdqinc](https://github.com/mdqinc)
+- **[Knulli](https://knulli.org/)** - Retro gaming distribution with extensive EmulationStation controller configs (283 controllers)
+- **[Batocera](https://batocera.org/)** - Retro gaming platform with additional controller mappings (38 controllers)
 - **[EmulationStation](https://emulationstation.org/)** - Frontend for retro gaming with comprehensive controller database format
 
-By combining @kmamal's SDL2 foundation, SDL2's built-in mappings, and EmulationStation's community-maintained database, we achieve **universal `mapping: "standard"` support** that surpasses browser implementations.
+By combining @kmamal's SDL2 foundation, SDL2's built-in mappings, the SDL_GameControllerDB community database, and EmulationStation's configs, we achieve **universal `mapping: "standard"` support** that surpasses browser implementations.
 
 ## Related Projects
 

@@ -55,44 +55,16 @@ GamepadManager::GamepadManager(const Napi::CallbackInfo& info)
     // Force an initial joystick update on macOS
     SDL_JoystickUpdate();
 
-    // Load SDL controller mappings if provided (array of mapping strings)
-    if (info.Length() > 0 && info[0].IsArray()) {
-        Napi::Array mappings = info[0].As<Napi::Array>();
-        int loaded = 0;
-        int failed = 0;
-
-        for (uint32_t i = 0; i < mappings.Length(); i++) {
-            Napi::Value item = mappings[i];
-            if (item.IsString()) {
-                std::string mappingStr = item.As<Napi::String>().Utf8Value();
-                int result = SDL_GameControllerAddMapping(mappingStr.c_str());
-                if (result >= 0) {
-                    loaded++;
-                } else {
-                    failed++;
-                }
-            }
-        }
+    // Load gamecontrollerdb.txt if path provided
+    if (info.Length() > 0 && info[0].IsString()) {
+        std::string dbPath = info[0].As<Napi::String>().Utf8Value();
+        int loaded = SDL_GameControllerAddMappingsFromFile(dbPath.c_str());
 
         if (loaded > 0) {
-            printf("Loaded %d SDL controller mappings (%d failed)\n", loaded, failed);
-        }
-    }
-
-    // Load force-joystick GUIDs if provided (second parameter)
-    // These are GUIDs that should use SDL_Joystick instead of SDL_GameController
-    // because we have better mappings than SDL's built-in database
-    if (info.Length() > 1 && info[1].IsArray()) {
-        Napi::Array guids = info[1].As<Napi::Array>();
-        for (uint32_t i = 0; i < guids.Length(); i++) {
-            Napi::Value item = guids[i];
-            if (item.IsString()) {
-                std::string guid = item.As<Napi::String>().Utf8Value();
-                force_joystick_guids_.insert(guid);
-            }
-        }
-        if (!force_joystick_guids_.empty()) {
-            printf("Forcing %zu GUIDs to use SDL_Joystick mode (cross-platform mappings)\n", force_joystick_guids_.size());
+            printf("Loaded %d controller mappings from %s\n", loaded, dbPath.c_str());
+        } else if (loaded < 0) {
+            printf("Warning: Failed to load controller mappings from %s: %s\n",
+                   dbPath.c_str(), SDL_GetError());
         }
     }
 
@@ -127,29 +99,19 @@ std::string GamepadManager::GetGUIDString(SDL_JoystickGUID guid) {
     return std::string(guid_str);
 }
 
-bool GamepadManager::ShouldForceJoystick(const std::string& guid) {
-    // Only check exact GUID match
-    // Vendor/product matching is handled in JavaScript layer as a fallback
-    return force_joystick_guids_.find(guid) != force_joystick_guids_.end();
-}
-
 void GamepadManager::ScanDevices() {
     int num_joysticks = SDL_NumJoysticks();
     printf("ScanDevices: SDL_NumJoysticks() = %d\n", num_joysticks);
 
     for (int i = 0; i < num_joysticks; i++) {
-        // Get GUID to check if we should force joystick mode
         SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(i);
         std::string guid_str = GetGUIDString(guid);
-
-        // Check if we should force joystick mode (exact GUID or vendor/product match)
-        bool force_joystick = ShouldForceJoystick(guid_str);
         bool is_controller = SDL_IsGameController(i);
 
-        printf("Device %d: GUID=%s, SDL_IsGameController=%d, force_joystick=%d\n",
-               i, guid_str.c_str(), is_controller, force_joystick);
+        printf("Device %d: GUID=%s, SDL_IsGameController=%d\n",
+               i, guid_str.c_str(), is_controller);
 
-        if (!force_joystick && is_controller) {
+        if (is_controller) {
             printf("  -> Using SDL_GameController\n");
             AddController(i);
         } else {
@@ -160,14 +122,6 @@ void GamepadManager::ScanDevices() {
 }
 
 void GamepadManager::AddController(int device_index) {
-    // Check if we should force this device to joystick mode
-    SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(device_index);
-    std::string guid_str = GetGUIDString(guid);
-    if (ShouldForceJoystick(guid_str)) {
-        // Don't add as controller - wait for joystick event
-        return;
-    }
-
     SDL_GameController* controller = SDL_GameControllerOpen(device_index);
     if (!controller) {
         return;
@@ -194,6 +148,9 @@ void GamepadManager::AddController(int device_index) {
     state.axes.fill(0.0f);
 
     gamepads_[instance_id] = state;
+
+    // Emit connected event
+    EmitConnected(state);
 }
 
 void GamepadManager::AddJoystick(int device_index) {
@@ -308,24 +265,14 @@ void GamepadManager::UpdateJoystickState(GamepadState& state, const SDL_Event& e
 void GamepadManager::HandleEvent(const SDL_Event& event) {
     switch (event.type) {
         case SDL_CONTROLLERDEVICEADDED:
-            // AddController will check if device should be forced to joystick mode
             AddController(event.cdevice.which);
             break;
 
         case SDL_JOYDEVICEADDED: {
-            // Add as joystick if:
-            // 1. SDL doesn't recognize it as a controller, OR
-            // 2. We're forcing it to joystick mode (will be added since CONTROLLERDEVICEADDED was skipped)
+            // Add as joystick only if SDL doesn't recognize it as a controller
             bool is_controller = SDL_IsGameController(event.jdevice.which);
             if (!is_controller) {
                 AddJoystick(event.jdevice.which);
-            } else {
-                // It's a controller - check if we should force joystick mode
-                SDL_JoystickGUID guid = SDL_JoystickGetDeviceGUID(event.jdevice.which);
-                std::string guid_str = GetGUIDString(guid);
-                if (ShouldForceJoystick(guid_str)) {
-                    AddJoystick(event.jdevice.which);
-                }
             }
             break;
         }
