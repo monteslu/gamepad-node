@@ -7,8 +7,8 @@ A fully compliant browser Gamepad API implementation that's **better than browse
 ## Features
 
 ✅ **Browser API Compatible** - `navigator.getGamepads()` works identically to browser
-⚡ **Native Performance** - C++ SDL2 bindings for low-latency input
-🎮 **ALL Controllers Get `mapping: "standard"`** - Every controller gets W3C standard layout (SDL + 291 database configs + fallbacks)
+⚡ **Native Performance** - SDL2 via [@kmamal/sdl](https://github.com/kmamal/node-sdl) for low-latency input
+🎮 **ALL Controllers Get `mapping: "standard"`** - Every controller gets W3C standard layout (SDL + 321 database configs + fallbacks)
 🗺️ **Better Than Browsers** - Browsers only give `mapping: "standard"` to ~20-30 controllers, we give it to ALL
 🔌 **Hot-Plug Support** - Automatic detection of connect/disconnect with events
 📳 **Vibration/Rumble** - Full GamepadHapticActuator support (dual-rumble)
@@ -18,10 +18,10 @@ A fully compliant browser Gamepad API implementation that's **better than browse
 ## Installation
 
 ```bash
-npm install
+npm install gamepad-node
 ```
 
-This will automatically download SDL2 and build the native addon.
+SDL2 binaries are automatically downloaded by @kmamal/sdl - no compilation needed!
 
 ## Usage
 
@@ -101,7 +101,8 @@ gamepad-test
 ```
 
 The CLI tester shows:
-- Real-time button states (A, B, X, Y, LB, RB, triggers, d-pad, etc.)
+- Real-time button states (A, B, X, Y, LB, RB, LT, RT, SELECT, START, GUIDE, L3, R3)
+- D-pad visualization
 - Analog stick positions with visual indicators
 - Trigger pressure bars
 - Supports up to 4 controllers simultaneously
@@ -109,21 +110,18 @@ The CLI tester shows:
 
 ## Architecture
 
-- **Native Layer**: Minimal C++ SDL2 bindings (~300 lines)
-- **JavaScript API**: Standard Gamepad API implementation
-- **Controller DB**: EmulationStation configs (Knulli + Batocera)
-- **CLI Tester**: React/Ink-based ASCII art visualizer
+- **SDL2 Foundation**: Built on [@kmamal/sdl](https://github.com/kmamal/node-sdl) for rock-solid native controller support
+- **JavaScript Mapping Layers**: EmulationStation DB + SDL mappings + fallbacks
+- **W3C Gamepad API**: Standard browser-compatible API implementation
+- **CLI Tester**: blessed-based terminal UI with real-time visualization
 
-Based on the proven approach from [webaudio-node](../webaudio-node).
+No native compilation required - just `npm install` and go!
 
-## Building
+## Installation & Testing
 
 ```bash
 # Install dependencies
 npm install
-
-# Build native addon
-npm run build
 
 # Run tests
 npm test                  # Basic gamepad test
@@ -136,12 +134,12 @@ node bin/cli.js
 
 ## Platform Support
 
-Prebuilt binaries available for:
+Supports all platforms via [@kmamal/sdl](https://github.com/kmamal/node-sdl):
 - macOS (x64, arm64)
 - Linux (x64, arm64)
 - Windows (x64)
 
-Installation automatically downloads the appropriate prebuilt binary for your platform. If unavailable, it builds from source automatically.
+Zero configuration - SDL2 binaries are automatically downloaded by @kmamal/sdl.
 
 ## ALL Controllers Get `mapping: "standard"` (Better Than Browsers!)
 
@@ -158,7 +156,7 @@ gamepad-node ensures **every controller gets `mapping: "standard"`** through thr
 
 **Result:** Your game code always sees predictable button indices. No configuration UI needed!
 
-📋 **See [MAPPED_CONTROLLERS.md](./docs/MAPPED_CONTROLLERS.md) for full list of 2455+ supported controllers**
+📋 **See [MAPPED_CONTROLLERS.md](./docs/MAPPED_CONTROLLERS.md) for full list of 2400+ supported controllers**
 
 ### How It Works
 
@@ -191,36 +189,9 @@ See [CONTROLLER_VS_JOYSTICK.md](./docs/CONTROLLER_VS_JOYSTICK.md) for technical 
 
 ## Development
 
-See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for the complete development plan.
+No build step required - gamepad-node is pure JavaScript on top of @kmamal/sdl.
 
-### Building Locally
-
-```bash
-# Install dependencies and build
-npm install
-
-# Or build manually
-npm run download-sdl
-npm run build
-```
-
-### Creating a Release
-
-To publish a new version with prebuilt binaries:
-
-1. Update version in `package.json`
-2. Commit and push changes
-3. Create and push a git tag:
-   ```bash
-   git tag v0.1.0
-   git push origin v0.1.0
-   ```
-4. GitHub Actions will automatically:
-   - Build native addons for all platforms
-   - Create a GitHub release
-   - Upload prebuilt binaries
-
-Users will automatically download the prebuilt binary matching their platform during `npm install`.
+See [IMPLEMENTATION_PLAN.md](./docs/IMPLEMENTATION_PLAN.md) for architecture details.
 
 ## License
 
@@ -228,12 +199,12 @@ ISC
 
 ## Credits
 
-This project builds on excellent work from the gaming and emulation communities:
+This project is built on top of excellent work from the gaming and emulation communities:
 
-- **[@kmamal](https://github.com/kmamal)** - Pioneering work on SDL2 for Node.js ecosystem
-  - [node-sdl](https://github.com/kmamal/node-sdl) - Comprehensive SDL2 bindings that inspired this implementation
-  - [build-sdl](https://github.com/kmamal/build-sdl) - Cross-platform prebuilt SDL2 binaries (used by this project)
-  - Made it possible to bring native SDL2 performance to Node.js with zero-config installation
+- **[@kmamal](https://github.com/kmamal)** - Foundational SDL2 bindings for Node.js
+  - [node-sdl](https://github.com/kmamal/node-sdl) - This project is built entirely on top of @kmamal/sdl
+  - [build-sdl](https://github.com/kmamal/build-sdl) - Zero-config SDL2 installation
+  - Made native SDL2 controller support accessible to Node.js with no compilation required
 - **[SDL2](https://www.libsdl.org/)** - Cross-platform game controller support with ~1000 built-in controller mappings
 - **[SDL_GameControllerDB](https://github.com/mdqinc/SDL_GameControllerDB)** - Community-sourced database of 2134 game controller mappings maintained by [@mdqinc](https://github.com/mdqinc)
 - **[Knulli](https://knulli.org/)** - Retro gaming distribution with extensive EmulationStation controller configs (283 controllers)
@@ -242,8 +213,22 @@ This project builds on excellent work from the gaming and emulation communities:
 
 By combining @kmamal's SDL2 foundation, SDL2's built-in mappings, the SDL_GameControllerDB community database, and EmulationStation's configs, we achieve **universal `mapping: "standard"` support** that surpasses browser implementations.
 
+## Terminal Gaming
+
+gamepad-node is a core component of a complete terminal gaming platform. Combined with other Web APIs for Node.js, you can build fully-featured games that run in your terminal via `npx`.
+
+**📚 See [TERMINAL_GAMING_PLATFORM.md](./docs/TERMINAL_GAMING_PLATFORM.md)** for the complete vision:
+- Canvas 2D + WebGL rendering via half-block characters
+- Web Audio API for spatial audio
+- Physics engines (Box2D)
+- 60 FPS gameplay at 160×120 resolution
+- Dual-target code (browser + terminal)
+
+**🎮 See [TERMINAL_GAMEBOY_MANIFESTO.md](./docs/TERMINAL_GAMEBOY_MANIFESTO.md)** for a specific example: running a Game Boy emulator in terminal with pixel-perfect graphics, audiophile sound, and modern gamepad support.
+
 ## Related Projects
 
 - [webaudio-node](../webaudio-node) - Web Audio API for Node.js
-- [jsgamelauncher](../jsgamelauncher) - Run web games in Node.js
-- [@kmamal/build-sdl](../build-sdl) - Prebuilt SDL2 binaries
+- [@kmamal/sdl](https://github.com/kmamal/node-sdl) - SDL2 bindings for Node.js (foundation for this project)
+- [@napi-rs/canvas](https://github.com/Brooooooklyn/canvas) - High-performance Canvas 2D for Node.js
+- [headless-gl](https://github.com/stackgl/headless-gl) - WebGL for Node.js

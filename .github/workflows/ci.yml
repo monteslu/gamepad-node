@@ -8,12 +8,11 @@ on:
 
 jobs:
   test:
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [20, 22]
-
-    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
@@ -27,14 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npm run test:unit
+
       - name: Run smoke test
         run: npm run test:smoke
-
-      - name: Check build artifacts
-        shell: bash
-        run: |
-          if [ ! -f build/Release/gamepad_native.node ]; then
-            echo "Error: gamepad_native.node not found"
-            exit 1
-          fi
-          echo "✓ Native addon built successfully"

@@ -91,17 +91,9 @@ export class Gamepad {
 
         // For SDL_GameController: use data as-is ONLY if we don't have our own SDL mapping
         if (native_data.isController && !hasSDLMapping) {
-            this.buttons = (native_data.buttons || []).map((pressed, i) => {
-                let value = pressed ? 1.0 : 0.0;
-
-                // For triggers (buttons 6 and 7), use axis values if available
-                if (i === 6 && native_data.axes && native_data.axes.length > 4) {
-                    value = (native_data.axes[4] + 1) / 2; // Normalize from [-1,1] to [0,1]
-                } else if (i === 7 && native_data.axes && native_data.axes.length > 5) {
-                    value = (native_data.axes[5] + 1) / 2;
-                }
-
-                return new GamepadButton(pressed, value);
+            this.buttons = (native_data.buttons || []).map((btn, i) => {
+                // Button data is already { pressed, value } from GamepadManager
+                return new GamepadButton(btn.pressed, btn.value);
             });
 
             // Only use first 4 axes for standard gamepad (left stick, right stick)
@@ -129,8 +121,11 @@ export class Gamepad {
                 }
             }
 
+            // Extract just the pressed state for mapping (mapButtons expects boolean array)
+            const rawButtonStates = native_data.buttons.map(b => b.pressed);
+
             // Map raw joystick buttons to standard gamepad buttons
-            const mappedButtons = mapButtons(native_data.buttons, jsMap);
+            const mappedButtons = mapButtons(rawButtonStates, jsMap);
 
             // Convert to GamepadButton objects
             this.buttons = mappedButtons.map(btn => new GamepadButton(btn.pressed, btn.value));
