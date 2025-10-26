@@ -1,8 +1,19 @@
-# Controllers with Guaranteed Standard Mapping
+# Complete Controller Database
 
-**ALL controllers get `mapping: "standard"` in gamepad-node!** This document lists the controllers with database mappings.
+**ALL controllers get `mapping: "standard"` in gamepad-node!**
 
-## Mapping Coverage Summary
+This document shows the complete database of all controllers with mappings, including:
+- SDL_GameControllerDB community mappings
+- EmulationStation retro/arcade controller configs
+
+## Database Statistics
+
+- **SDL_GameControllerDB**: 2134 unique controllers across all platforms
+- **EmulationStation (Knulli)**: 283 controllers
+- **EmulationStation (Batocera)**: 38 controllers
+- **Total**: 2455 controller mappings
+
+## Mapping Architecture
 
 gamepad-node provides `mapping: "standard"` through a **4-tier architecture**:
 
@@ -12,16 +23,13 @@ gamepad-node provides `mapping: "standard"` through a **4-tier architecture**:
 - Automatic standard mapping, no configuration needed
 
 ### Tier 2: SDL_GameControllerDB (Community Database)
-- **macOS**: 2108 controllers
-- **Linux**: 2108 controllers
-- **Windows**: 2108 controllers
-- Loaded automatically at startup based on platform
-- Community-maintained database from https://github.com/mdqinc/SDL_GameControllerDB
+- **2134 unique controllers** (listed below)
+- Community-maintained from https://github.com/mdqinc/SDL_GameControllerDB
+- Platform-specific mappings (Windows, macOS, Linux, Android)
+- Loaded automatically at startup based on your platform
 
-### Tier 3: EmulationStation Database (Retro/Arcade Controllers)
-- **321 unique controllers** (listed below)
-- **From Knulli**: 283 controllers
-- **From Batocera**: 38 controllers
+### Tier 3: EmulationStation Database (Retro/Arcade)
+- **321 controllers** (listed below)
 - Specialized retro gaming, arcade, and handheld controllers
 - GPIO controllers, arcade IPAC boards, Wii remotes, etc.
 
@@ -30,75 +38,2154 @@ gamepad-node provides `mapping: "standard"` through a **4-tier architecture**:
 - PlayStation 4 style (for Sony controllers)
 - Covers everything else
 
-**Total: ~2000+ controllers with guaranteed standard mapping!**
+---
 
-## Understanding Standard Mapping
+## SDL_GameControllerDB Mappings (2134 controllers)
 
-The Gamepad API defines a **"standard" mapping** (W3C specification) with predictable button/axis indices:
-- `gamepad.mapping === "standard"` → Buttons follow predictable layout (button 0 = A, button 1 = B, etc.)
-- `gamepad.mapping === ""` → Raw hardware indices, unpredictable
-
-**The Problem with Browsers:**
-- Only ~20-30 recognized controllers get `mapping: "standard"`
-- Unknown controllers get `mapping: ""` with random button indices
-- Your game must implement per-controller configuration UI (bad UX)
-
-**gamepad-node's Solution:**
-Every controller gets `mapping: "standard"` through the 4-tier system above.
-
-## Real-World Benefits
-
-With `mapping: "standard"` guaranteed for ALL controllers:
-
-- ✅ **No configuration UI needed** - Games work immediately with any controller
-- ✅ **Arcade sticks** - Get standard layout instead of `mapping: ""` chaos
-- ✅ **Retro USB controllers** - NES, SNES, etc. get proper button mapping
-- ✅ **Racing wheels & flight sticks** - Consistent button/axis layout
-- ✅ **Multi-player games** - Mix Xbox + arcade stick + retro controller, all work the same
-- ✅ **Future controllers** - New/unknown controllers work immediately with fallback mapping
-
-See [WHY_BETTER_THAN_BROWSERS.md](./WHY_BETTER_THAN_BROWSERS.md) for detailed comparison.
-
-## Standard Button Layout
-
-All controllers are mapped to this standard layout:
-
-| Index | Button | Description |
-|-------|--------|-------------|
-| 0 | A | South button (Cross on PlayStation) |
-| 1 | B | East button (Circle on PlayStation) |
-| 2 | X | West button (Square on PlayStation) |
-| 3 | Y | North button (Triangle on PlayStation) |
-| 4 | LB | Left bumper (L1) |
-| 5 | RB | Right bumper (R1) |
-| 6 | LT | Left trigger (L2) |
-| 7 | RT | Right trigger (R2) |
-| 8 | SELECT | Back/Select/Share button |
-| 9 | START | Start/Options button |
-| 10 | L3 | Left stick click |
-| 11 | R3 | Right stick click |
-| 12 | UP | D-pad up |
-| 13 | DOWN | D-pad down |
-| 14 | LEFT | D-pad left |
-| 15 | RIGHT | D-pad right |
-| 16 | GUIDE | Home/Guide/PS button |
-
-## Axes
-
-| Index | Description |
-|-------|-------------|
-| 0 | Left stick X (-1 = left, 1 = right) |
-| 1 | Left stick Y (-1 = up, 1 = down) |
-| 2 | Right stick X |
-| 3 | Right stick Y |
+| Controller Name | GUID | Win | macOS | Linux | Android |
+|----------------|----------------------------------|:---:|:-----:|:-----:|:-------:|
+| * | `05000000ac0500000100000000006d01` |  |  |  |  |
+| * | `05000000ac050000010000004f066d01` |  |  |  |  |
+| * | `05000000ac05000001000000cf076d01` |  |  |  |  |
+| * | `05000000ac05000001000000df076d01` |  |  |  |  |
+| * | `05000000ac05000001000000ff076d01` |  |  |  |  |
+| * | `05000000ac0500000200000000006d02` |  |  |  |  |
+| * | `05000000ac050000020000004f066d02` |  |  |  |  |
+| 2 In 1 Joystick | `030000008f0e00000300000009010000` |  | ✓ |  |  |
+| 3 In 1 Conversion Box | `03000000300f00000a01000000000000` | ✓ |  |  |  |
+| 3 In 1 Conversion Box | `03000000fa190000918d000000000000` | ✓ |  |  |  |
+| 3dRudder Foot Motion Controller | `03000000fa2d00000100000000000000` | ✓ |  |  |  |
+| 4Play Adapter | `03000000d0160000040d000000000000` | ✓ |  |  |  |
+| 4Play Adapter | `03000000d0160000050d000000000000` | ✓ |  |  |  |
+| 4Play Adapter | `03000000d0160000060d000000000000` | ✓ |  |  |  |
+| 4Play Adapter | `03000000d0160000070d000000000000` | ✓ |  |  |  |
+| 4Play Adapter | `03000000d0160000600a000000000000` | ✓ |  |  |  |
+| 8BitDo 64 | `03000000c82d00001930000000000000` | ✓ |  |  |  |
+| 8BitDo 64 | `03000000c82d00001930000000020000` |  | ✓ |  |  |
+| 8BitDo 64 | `03000000c82d00001930000001000000` |  | ✓ |  |  |
+| 8BitDo 64 | `03000000c82d00001930000011010000` |  |  | ✓ |  |
+| 8BitDo 64 | `05000000c82d00001930000001000000` |  |  | ✓ |  |
+| 8BitDo Adapter | `03000000c82d00000031000000000000` | ✓ |  |  |  |
+| 8BitDo Adapter | `03000000c82d00000031000001000000` |  | ✓ |  |  |
+| 8BitDo Adapter | `03000000c82d00000031000011010000` |  |  | ✓ |  |
+| 8BitDo Adapter | `38653964633230666463343334313533` |  |  |  | ✓ |
+| 8BitDo Adapter 2 | `03000000c82d00000531000000000000` | ✓ |  |  |  |
+| 8BitDo Adapter 2 | `03000000c82d00000531000000020000` |  | ✓ |  |  |
+| 8BitDo Adapter 2 | `03000000c82d00000631000000010000` |  |  | ✓ |  |
+| 8BitDo Adapter 2 | `36666264316630653965636634386234` |  |  |  | ✓ |
+| 8BitDo Arcade Stick | `38426974446f20417263616465205374` |  |  |  | ✓ |
+| 8BitDo Arcade Stick | `61393962646434393836356631636132` |  |  |  | ✓ |
+| 8BitDo Arcade Stick | `64323139346131306233636562663738` |  |  |  | ✓ |
+| 8BitDo Arcade Stick | `64643565386136613265663236636564` |  |  |  | ✓ |
+| 8BitDo Dogbone | `03000000c82d00000951000000000000` | ✓ |  |  |  |
+| 8BitDo Dogbone | `03000000c82d00000951000000010000` |  | ✓ | ✓ |  |
+| 8BitDo Dogbone | `33313433353539306634656436353432` |  |  |  | ✓ |
+| 8BitDo Dogbone | `38426974446f20446f67626f6e65204d` |  |  |  | ✓ |
+| 8BitDo F30 | `03000000008000000210000000000000` | ✓ |  |  |  |
+| 8BitDo F30 Arcade Joystick | `030000003512000011ab000000000000` | ✓ |  |  |  |
+| 8BitDo F30 Arcade Joystick | `03000000c82d00001028000000000000` | ✓ |  |  |  |
+| 8BitDo F30 Arcade Joystick | `03000000c82d000011ab000000000000` | ✓ |  |  |  |
+| 8BitDo F30 Arcade Stick | `03000000801000000900000000000000` | ✓ |  |  |  |
+| 8BitDo F30 Pro | `03000000c82d00001038000000000000` | ✓ |  |  |  |
+| 8BitDo FC30 Pro | `03000000c82d00000090000000000000` | ✓ |  |  |  |
+| 8BitDo FC30 Pro | `03000000c82d00000090000001000000` |  | ✓ |  |  |
+| 8BitDo FC30 Pro | `03000000c82d00001038000000010000` |  | ✓ |  |  |
+| 8BitDo FC30 Pro | `03000000021000000090000011010000` |  |  | ✓ |  |
+| 8BitDo FC30 Pro | `03000000c82d00000090000011010000` |  |  | ✓ |  |
+| 8BitDo FC30 Pro | `05000000c82d00001038000000010000` |  |  | ✓ |  |
+| 8BitDo FC30 Pro | `34343439373236623466343934376233` |  |  |  | ✓ |
+| 8BitDo GameCube | `03000000c82d00006a28000000000000` | ✓ |  |  |  |
+| 8BitDo GameCube | `03000000c82d00006a28000000010000` |  | ✓ |  |  |
+| 8BitDo GameCube | `05000000c82d00006a28000000010000` |  |  | ✓ |  |
+| 8BitDo GameCube | `38426974446f204e4743204d6f646b69` |  |  |  | ✓ |
+| 8BitDo Lite | `38426974446f2038426974446f204c69` |  |  |  | ✓ |
+| 8BitDo Lite 2 | `03000000c82d00001251000000000000` | ✓ |  |  |  |
+| 8BitDo Lite 2 | `03000000c82d00001251000000010000` |  | ✓ |  |  |
+| 8BitDo Lite 2 | `03000000c82d00001251000000020000` |  | ✓ |  |  |
+| 8BitDo Lite 2 | `03000000c82d00001251000011010000` |  |  | ✓ |  |
+| 8BitDo Lite 2 | `05000000c82d00001251000000010000` |  |  | ✓ |  |
+| 8BitDo Lite 2 | `30643332373663313263316637356631` |  |  |  | ✓ |
+| 8BitDo Lite 2 | `38426974446f204c6974652032000000` |  |  |  | ✓ |
+| 8BitDo Lite 2 | `62656331626461363634633735353032` |  |  |  | ✓ |
+| 8BitDo Lite SE | `03000000c82d00001151000000000000` | ✓ |  |  |  |
+| 8BitDo Lite SE | `03000000c82d00001151000000010000` |  | ✓ |  |  |
+| 8BitDo Lite SE | `03000000c82d00001151000000020000` |  | ✓ |  |  |
+| 8BitDo Lite SE | `03000000c82d00001151000011010000` |  |  | ✓ |  |
+| 8BitDo Lite SE | `05000000c82d00001151000000010000` |  |  | ✓ |  |
+| 8BitDo Lite SE | `38393936616436383062666232653338` |  |  |  | ✓ |
+| 8BitDo Lite SE | `38426974446f204c6974652053450000` |  |  |  | ✓ |
+| 8BitDo Lite SE | `39356430616562366466646636643435` |  |  |  | ✓ |
+| 8BitDo M30 | `03000000c82d00000150000000000000` | ✓ |  |  |  |
+| 8BitDo M30 | `03000000c82d00000151000000000000` | ✓ |  |  |  |
+| 8BitDo M30 | `03000000c82d00000650000000000000` | ✓ |  |  |  |
+| 8BitDo M30 | `03000000c82d00005106000000000000` | ✓ |  |  |  |
+| 8BitDo M30 | `03000000a30c00002400000006020000` |  | ✓ |  |  |
+| 8BitDo M30 | `03000000c82d00000151000000010000` |  | ✓ | ✓ |  |
+| 8BitDo M30 | `03000000c82d00000650000001000000` |  | ✓ |  |  |
+| 8BitDo M30 | `03000000c82d00005106000000010000` |  | ✓ |  |  |
+| 8BitDo M30 | `03000000c82d00000650000011010000` |  |  | ✓ |  |
+| 8BitDo M30 | `05000000c82d00005106000000010000` |  |  | ✓ |  |
+| 8BitDo M30 | `05000000c82d000006500000ffff3f00` |  |  |  | ✓ |
+| 8BitDo M30 | `05000000c82d000051060000ffff3f00` |  |  |  | ✓ |
+| 8BitDo M30 | `32323161363037623637326438643634` |  |  |  | ✓ |
+| 8BitDo M30 | `33656266353630643966653238646264` |  |  |  | ✓ |
+| 8BitDo M30 | `38426974446f204d3330204d6f646b69` |  |  |  | ✓ |
+| 8BitDo M30 | `39366630663062373237616566353437` |  |  |  | ✓ |
+| 8BitDo M30 | `64653533313537373934323436343563` |  |  |  | ✓ |
+| 8BitDo M30 | `66356438346136366337386437653934` |  |  |  | ✓ |
+| 8BitDo M30 | `66393064393162303732356665666366` |  |  |  | ✓ |
+| 8BitDo M30 Xbox | `03000000c82d00000a20000000020000` |  |  | ✓ |  |
+| 8BitDo Micro | `03000000c82d00002090000000000000` | ✓ |  |  |  |
+| 8BitDo Micro | `03000000c82d00002090000000010000` |  | ✓ |  |  |
+| 8BitDo Micro | `03000000c82d00002090000011010000` |  |  | ✓ |  |
+| 8BitDo Micro | `05000000c82d00002090000000010000` |  |  | ✓ |  |
+| 8BitDo Micro | `38426974446f204d6963726f2067616d` |  |  |  | ✓ |
+| 8BitDo Micro | `61653365323561356263373333643266` |  |  |  | ✓ |
+| 8BitDo Micro | `62613137616239666338343866326336` |  |  |  | ✓ |
+| 8BitDo Micro | `05000000ac05000004000000a8986d04` |  |  |  |  |
+| 8BitDo N30 | `03000000c82d00000310000000000000` | ✓ |  |  |  |
+| 8BitDo N30 | `03000000c82d00000451000000000000` | ✓ |  |  |  |
+| 8BitDo N30 | `03000000c82d00002028000000000000` | ✓ |  |  |  |
+| 8BitDo N30 | `03000000c82d00008010000000000000` | ✓ |  |  |  |
+| 8BitDo N30 | `03000000c82d0000e002000000000000` | ✓ |  |  |  |
+| 8BitDo N30 | `03000000c82d00000451000000010000` |  | ✓ | ✓ |  |
+| 8BitDo N30 | `33663431326134333366393233616633` |  |  |  | ✓ |
+| 8BitDo N30 | `38426974446f204e3330204d6f646b69` |  |  |  | ✓ |
+| 8BitDo N30 Pro | `03000000c82d00000190000000000000` | ✓ |  |  |  |
+| 8BitDo N30 Pro 2 | `03000000c82d00001590000000000000` | ✓ |  |  |  |
+| 8BitDo N30 Pro 2 | `03000000c82d00006528000000000000` | ✓ |  |  |  |
+| 8BitDo N30 Pro 2 | `03000000c82d00001590000001000000` |  | ✓ |  |  |
+| 8BitDo N30 Pro 2 | `03000000c82d00006528000000010000` |  | ✓ |  |  |
+| 8BitDo N30 Pro 2 | `03000000c82d00001590000011010000` |  |  | ✓ |  |
+| 8BitDo N30 Pro 2 | `05000000c82d00006528000000010000` |  |  | ✓ |  |
+| 8BitDo N30 Pro 2 | `05000000c82d000015900000ffff3f00` |  |  |  | ✓ |
+| 8BitDo N30 Pro 2 | `05000000c82d000065280000ffff3f00` |  |  |  | ✓ |
+| 8BitDo N64 | `03000000c82d00000290000000000000` | ✓ |  |  |  |
+| 8BitDo N64 | `03000000c82d00003038000000000000` | ✓ |  |  |  |
+| 8BitDo N64 | `03000000c82d00006928000000000000` | ✓ |  |  |  |
+| 8BitDo N64 | `03000000c82d00006928000000010000` |  | ✓ |  |  |
+| 8BitDo N64 | `03000000c82d00006928000011010000` |  |  | ✓ |  |
+| 8BitDo N64 | `05000000c82d00006928000000010000` |  |  | ✓ |  |
+| 8BitDo N64 | `38323035343766666239373834336637` |  |  |  | ✓ |
+| 8BitDo N64 | `38426974446f204e3634204d6f646b69` |  |  |  | ✓ |
+| 8BitDo NEOGEO | `03000000c82d00002590000000000000` | ✓ |  |  |  |
+| 8BitDo NEOGEO | `03000000c82d00002590000000010000` |  | ✓ |  |  |
+| 8BitDo NEOGEO | `03000000c82d00002590000001000000` |  | ✓ |  |  |
+| 8BitDo NEOGEO | `03000000c82d00002690000000010000` |  | ✓ |  |  |
+| 8BitDo NEOGEO | `05000000c82d00002590000001000000` |  |  | ✓ |  |
+| 8BitDo NEOGEO | `32363135613966656338666638666237` |  |  |  | ✓ |
+| 8BitDo NEOGEO | `35363534633333373639386466346631` |  |  |  | ✓ |
+| 8BitDo NEOGEO | `38426974446f204e454f47454f204750` |  |  |  | ✓ |
+| 8BitDo NEOGEO | `39383963623932353561633733306334` |  |  |  | ✓ |
+| 8BitDo NES30 | `030000003512000012ab000000000000` | ✓ |  |  |  |
+| 8BitDo NES30 | `03000000c82d000012ab000000000000` | ✓ |  |  |  |
+| 8BitDo NES30 | `030000003512000012ab000001000000` |  | ✓ |  |  |
+| 8BitDo NES30 | `03000000c82d000012ab000001000000` |  | ✓ |  |  |
+| 8BitDo NES30 | `03000000c82d00002028000000010000` |  | ✓ |  |  |
+| 8BitDo NES30 | `03000000008000000210000011010000` |  |  | ✓ |  |
+| 8BitDo NES30 | `03000000c82d00000310000011010000` |  |  | ✓ |  |
+| 8BitDo NES30 | `05000000c82d00008010000000010000` |  |  | ✓ |  |
+| 8BitDo NES30 Pro | `03000000022000000090000000000000` | ✓ |  |  |  |
+| 8BitDo NES30 Pro | `03000000203800000900000000000000` | ✓ |  |  |  |
+| 8BitDo NES30 Pro | `03000000c82d00002038000000000000` | ✓ |  |  |  |
+| 8BitDo NES30 Pro | `03000000022000000090000001000000` |  | ✓ |  |  |
+| 8BitDo NES30 Pro | `03000000203800000900000000010000` |  | ✓ |  |  |
+| 8BitDo NES30 Pro | `03000000c82d00000190000001000000` |  | ✓ |  |  |
+| 8BitDo NES30 Pro | `03000000022000000090000011010000` |  |  | ✓ |  |
+| 8BitDo NES30 Pro | `03000000c82d00000190000011010000` |  |  | ✓ |  |
+| 8BitDo NES30 Pro | `05000000203800000900000000010000` |  |  | ✓ |  |
+| 8BitDo NES30 Pro | `05000000c82d00002038000000010000` |  |  | ✓ |  |
+| 8BitDo NES30 Pro | `050000000220000000900000ffff3f00` |  |  |  | ✓ |
+| 8BitDo NES30 Pro | `050000002038000009000000ffff3f00` |  |  |  | ✓ |
+| 8BitDo P30 | `03000000c82d00000751000000000000` | ✓ |  |  |  |
+| 8BitDo P30 | `03000000c82d00000851000000000000` | ✓ |  |  |  |
+| 8BitDo P30 | `03000000c82d00000751000000010000` |  | ✓ | ✓ |  |
+| 8BitDo P30 | `03000000c82d00000851000000010000` |  | ✓ |  |  |
+| 8BitDo P30 | `05000000c82d00000851000000010000` |  |  | ✓ |  |
+| 8BitDo P30 | `38313433643131656262306631373166` |  |  |  | ✓ |
+| 8BitDo P30 | `38326536643339353865323063616339` |  |  |  | ✓ |
+| 8BitDo P30 | `38426974446f2050333020636c617373` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `03000000c82d00000360000000000000` | ✓ |  |  |  |
+| 8BitDo Pro 2 | `03000000c82d00000361000000000000` | ✓ |  |  |  |
+| 8BitDo Pro 2 | `03000000c82d00000660000000000000` | ✓ |  |  |  |
+| 8BitDo Pro 2 | `03000000c82d00000660000000010000` |  | ✓ |  |  |
+| 8BitDo Pro 2 | `03000000c82d00000660000000020000` |  | ✓ |  |  |
+| 8BitDo Pro 2 | `03000000c82d00000660000011010000` |  |  | ✓ |  |
+| 8BitDo Pro 2 | `03000000c82d00001030000011010000` |  |  | ✓ |  |
+| 8BitDo Pro 2 | `05000000c82d00000660000000010000` |  |  | ✓ |  |
+| 8BitDo Pro 2 | `35376664343164386333616535333434` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `38426974446f2038426974446f205072` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `38426974446f2050726f203200000000` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `61333362366131643730353063616330` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `62373739366537363166326238653463` |  |  |  | ✓ |
+| 8BitDo Pro 2 | `05000000ac05000004000000fd216d04` |  |  |  |  |
+| 8BitDo Pro 2 for Xbox | `03000000c82d00000020000000000000` |  |  | ✓ |  |
+| 8BitDo Pro 2 for Xbox | `06000000c82d00000020000006010000` |  |  | ✓ |  |
+| 8BitDo Pro 3 | `03000000c82d00000960000000000000` | ✓ |  |  |  |
+| 8BitDo Receiver | `03000000c82d00000131000000000000` | ✓ |  |  |  |
+| 8BitDo Receiver | `03000000c82d00000231000000000000` | ✓ |  |  |  |
+| 8BitDo Receiver | `03000000c82d00000331000000000000` | ✓ |  |  |  |
+| 8BitDo Receiver | `03000000c82d00000431000000000000` | ✓ |  |  |  |
+| 8BitDo Receiver | `03000000c82d00000131000001000000` |  | ✓ |  |  |
+| 8BitDo Receiver | `03000000c82d00000231000001000000` |  | ✓ |  |  |
+| 8BitDo Receiver | `03000000c82d00000331000001000000` |  | ✓ |  |  |
+| 8BitDo Receiver | `03000000c82d00000431000001000000` |  | ✓ |  |  |
+| 8BitDo Receiver | `03000000c82d00000131000011010000` |  |  | ✓ |  |
+| 8BitDo Receiver | `03000000c82d00000231000011010000` |  |  | ✓ |  |
+| 8BitDo Receiver | `03000000c82d00000331000011010000` |  |  | ✓ |  |
+| 8BitDo Receiver | `03000000c82d00000431000011010000` |  |  | ✓ |  |
+| 8BitDo Receiver | `38386464613034326435626130396565` |  |  |  | ✓ |
+| 8BitDo Receiver | `38426974446f2038426974446f205265` |  |  |  | ✓ |
+| 8BitDo Receiver | `66303230343038613365623964393766` |  |  |  | ✓ |
+| 8BitDo S30 | `03000000c82d00002867000000000000` | ✓ |  |  |  |
+| 8BitDo S30 | `03000000c82d00002867000000010000` |  | ✓ | ✓ |  |
+| 8BitDo S30 | `38426974446f20533330204d6f646b69` |  |  |  | ✓ |
+| 8BitDo S30 | `66316462353561376330346462316137` |  |  |  | ✓ |
+| 8BitDo SF30 | `03000000c82d00000130000000000000` | ✓ |  |  |  |
+| 8BitDo SF30 Pro | `03000000c82d00000060000000000000` | ✓ |  |  |  |
+| 8BitDo SF30 Pro | `03000000c82d00000061000000000000` | ✓ |  |  |  |
+| 8BitDo SF30 Pro | `03000000c82d00000060000011010000` |  |  | ✓ |  |
+| 8BitDo SF30 Pro | `05000000c82d00000060000000010000` |  |  | ✓ |  |
+| 8BitDo SF30 Pro | `05000000c82d00000061000000010000` |  |  | ✓ |  |
+| 8BitDo SF30 Pro | `05000000c82d000000600000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SF30 Pro | `05000000c82d000000610000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SF30 Pro | `38426974646f20534633302050726f00` |  |  |  | ✓ |
+| 8BitDo SFC30 | `03000000102800000900000000000000` | ✓ |  |  |  |
+| 8BitDo SFC30 | `03000000c82d000021ab000000000000` | ✓ |  |  |  |
+| 8BitDo SFC30 | `03000000c82d00003028000000000000` | ✓ |  |  |  |
+| 8BitDo SFC30 | `030000003512000012ab000010010000` |  |  | ✓ |  |
+| 8BitDo SFC30 | `030000003512000021ab000010010000` |  |  | ✓ |  |
+| 8BitDo SFC30 | `03000000c82d000021ab000010010000` |  |  | ✓ |  |
+| 8BitDo SFC30 | `05000000102800000900000000010000` |  |  | ✓ |  |
+| 8BitDo SFC30 | `05000000c82d00003028000000010000` |  |  | ✓ |  |
+| 8BitDo SFC30 | `61623334636338643233383735326439` |  |  |  | ✓ |
+| 8Bitdo SFC30 Gamepad | `03000000c82d00003028000000010000` |  | ✓ |  |  |
+| 8BitDo SFC30 Joystick | `03000000102800000900000000000000` |  | ✓ |  |  |
+| 8BitDo SN30 | `030000003512000020ab000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00000030000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00000351000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00001290000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d000020ab000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00004028000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00006228000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 | `03000000c82d00000351000000010000` |  | ✓ |  |  |
+| 8BitDo SN30 | `03000000c82d00001290000001000000` |  | ✓ |  |  |
+| 8BitDo SN30 | `03000000c82d00004028000000010000` |  | ✓ |  |  |
+| 8BitDo SN30 | `05000000c82d00000351000000010000` |  |  | ✓ |  |
+| 8BitDo SN30 | `05000000c82d000012900000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SN30 | `05000000c82d000062280000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SN30 | `38316230613931613964356666353839` |  |  |  | ✓ |
+| 8BitDo SN30 | `38426974446f20534e3330204d6f646b` |  |  |  | ✓ |
+| 8BitDo SN30 | `65323563303231646531383162646335` |  |  |  | ✓ |
+| 8BitDo SN30 PP | `35383531346263653330306238353131` |  |  |  | ✓ |
+| 8Bitdo SN30 Pro | `05000000ac05000004000000209f6d04` |  |  |  |  |
+| 8BitDo SN30 Pro | `03000000c82d00000021000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 Pro | `03000000c82d00000160000000000000` | ✓ |  | ✓ |  |
+| 8BitDo SN30 Pro | `03000000c82d00000161000000000000` | ✓ |  | ✓ |  |
+| 8BitDo SN30 Pro | `03000000c82d00000160000001000000` |  | ✓ |  |  |
+| 8BitDo SN30 Pro | `03000000c82d00000161000000010000` |  | ✓ |  |  |
+| 8BitDo SN30 Pro | `03000000c82d00000160000011010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro | `03000000c82d00001290000011010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro | `05000000c82d00000161000000010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro | `05000000c82d00006228000000010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro | `05000000c82d000001600000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `03000000c82d00000260000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 Pro Plus | `03000000c82d00000261000000000000` | ✓ |  |  |  |
+| 8BitDo SN30 Pro Plus | `03000000c82d00000260000001000000` |  | ✓ |  |  |
+| 8BitDo SN30 Pro Plus | `03000000c82d00000261000000010000` |  | ✓ |  |  |
+| 8BitDo SN30 Pro Plus | `03000000c82d00000260000011010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro Plus | `05000000c82d00000261000000010000` |  |  | ✓ |  |
+| 8BitDo SN30 Pro Plus | `05000000c82d000002600000ffff0f00` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `36653638656632326235346264663661` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `38303232393133383836366330346462` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `38346630346135363335366265656666` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `38426974446f20534e33302050726f2b` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `536f6e7920436f6d707574657220456e` |  |  |  | ✓ |
+| 8BitDo SN30 Pro Plus | `66306331643531333230306437353936` |  |  |  | ✓ |
+| 8BitDo SN30 Pro+ | `05000000ac050000040000003b8a6d04` |  |  |  |  |
+| 8BitDo SNES30 | `05000000202800000900000000010000` |  |  | ✓ |  |
+| 8BitDo SNES30 | `050000002028000009000000ffff3f00` |  |  |  | ✓ |
+| 8BitDo SNES30 | `050000003512000020ab000000780f00` |  |  |  | ✓ |
+| 8BitDo Ultimate | `03000000c82d00001230000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate | `03000000c82d00001230000000010000` |  | ✓ |  |  |
+| 8BitDo Ultimate | `05000000c82d00001230000000010000` |  |  | ✓ |  |
+| 8BitDo Ultimate 2 | `03000000c82d00001260000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate 2C | `03000000c82d00001b30000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate 2C | `03000000c82d00001d30000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate 2C | `03000000c82d00001b30000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate 2C | `03000000c82d00001d30000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate 2C | `03000000c82d00000a31000014010000` |  |  | ✓ |  |
+| 8BitDo Ultimate 2C | `03000000c82d00001d30000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate 2C | `05000000c82d00001b30000001000000` |  |  | ✓ |  |
+| 8BitDo Ultimate C | `03000000c82d00001530000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001630000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001730000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001530000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001630000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001730000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate C | `03000000c82d00001530000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate C | `03000000c82d00001630000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate C | `03000000c82d00001730000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wired | `03000000c82d00001130000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate Wired | `03000000c82d00001130000000020000` |  | ✓ |  |  |
+| 8BitDo Ultimate Wired | `03000000c82d00001130000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00001330000000000000` | ✓ |  |  |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00001330000000020000` |  | ✓ |  |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00001330000001000000` |  | ✓ |  |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00000631000010010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00000631000014010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00000760000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00001230000011010000` |  |  | ✓ |  |
+| 8BitDo Ultimate Wireless | `03000000c82d00001330000011010000` |  |  | ✓ |  |
+| 8BitDo Xbox One SN30 Pro | `03000000c82d00000121000000000000` | ✓ |  |  |  |
+| 8BitDo Xbox One SN30 Pro | `03000000c82d00000121000011010000` |  |  | ✓ |  |
+| 8BitDo Xbox One SN30 Pro | `05000000c82d00000121000000010000` |  |  | ✓ |  |
+| 8BitDo Zero | `03000000a00500003232000000000000` | ✓ |  |  |  |
+| 8BitDo Zero | `03000000a00500003232000008010000` |  | ✓ |  |  |
+| 8BitDo Zero | `03000000a00500003232000009010000` |  | ✓ |  |  |
+| 8BitDo Zero | `05000000a00500003232000001000000` |  |  | ✓ |  |
+| 8BitDo Zero | `05000000a00500003232000008010000` |  |  | ✓ |  |
+| 8BitDo Zero | `33666663316164653937326237613331` |  |  |  | ✓ |
+| 8BitDo Zero | `38426974646f205a65726f2047616d65` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `03000000c82d00001890000000000000` | ✓ |  |  |  |
+| 8BitDo Zero 2 | `03000000c82d00003032000000000000` | ✓ |  |  |  |
+| 8BitDo Zero 2 | `03000000c82d00001890000001000000` |  | ✓ |  |  |
+| 8BitDo Zero 2 | `03000000c82d00003032000000010000` |  | ✓ |  |  |
+| 8BitDo Zero 2 | `03000000c82d00001890000011010000` |  |  | ✓ |  |
+| 8BitDo Zero 2 | `05000000c82d00003032000000010000` |  |  | ✓ |  |
+| 8BitDo Zero 2 | `05000000c82d000018900000ffff0f00` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `05000000c82d000030320000ffff0f00` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `33663434393362303033616630346337` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `34656330626361666438323266633963` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `63396666386564393334393236386630` |  |  |  | ✓ |
+| 8BitDo Zero 2 | `63633435623263373466343461646430` |  |  |  | ✓ |
+| Acme GA02 | `030000008f0e00001200000000000000` | ✓ |  |  |  |
+| Acrux | `03000000c01100000355000000000000` | ✓ |  |  |  |
+| Acrux Gamepad | `03000000c01100000355000011010000` |  |  | ✓ |  |
+| Acteck AGJ 3200 | `03000000fa190000f0ff000000000000` | ✓ |  |  |  |
+| ADT1 | `03000000d1180000402c000000000000` | ✓ |  |  |  |
+| Afterglow Deluxe Nintendo Switch Controller | `030000006f0e00008801000000000000` | ✓ |  |  |  |
+| Afterglow Deluxe Nintendo Switch Controller | `030000006f0e00008801000011010000` |  |  | ✓ |  |
+| Afterglow Prismatic Controller | `030000006f0e00003901000000430000` |  |  | ✓ |  |
+| Afterglow Prismatic Controller 048-007-NA | `030000006f0e00003901000013020000` |  |  | ✓ |  |
+| Afterglow PS3 Controller | `03000000341a00003608000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00000263000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00001101000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00001401000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00001402000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00001901000000000000` | ✓ |  |  |  |
+| Afterglow PS3 Controller | `030000006f0e00001a01000000000000` | ✓ |  |  |  |
+| Afterglow Xbox 360 Controller | `030000006f0e00001302000000010000` |  |  | ✓ |  |
+| Afterglow Xbox Controller | `030000006f0e00001301000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `030000006f0e00001302000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `030000006f0e00001304000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `030000006f0e00001413000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `030000006f0e00003901000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `03000000ab1200000103000000000000` | ✓ |  |  |  |
+| Afterglow Xbox Controller | `03000000ad1b000000f9000000000000` | ✓ |  |  |  |
+| Afterglow Xbox One Controller | `030000006f0e00003901000020060000` |  |  | ✓ |  |
+| Akishop Customs PS360 | `03000000100000008200000000000000` | ✓ |  |  |  |
+| Akishop Customs PS360 | `03000000100000008200000011010000` |  |  | ✓ |  |
+| Alienware Dual Compatible Game PlayStation Controller | `030000007c1800000006000010010000` |  |  | ✓ |  |
+| Alienware Dual Compatible PlayStation Controller | `030000007c1800000006000000000000` | ✓ |  |  |  |
+| Amazon Fire Controller | `05000000491900000204000021000000` |  |  | ✓ |  |
+| Amazon Luna Controller | `03000000491900001904000000000000` | ✓ |  |  |  |
+| Amazon Luna Controller | `03000000710100001904000000000000` | ✓ |  |  |  |
+| Amazon Luna Controller | `03000000491900001904000001010000` |  | ✓ |  |  |
+| Amazon Luna Controller | `03000000710100001904000000010000` |  | ✓ |  |  |
+| Amazon Luna Controller | `03000000491900001904000011010000` |  |  | ✓ |  |
+| Amazon Luna Controller | `05000000710100001904000000010000` |  |  | ✓ |  |
+| Amazon Luna Controller | `32333634613735616163326165323731` |  |  |  | ✓ |
+| Anbernic Game Pad | `0300000008100000e501000000000000` | ✓ |  |  |  |
+| Anbernic Handheld | `0300000008100000e501000019040000` |  | ✓ |  |  |
+| Anbernic Handheld | `0300000008100000e501000001010000` |  |  | ✓ |  |
+| Anbernic Handheld | `4c696e757820342e31392e3137322077` |  |  |  | ✓ |
+| Anbernic RG P01 | `03000000020500000913000000000000` | ✓ |  |  |  |
+| Anbernic RG P01 | `03000000373500000710000000000000` | ✓ |  |  |  |
+| Anbernic RG P01 | `03000000373500004610000000000000` | ✓ |  |  |  |
+| Anbernic RG P01 | `03000000373500004610000001000000` |  | ✓ |  |  |
+| Anbernic RG P01 | `03000000020500000913000010010000` |  |  | ✓ |  |
+| Anbernic RG P01 | `03000000373500000710000010010000` |  |  | ✓ |  |
+| Anbernic RG P01 | `05000000373500004610000001000000` |  |  | ✓ |  |
+| Aquaplus Piece | `03000000190e00000110000000000000` | ✓ |  |  |  |
+| Aquaplus Piece | `03000000190e00000110000010010000` |  |  | ✓ |  |
+| Arcade | `03000000830500000160000000000000` | ✓ |  |  |  |
+| Arcade Fightstick F300 | `03000000790000003018000011010000` |  |  | ✓ |  |
+| Armor 3 | `03000000120c0000100e000000000000` | ✓ |  |  |  |
+| ASCII Seamic Controller | `03000000490b00004406000000000000` | ✓ |  |  |  |
+| Astro C40 TR PS4 Controller | `03000000869800002500000000000000` | ✓ |  |  |  |
+| Astro City Mini | `03000000a30c00002700000000000000` | ✓ |  |  |  |
+| Astro City Mini | `03000000a30c00002800000000000000` | ✓ |  |  |  |
+| Astro City Mini | `03000000a30c00002700000003030000` |  | ✓ |  |  |
+| Astro City Mini | `03000000a30c00002800000003030000` |  | ✓ |  |  |
+| Astro City Mini | `03000000a30c00002700000011010000` |  |  | ✓ |  |
+| Astro City Mini | `03000000a30c00002800000011010000` |  |  | ✓ |  |
+| Astro City Mini | `417374726f2063697479206d696e6920` |  |  |  | ✓ |
+| ASUS Gamepad | `03000000050b00000045000031000000` |  | ✓ |  |  |
+| ASUS Gamepad | `05000000050b00000045000031000000` |  |  | ✓ |  |
+| ASUS Gamepad | `05000000050b00000045000040000000` |  |  | ✓ |  |
+| ASUS ROG Kunai 3 | `03000000050b00000579000000000000` | ✓ |  |  |  |
+| ASUS ROG Kunai 3 | `03000000050b00000679000000000000` | ✓ |  |  |  |
+| ASUS ROG Kunai 3 | `03000000050b00000579000000010000` |  | ✓ |  |  |
+| ASUS ROG Kunai 3 | `03000000050b00000679000000010000` |  | ✓ |  |  |
+| ASUS ROG Kunai 3 | `03000000050b00000579000011010000` |  |  | ✓ |  |
+| ASUS ROG Kunai 3 | `05000000050b00000679000000010000` |  |  | ✓ |  |
+| Atari VCS Classic | `03000000503200000110000045010000` |  | ✓ |  |  |
+| Atari VCS Classic Controller | `03000000503200000110000000000000` | ✓ |  | ✓ |  |
+| Atari VCS Classic Controller | `03000000503200000110000047010000` |  | ✓ |  |  |
+| Atari VCS Classic Controller | `03000000503200000110000011010000` |  |  | ✓ |  |
+| Atari VCS Classic Controller | `05000000503200000110000000000000` |  |  | ✓ |  |
+| Atari VCS Classic Controller | `05000000503200000110000044010000` |  |  | ✓ |  |
+| Atari VCS Classic Controller | `05000000503200000110000046010000` |  |  | ✓ |  |
+| Atari VCS Classic Controller | `35643263313264386134376362363435` |  |  |  | ✓ |
+| Atari VCS Modern Controller | `03000000503200000210000000000000` | ✓ |  | ✓ |  |
+| Atari VCS Modern Controller | `03000000503200000210000047010000` |  | ✓ |  |  |
+| Atari VCS Modern Controller | `03000000503200000210000011010000` |  |  | ✓ |  |
+| Atari VCS Modern Controller | `05000000503200000210000000000000` |  |  | ✓ |  |
+| Atari VCS Modern Controller | `05000000503200000210000045010000` |  |  | ✓ |  |
+| Atari VCS Modern Controller | `05000000503200000210000046010000` |  |  | ✓ |  |
+| Atari VCS Modern Controller | `05000000503200000210000047010000` |  |  | ✓ |  |
+| Atari VCS Modern Controller | `32353831643566306563643065356239` |  |  |  | ✓ |
+| AtGames Legends Gamer Pro | `03000000380800001889000000000000` | ✓ |  |  |  |
+| AYN Odin | `4f64696e20436f6e74726f6c6c657200` |  |  |  | ✓ |
+| Backbone One | `030000008a3500000102000000000000` | ✓ |  |  |  |
+| Backbone One | `030000008a3500000201000000000000` | ✓ |  |  |  |
+| Backbone One | `030000008a3500000302000000000000` | ✓ |  |  |  |
+| Backbone One | `030000008a3500000402000000000000` | ✓ |  |  |  |
+| Backbone One | `030000008a3500000102000000010000` |  | ✓ |  |  |
+| Backbone One | `030000008a3500000201000000010000` |  | ✓ |  |  |
+| Backbone One | `030000008a3500000202000000010000` |  | ✓ |  |  |
+| Backbone One | `030000008a3500000402000000010000` |  | ✓ |  |  |
+| Backbone One | `030000008a3500000201000011010000` |  |  | ✓ |  |
+| Backbone One | `030000008a3500000202000011010000` |  |  | ✓ |  |
+| Backbone One | `030000008a3500000302000011010000` |  |  | ✓ |  |
+| Backbone One | `030000008a3500000402000011010000` |  |  | ✓ |  |
+| Backbone One | `050000008a35000003010000ff070000` |  |  |  |  |
+| Backbone One | `050000008a35000004010000ff070000` |  |  |  |  |
+| Backbone One PlayStation Edition | `030000008a3500000302000000010000` |  | ✓ |  |  |
+| Batarang | `03000000e4150000103f000000000000` | ✓ |  |  |  |
+| Batarang PlayStation Controller | `03000000d6200000e557000000000000` | ✓ |  |  |  |
+| Battalife Joystick | `03000000c01100001352000000000000` | ✓ |  |  |  |
+| Battlefield 4 PS3 Controller | `030000006f0e00003201000000000000` | ✓ |  |  |  |
+| BB 070 | `03000000ad1b000001f9000000000000` | ✓ |  |  |  |
+| BDA MOGA XP5-X Plus | `03000000c62400001a89000000010000` |  | ✓ |  |  |
+| BDA MOGA XP5-X Plus | `03000000c62400001b89000000010000` |  | ✓ |  |  |
+| BDA MOGA XP5X Plus | `03000000c62400001b89000011010000` |  |  | ✓ |  |
+| BDA PS4 Fightpad | `03000000d62000002a79000000000000` | ✓ |  |  |  |
+| BDA PS4 Fightpad | `03000000d62000002a79000000010000` |  | ✓ |  |  |
+| BDA PS4 Fightpad | `03000000d62000002a79000011010000` |  |  | ✓ |  |
+| Be1 GC101 Controller 1.03 | `03000000c21100000791000011010000` |  |  | ✓ |  |
+| Be1 GC101 Controller 1.03 | `03000000c31100000791000011010000` |  |  | ✓ |  |
+| Be1 GC101 Xbox 360 | `030000005e0400008e02000003030000` |  |  | ✓ |  |
+| Beitong A1T2 BFM | `03000000bc2000004d50000011010000` |  |  | ✓ |  |
+| Beitong G3 | `03000000bc2000005250000000000000` | ✓ |  |  |  |
+| Belkin Nostromo N40 | `030000000d0500000208000000000000` | ✓ |  |  |  |
+| Betop 2126F | `03000000bc2000006012000000000000` | ✓ |  |  |  |
+| Betop AX1 BFM | `05000000bc2000000055000001000000` |  |  | ✓ |  |
+| Betop BFM | `03000000bc2000000055000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000790000000700000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000808300000300000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000bc2000006312000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000bc2000006321000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000bc2000006412000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000c01100000555000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000c01100000655000000000000` | ✓ |  |  |  |
+| Betop Controller | `03000000bc2000006412000011010000` |  |  | ✓ |  |
+| BF One | `030000006f0e00006401000000000000` | ✓ |  |  |  |
+| Bigben | `03000000300f00000202000000000000` | ✓ |  |  |  |
+| Bigben | `030000006b1400000209000000000000` | ✓ |  |  |  |
+| Bigben | `030000006b1400000209000011010000` |  |  | ✓ |  |
+| Bigben PS3 Controller | `030000006b1400000055000000000000` | ✓ |  |  |  |
+| Bigben PS3 Controller | `030000006b1400000103000000000000` | ✓ |  |  |  |
+| Brook Audio Fighting Board PS3 | `03000000120c0000300e000011010000` |  |  | ✓ |  |
+| Brook Audio Fighting Board PS4 | `03000000120c0000310e000011010000` |  |  | ✓ |  |
+| Brook Mars PS4 Controller | `03000000120c0000200e000000000000` | ✓ |  |  |  |
+| Brook Mars PS4 Controller | `03000000120c0000210e000000000000` | ✓ |  |  |  |
+| Brook Mars PS4 Controller | `03000000120c0000200e000000010000` |  | ✓ |  |  |
+| Brook Mars PS4 Controller | `03000000120c0000210e000000010000` |  | ✓ |  |  |
+| Brook Mars PS4 Controller | `03000000120c0000200e000011010000` |  |  | ✓ |  |
+| Brook Mars PS4 Controller | `03000000120c0000210e000011010000` |  |  | ✓ |  |
+| Brook Mars PS4 Controller | `32303165626138343962363666346165` |  |  |  | ✓ |
+| Brook Mars PS4 Controller | `38383337343564366131323064613561` |  |  |  | ✓ |
+| Brook PS2 Adapter | `03000000120c0000f10e000000000000` | ✓ |  |  |  |
+| Brook Super Converter | `03000000120c0000310c000000000000` | ✓ |  |  |  |
+| Brook Universal Fighting Board | `03000000120c0000f70e000011010000` |  |  | ✓ |  |
+| Buffalo BSGP1601 | `03000000d81d00000b00000010010000` |  |  | ✓ |  |
+| Buffalo BSGP1601 Series | `03000000d81d00000b00000000000000` | ✓ |  |  |  |
+| Capcom Home Arcade Controller | `030000005a1c00002400000000000000` | ✓ |  |  |  |
+| Capcom Home Arcade Controller | `030000005b1c00002400000000000000` | ✓ |  |  |  |
+| Capcom Home Arcade Controller | `030000005b1c00002500000000000000` | ✓ |  |  |  |
+| ChillStream | `030000006d04000042c2000000000000` | ✓ |  |  |  |
+| Cideko AK08b | `03000000e82000006058000000000000` | ✓ |  |  |  |
+| Cideko AK08b | `030000008305000031b0000000000000` |  | ✓ |  |  |
+| Cideko AK08b | `03000000e82000006058000001010000` |  |  | ✓ |  |
+| Clockwork Pi DevTerm | `03000000af1e00002400000010010000` |  |  | ✓ |  |
+| Cobra | `03000000457500000401000000000000` | ✓ |  |  |  |
+| Competition Pro | `030000000b0400003365000000000000` | ✓ |  |  |  |
+| Competition Pro | `030000000b0400003365000000010000` |  |  | ✓ |  |
+| Cosmic Byte Ares Wired Controller | `03000000632500007a05000001020000` |  |  | ✓ |  |
+| CronusMax Adapter | `030000004c050000c505000000000000` | ✓ |  |  |  |
+| Cthulhu | `03000000d814000007cd000000000000` | ✓ |  |  |  |
+| Cthulhu | `03000000d8140000cefa000000000000` | ✓ |  |  |  |
+| Cthulhu | `03000000d8140000cecf000000000000` |  | ✓ |  |  |
+| Cyber Gadget GameCube Controller | `03000000260900008888000000000000` | ✓ |  |  |  |
+| Cyber Gadget GameCube Controller | `03000000260900008888000088020000` |  | ✓ |  |  |
+| Cyber Gadget GameCube Controller | `03000000260900008888000000010000` |  |  | ✓ |  |
+| Cyborg | `030000003807000002cb000000000000` | ✓ |  |  |  |
+| Cyborg V.3 Rumble | `03000000a306000022f6000000000000` | ✓ |  |  |  |
+| Cyborg V3 Rumble | `03000000a306000022f6000011010000` |  |  | ✓ |  |
+| Cyborg V3 Rumble Pad PlayStation Controller | `03000000a306000022f6000001030000` |  | ✓ |  |  |
+| DA Leader | `03000000f806000000a3000000000000` | ✓ |  |  |  |
+| Data Frog S80 | `030000005e0400008e02000002010000` |  |  | ✓ |  |
+| Datel Arcade Joystick | `030000001a1c00000001000000000000` | ✓ |  |  |  |
+| Defender Game Racer X7 | `03000000451300000830000000000000` | ✓ |  |  |  |
+| Dual Box Wii | `03000000791d00000103000000000000` | ✓ |  |  |  |
+| Dual Box Wii Classic Adapter | `03000000791d00000103000009010000` |  | ✓ |  |  |
+| Dual Box Wii Classic Adapter | `03000000791d00000103000010010000` |  |  | ✓ |  |
+| Dual Controller | `03000000c0160000e105000000000000` | ✓ |  |  |  |
+| Dual Power | `030000004f040000070f000000000000` | ✓ |  |  |  |
+| Dual Power 3 | `030000004f04000012b3000000000000` | ✓ |  |  |  |
+| Dual Trigger | `030000004f04000020b3000000000000` | ✓ |  |  |  |
+| Dual Vibration Joystick | `03000000bd12000002e0000000000000` | ✓ |  |  |  |
+| DualForce | `03000000ff1100003133000000000000` | ✓ |  |  |  |
+| EA Sports PS3 Controller | `030000006f0e00003001000000000000` | ✓ |  |  |  |
+| EA Sports PS3 Controller | `030000006f0e00003001000001010000` |  |  | ✓ |  |
+| Easy Grip | `03000000fc0400000250000000000000` | ✓ |  |  |  |
+| EasySMX | `03000000c11100000191000011010000` |  |  | ✓ |  |
+| EasySMX Controller | `03000000bc2000000091000000000000` | ✓ |  |  |  |
+| EasySMX ESM-9101 | `03000000242f00009100000000010000` |  |  | ✓ |  |
+| Elecom DUX60 MMO | `030000006e0500000a20000000000000` | ✓ |  |  |  |
+| Elecom Gamepad | `03000000b80500000410000000000000` | ✓ |  |  |  |
+| Elecom Gamepad | `03000000b80500000610000000000000` | ✓ |  |  |  |
+| Elecom JC-U609 | `03000095090000010000000000000000` | ✓ |  |  |  |
+| Elecom JC-U909Z | `0300004112000000e500000000000000` | ✓ |  |  |  |
+| Elecom JC-U911 | `03000041120000001050000000000000` | ✓ |  |  |  |
+| Elecom JC-W01U | `030000006e0500000720000010020000` |  | ✓ |  |  |
+| Elecom JC-W01U | `34313430343161653665353737323365` |  |  |  | ✓ |
+| Elecom JC-W01U | `4875694a6961204a432d573031550000` |  |  |  | ✓ |
+| Elecom P301U PlayStation Controller Adapter | `030000006e0500000520000000000000` | ✓ |  |  |  |
+| Elecom PlayStation Adapter | `03000000250900000218000000000000` | ✓ |  |  |  |
+| Elecom U1012 | `03000000411200004450000000000000` | ✓ |  |  |  |
+| Elecom U3613M | `030000006e0500000320000000000000` | ✓ |  |  |  |
+| Elecom U3613M | `030000006e0500000320000010010000` |  |  | ✓ |  |
+| Elecom U3912T | `030000006e0500000e20000000000000` | ✓ |  |  |  |
+| Elecom U4013S | `030000006e0500000f20000000000000` | ✓ |  |  |  |
+| Elecom U4113 | `030000006e0500001320000000000000` | ✓ |  |  |  |
+| Elecom U4113S | `030000006e0500001020000000000000` | ✓ |  |  |  |
+| Elecom W01U | `030000006e0500000720000000000000` | ✓ |  |  |  |
+| Elecom W01U | `030000006e0500000720000010010000` |  |  | ✓ |  |
+| Eliminator AfterShock | `030000007d0400000640000000000000` | ✓ |  |  |  |
+| Eliminator AfterShock | `030000007d0400000640000010010000` |  |  | ✓ |  |
+| Elite | `03000000120c0000f61c000000000000` | ✓ |  |  |  |
+| EMS Production PS2 Adapter | `03000000430b00000300000000000000` | ✓ |  |  |  |
+| EMS Production PS2 Adapter | `03000000430b00000300000000010000` |  |  | ✓ |  |
+| EMS TrioLinker Plus II | `03000000062000001801000000000000` | ✓ |  |  |  |
+| ESM 9110 | `03000000242f000000b7000000000000` | ✓ |  |  |  |
+| Essential | `03000000101c0000181c000000000000` | ✓ |  |  |  |
+| Evo VR | `30363230653635633863366338623265` |  |  |  | ✓ |
+| EXEQ | `030000008f0e00000f31000000000000` | ✓ |  |  |  |
+| EXEQ RF Gamepad | `03000000341a00000108000000000000` | ✓ |  |  |  |
+| Faceoff Deluxe Nintendo Switch Controller | `030000006f0e00008401000000000000` | ✓ |  |  |  |
+| Faceoff Deluxe Nintendo Switch Controller | `030000006f0e00008401000003010000` |  | ✓ |  |  |
+| Faceoff Deluxe Nintendo Switch Controller | `030000006f0e00008401000011010000` |  |  | ✓ |  |
+| Faceoff Deluxe Pro Nintendo Switch Controller | `030000006f0e00008101000000000000` | ✓ |  |  |  |
+| Faceoff Deluxe Pro Nintendo Switch Controller | `030000006f0e00008101000011010000` |  |  | ✓ |  |
+| Faceoff Pro Nintendo Switch Controller | `030000006f0e00008001000000000000` | ✓ |  |  |  |
+| Faceoff Pro Nintendo Switch Controller | `030000006f0e00008001000011010000` |  |  | ✓ |  |
+| FC30 Pro | `03000000021000000090000000000000` | ✓ |  |  |  |
+| FC801 | `0300000011040000c600000000000000` | ✓ |  |  |  |
+| FF GP1 | `03000000852100000201000000000000` | ✓ |  |  |  |
+| FF GP1 | `03000000852100000201000010010000` |  |  | ✓ |  |
+| Fightpad | `03000000ad1b000028f0000000000000` | ✓ |  |  |  |
+| Fightpad | `03000000ad1b00002ef0000000000000` | ✓ |  |  |  |
+| Fightpad TE | `03000000ad1b000038f0000000000000` | ✓ |  |  |  |
+| Final Fantasy XIV Online Controller | `03005036852100000000000000000000` | ✓ |  |  |  |
+| Firestorm | `03000000f806000001a3000000000000` | ✓ |  |  |  |
+| Firestorm 2 | `03000000b50700000399000000000000` | ✓ |  |  |  |
+| Firestorm D3 | `03000000b50700001302000000000000` | ✓ |  |  |  |
+| Flydigi Apex | `03000000b40400001024000000000000` | ✓ |  |  |  |
+| Flydigi APEX 4 | `05000000b40400001224000001010000` |  |  | ✓ |  |
+| Flydigi Vader 2 | `03000000151900004000000000000000` | ✓ |  |  |  |
+| Flydigi Vader 2 | `03000000b40400001124000000000000` | ✓ |  |  |  |
+| Flydigi Vader 2 | `03000000b40400001224000000000000` | ✓ |  |  |  |
+| Flydigi Vader 2 | `03000000151900004000000001000000` |  | ✓ |  |  |
+| Flydigi Vader 2 | `03000000b40400001124000001040000` |  | ✓ |  |  |
+| Flydigi Vader 2 | `03000000b40400001224000003030000` |  | ✓ |  |  |
+| Flydigi Vader 2 | `03000000b40400001124000011010000` |  |  | ✓ |  |
+| Flydigi Vader 2 | `03000000b40400001224000011010000` |  |  | ✓ |  |
+| Flydigi Vader 2 | `05000000151900004000000001000000` |  |  | ✓ |  |
+| Flydigi Vader 2 | `05000000b404000011240000dfff3f00` |  |  |  | ✓ |
+| G08XU | `030000008305000000a0000000000000` | ✓ |  |  |  |
+| Game VIB Joystick | `0300000066f700000100000000000000` | ✓ |  |  |  |
+| GameCube Adapter | `030000007e0500003703000000000000` |  |  | ✓ |  |
+| GameCube Controller | `03000000260900002625000000000000` | ✓ |  |  |  |
+| GameCube Controller | `03000000341a000005f7000000000000` | ✓ |  |  |  |
+| GameCube Controller | `03000000430b00000500000000000000` | ✓ |  |  |  |
+| GameCube Controller | `03000000790000004718000000000000` | ✓ |  |  |  |
+| GameCube Controller Adapter | `03000000790000004618000000000000` | ✓ |  |  |  |
+| GameCube Controller Adapter | `03000000790000004618000000010000` |  | ✓ |  |  |
+| GameForce Controller | `19000000030000000300000002030000` |  |  | ✓ |  |
+| Gamepad 3 Turbo | `030000008f0e00000d31000000000000` | ✓ |  |  |  |
+| GameSir Cyclone 2 | `03000000373500000b10000019010000` |  |  | ✓ |  |
+| GameSir G3 | `03000000ac0500003d03000000000000` | ✓ |  |  |  |
+| GameSir G3w | `03000000ac0500005b05000000000000` | ✓ |  |  |  |
+| GameSir G3w | `03000000ac0500005b05000010010000` |  |  | ✓ |  |
+| GameSir G3w | `03000000bc2000000055000011010000` |  |  | ✓ |  |
+| GameSir G3w | `05000000bc20000000550000ffff3f00` |  |  |  | ✓ |
+| GameSir G4 | `03000000ac0500002d02000000000000` | ✓ |  |  |  |
+| GameSir G4 | `03000000ac0500004d04000000000000` | ✓ |  |  |  |
+| GameSir G4 Pro | `03000000558500001b06000010010000` |  |  | ✓ |  |
+| GameSir G4s | `05000000ac0500002d0200001b010000` |  |  | ✓ |  |
+| GameSir G5 | `03000000ac0500007a05000011010000` |  |  | ✓ |  |
+| GameSir Kaleid Flux | `03000000373500009710000001020000` |  |  | ✓ |  |
+| GameSir T3 2.02 | `03000000ac0500001a06000000000000` | ✓ |  |  |  |
+| GameSir T3 2.02 | `03000000ac0500001a06000002020000` |  | ✓ |  |  |
+| GameSir T3 2.02 | `03000000ac0500001a06000011010000` |  |  | ✓ |  |
+| GameSir T4w | `03000000bc2000005656000011010000` |  |  | ✓ |  |
+| GameSir Tegenaria Lite | `03000000373500009410000000000000` | ✓ |  |  |  |
+| GameSir Tegenaria Lite | `03000000373500009410000010010000` |  |  | ✓ |  |
+| GameSir X4A Xbox Controller | `03000000373500000411000023000000` |  | ✓ |  |  |
+| Gamester | `030000004c0e00001035000000000000` | ✓ |  |  |  |
+| GameStick Controller | `030000000d0f00001110000000000000` | ✓ |  |  |  |
+| GameStop | `0300000047530000616d000000000000` | ✓ |  |  |  |
+| Gamestop BB070 X360 Controller | `03000000ad1b000001f9000000000000` |  | ✓ |  |  |
+| GameStop Gamepad | `0500000047532047616d657061640000` |  | ✓ | ✓ |  |
+| Gamestop Logic3 Controller | `030000006f0e00000104000000010000` |  |  | ✓ |  |
+| GameStop PS4 Fun Controller | `03000000c01100000140000000000000` | ✓ |  |  |  |
+| GameStop PS4 Fun Controller | `03000000c01100000140000000010000` |  | ✓ |  |  |
+| GameStop Xbox 360 Controller | `030000006f0e00000102000000000000` |  | ✓ |  |  |
+| Gametel GT004 01 | `03000000b62500000100000000000000` | ✓ |  |  |  |
+| GameWare PC Control Pad | `03000000ff1100003133000007010000` |  | ✓ |  |  |
+| Gamo2 Divaller | `030000008f0e00001411000000000000` | ✓ |  |  |  |
+| Gasia PlayStation Gamepad | `030000008f0e00000800000010010000` |  |  | ✓ |  |
+| Gator Claw | `03000000120c0000a857000000000000` | ✓ |  |  |  |
+| GC100XF | `03000000c9110000f055000000000000` | ✓ |  |  |  |
+| Genius | `030000008305000009a0000000000000` | ✓ |  |  |  |
+| Genius Maxfire Blaze 3 | `030000008305000031b0000000000000` | ✓ |  |  |  |
+| Genius Maxfire Grandias 12 | `03000000451300000010000000000000` | ✓ |  |  |  |
+| Genius Maxfire Grandias 12 | `03000000451300000010000010010000` |  |  | ✓ |  |
+| Genius MaxFire Grandias 12V | `030000005c1a00003330000000000000` | ✓ |  |  |  |
+| GGE909 Recoil | `03000000300f00000b01000000000000` | ✓ |  |  |  |
+| Gioteck PlayStation Controller | `03000000f0250000c283000000000000` | ✓ |  |  |  |
+| Gioteck PS3 Controller | `03000000f025000021c1000000000000` | ✓ |  |  |  |
+| Gioteck PS3 Controller | `03000000f025000021c1000010010000` |  |  | ✓ |  |
+| Gioteck PS3 Controller | `03000000f025000031c1000000000000` | ✓ |  |  |  |
+| Gioteck VX2 PlayStation Controller | `03000000f0250000c383000000000000` | ✓ |  |  |  |
+| Gioteck VX2 PlayStation Controller | `03000000f0250000c483000000000000` | ✓ |  |  |  |
+| Gioteck VX2 PS3 Controller | `03000000f0250000c283000010010000` |  |  | ✓ |  |
+| GO-Advance Controller | `190000004b4800000010000000010000` |  |  | ✓ |  |
+| GO-Advance Controller | `190000004b4800000010000001010000` |  |  | ✓ |  |
+| GO-Super Gamepad | `190000004b4800000011000000010000` |  |  | ✓ |  |
+| Goodbetterbest Controller | `03000000f0250000c183000010010000` |  |  | ✓ |  |
+| Google Nexus | `34323662653333636330306631326233` |  |  |  | ✓ |
+| Google Stadia Controller | `03000000d11800000094000000000000` | ✓ |  |  |  |
+| Google Stadia Controller | `03000000d11800000094000000010000` |  | ✓ |  |  |
+| Google Stadia Controller | `03000000d11800000094000011010000` |  |  | ✓ |  |
+| Google Stadia Controller | `05000000d11800000094000000010000` |  |  | ✓ |  |
+| Google Stadia Controller | `35383633353935396534393230616564` |  |  |  | ✓ |
+| Google Stadia Controller | `476f6f676c65204c4c43205374616469` |  |  |  | ✓ |
+| Google Stadia Controller | `5374616469614e3848532d6532633400` |  |  |  | ✓ |
+| GP XID | `030000004f04000026b3000000000000` | ✓ |  |  |  |
+| GPD Win | `0300000079000000d418000000000000` | ✓ |  |  |  |
+| GPD Win 2 Controller | `0300000079000000d418000000010000` |  |  | ✓ |  |
+| GPD Win Max 2 6800U Controller | `030000005e0400008e02000001010000` |  |  | ✓ |  |
+| GPD XD Plus | `05000000d6020000e5890000dfff3f00` |  |  |  | ✓ |
+| GPD XD Plus | `05000000d6020000e5890000dfff3f80` |  |  |  | ✓ |
+| GPX | `03000000c6240000025b000000000000` | ✓ |  |  |  |
+| Gravis Destroyer Tilt | `030000007d0400000840000000000000` | ✓ |  |  |  |
+| Gravis Eliminator Pro | `030000007d0400000540000000000000` | ✓ |  |  |  |
+| Gravis Eliminator Pro | `030000007d0400000540000001010000` |  | ✓ |  |  |
+| Gravis Eliminator Pro | `030000007d0400000540000000010000` |  |  | ✓ |  |
+| Gravis GamePad Pro | `03000000280400000140000000000000` | ✓ |  |  |  |
+| Gravis GamePad Pro | `03000000280400000140000000020000` |  | ✓ |  |  |
+| Gravis GamePad Pro | `03000000280400000140000000010000` |  |  | ✓ |  |
+| GreenAsia | `030000008f0e00000610000000000000` | ✓ |  |  |  |
+| GreenAsia Electronics Controller | `030000008f0e00000610000000010000` |  |  | ✓ |  |
+| GreenAsia Joystick | `030000008f0e00000300000007010000` |  | ✓ |  |  |
+| GreenAsia Joystick | `030000008f0e00001200000010010000` |  |  | ✓ |  |
+| GS gamepad | `0500000047532067616d657061640000` |  |  | ✓ |  |
+| GT VX2 | `03000000f0250000c383000010010000` |  |  | ✓ |  |
+| GT2a | `03000000ac0500006b05000000000000` | ✓ |  |  |  |
+| Hama Scorpad | `03000000341a00000302000000000000` | ✓ |  |  |  |
+| Hand Held Legend GC Ultimate | `030000008a2e0000dd10000000000000` | ✓ |  |  |  |
+| Hand Held Legend GC Ultimate | `030000008a2e0000dd10000011010000` |  |  | ✓ |  |
+| Hand Held Legend ProGCC | `030000008a2e0000df10000000000000` | ✓ |  |  |  |
+| Hand Held Legend ProGCC | `030000008a2e0000df10000011010000` |  |  | ✓ |  |
+| Hatsune Miku Sho PS3 Controller | `030000000d0f00004900000000000000` | ✓ |  |  |  |
+| Havit HV G60 | `030000001008000001e1000000000000` | ✓ |  |  |  |
+| HEXT | `030000000d0f00000c00000000000000` | ✓ |  |  |  |
+| Hidromancer Controller | `06000000adde0000efbe000002010000` |  |  | ✓ |  |
+| HitBox Edition Cthulhu | `03000000d81400000862000000000000` | ✓ |  |  |  |
+| HitBox PS3 PC Analog Mode | `03000000d81400000862000011010000` |  |  | ✓ |  |
+| HJC Gamepad | `03000000c9110000f055000011010000` |  |  | ✓ |  |
+| HJD X | `03000000632500002605000000000000` | ✓ |  |  |  |
+| Hori Battle | `66633030656131663837396562323935` |  |  |  | ✓ |
+| Hori DOA | `030000000d0f00000a00000000000000` | ✓ |  |  |  |
+| Hori EDGE 301 | `030000000d0f00006d00000020010000` |  |  | ✓ |  |
+| Hori Fighting Commander | `030000000d0f00008400000011010000` |  |  | ✓ |  |
+| Hori Fighting Commander 2016 PS3 | `030000000d0f00008500000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander 3 | `030000000d0f00002500000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander 3 Pro | `030000000d0f00002d00000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander 3 Pro | `030000000d0f00002d00000000100000` |  | ✓ |  |  |
+| Hori Fighting Commander 3 Pro | `35623466343433653739346434636330` |  |  |  | ✓ |
+| Hori Fighting Commander 3 Pro | `484f524920434f2e2c4c54442e203130` |  |  |  | ✓ |
+| Hori Fighting Commander 4 PS3 | `030000000d0f00005f00000000000000` | ✓ | ✓ |  |  |
+| Hori Fighting Commander 4 PS3 | `030000000d0f00005f00000000010000` |  | ✓ |  |  |
+| Hori Fighting Commander 4 PS3 | `030000000d0f00005f00000011010000` |  |  | ✓ |  |
+| Hori Fighting Commander 4 PS4 | `030000000d0f00005e00000000000000` | ✓ | ✓ |  |  |
+| Hori Fighting Commander 4 PS4 | `030000000d0f00005e00000000010000` |  | ✓ |  |  |
+| Hori Fighting Commander 4 PS4 | `030000000d0f00005e00000011010000` |  |  | ✓ |  |
+| Hori Fighting Commander 5 | `030000000d0f00008400000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander Octa | `030000000d0f00006201000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander Octa | `030000000d0f00006401000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander Octa Xbox One | `030000000d0f00005001000009040000` |  |  | ✓ |  |
+| Hori Fighting Commander PS3 | `030000000d0f00005100000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander PS3 | `030000000d0f00008400000000010000` |  | ✓ |  |  |
+| Hori Fighting Commander PS3 | `030000000d0f00008500000000010000` |  | ✓ |  |  |
+| Hori Fighting Commander PS3 | `030000000d0f00008500000010010000` |  |  | ✓ |  |
+| Hori Fighting Commander Xbox 360 | `030000000d0f00008600000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander Xbox 360 | `030000000d0f0000ba00000000000000` | ✓ |  |  |  |
+| Hori Fighting Commander Xbox 360 | `030000000d0f00008600000002010000` |  |  | ✓ |  |
+| Hori Fighting Stick Mini | `03000000341a00000302000014010000` |  | ✓ |  |  |
+| Hori Fighting Stick Mini | `030000000d0f00003701000013010000` |  |  | ✓ |  |
+| Hori Fighting Stick mini 4 PS3 | `030000000d0f00008800000000000000` | ✓ |  |  |  |
+| Hori Fighting Stick mini 4 PS3 | `030000000d0f00008800000000010000` |  | ✓ |  |  |
+| Hori Fighting Stick mini 4 PS3 | `030000000d0f00008800000011010000` |  |  | ✓ |  |
+| Hori Fighting Stick mini 4 PS4 | `030000000d0f00008700000000000000` | ✓ |  |  |  |
+| Hori Fighting Stick mini 4 PS4 | `030000000d0f00008700000000010000` |  | ✓ |  |  |
+| Hori Fighting Stick mini 4 PS4 | `030000000d0f00008700000011010000` |  |  | ✓ |  |
+| Hori Fightstick | `030000000d0f00001000000000000000` | ✓ |  |  |  |
+| Hori Fightstick 3 | `030000000d0f00001000000011010000` |  |  | ✓ |  |
+| Hori Fightstick 3W | `030000000d0f00003200000000000000` | ✓ |  |  |  |
+| Hori Fightstick 4 | `030000000d0f0000c000000000000000` | ✓ |  |  |  |
+| Hori Fightstick EX2 | `030000000d0f00000d00000000000000` | ✓ |  |  |  |
+| Hori Fightstick Mini | `030000000d0f00003701000000000000` | ✓ |  |  |  |
+| Hori Fightstick Mini 3 | `030000000d0f00004000000000000000` | ✓ |  |  |  |
+| Hori Fightstick V3 | `030000000d0f00002100000000000000` | ✓ |  |  |  |
+| Hori Fightstick V3 | `030000000d0f00002700000000000000` | ✓ |  |  |  |
+| Hori Fightstick VX | `03000000ad1b000003f5000033050000` |  |  | ✓ |  |
+| Hori Gem Pad 3 | `030000000d0f00004d00000000000000` |  | ✓ |  |  |
+| Hori Gem Pad 3 | `030000000d0f00004d00000011010000` |  |  | ✓ |  |
+| Hori Gem Pad 3 | `484f524920434f2e2c4c544420205041` |  |  |  | ✓ |
+| Hori Grip TAC4 | `030000000d0f0000a000000000000000` | ✓ |  |  |  |
+| Hori Miku Project Diva X HD PS4 Controller | `030000000d0f0000a500000000000000` | ✓ |  |  |  |
+| Hori Miku Project Diva X HD PS4 Controller | `030000000d0f0000a600000000000000` | ✓ |  |  |  |
+| Hori Mini Hatsune Miku FT | `030000000d0f00000101000000000000` | ✓ |  |  |  |
+| Hori Pad 3 | `030000000d0f00005400000000000000` | ✓ |  |  |  |
+| Hori Pad 3 Turbo | `030000000d0f00000900000000000000` | ✓ |  |  |  |
+| Hori Pad A | `030000000d0f00004d00000000000000` | ✓ |  |  |  |
+| Hori Pad EX Turbo 2 | `03000000ad1b000001f5000033050000` |  |  | ✓ |  |
+| Hori PC Engine Mini Controller | `030000000d0f00003801000000000000` | ✓ |  |  |  |
+| Hori PC Engine Mini Controller | `030000000d0f00003801000008010000` |  | ✓ |  |  |
+| Hori PC Engine Mini Controller | `030000000d0f00003801000011010000` |  |  | ✓ |  |
+| Hori PC Engine Mini Controller | `65656436646661313232656661616130` |  |  |  | ✓ |
+| Hori Pokken Tournament DX Pro | `030000000d0f00009200000000000000` | ✓ |  |  |  |
+| Hori Pokken Tournament DX Pro | `030000000d0f00009200000000010000` |  | ✓ |  |  |
+| Hori Pokken Tournament DX Pro | `030000000d0f00009200000011010000` |  |  | ✓ |  |
+| Hori PS4 Controller Light | `030000000d0f00002301000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 3 | `030000000d0f00001100000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 3 | `030000000d0f00001100000011010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro 3 | `030000000d0f00002200000011010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro 3 | `31303433326562636431653534636633` |  |  |  | ✓ |
+| Hori Real Arcade Pro 3P | `030000000d0f00002600000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 3W | `030000000d0f00004b00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00006a00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00006b00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00008a00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00008b00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00006a00000011010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro 4 | `030000000d0f00006b00000011010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro 4 VLX | `030000000d0f00006f00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro 4 VLX | `030000000d0f00007000000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro EXSE | `030000000d0f00001600000000010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro for Nintendo Switch | `030000000d0f0000aa00000072050000` |  | ✓ |  |  |
+| Hori Real Arcade Pro for Nintendo Switch | `030000000d0f0000aa00000011010000` |  |  | ✓ |  |
+| Hori Real Arcade Pro N3 | `030000000d0f00003d00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro N4 | `030000000d0f0000ae00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro P4 | `030000000d0f00008c00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro S | `030000000d0f0000aa00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro S | `030000000d0f0000d800000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro V3 | `030000000d0f00002200000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro V4 | `030000000d0f00005b00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro V4 | `030000000d0f00005c00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro VHS | `030000000d0f0000af00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro VX | `030000000d0f00001b00000000000000` | ✓ |  |  |  |
+| Hori Real Arcade Pro VX | `03000000ad1b000002f5000000000000` | ✓ |  |  |  |
+| Hori Split Pad Fit | `030000000d0f00000002000017010000` |  | ✓ |  |  |
+| Hori Split Pad Fit | `030000000d0f00008501000017010000` |  |  | ✓ |  |
+| Hori Switch Split Pad Pro | `030000000d0f00000002000015010000` |  | ✓ |  |  |
+| Hori Switch Split Pad Pro | `030000000d0f00008501000015010000` |  |  | ✓ |  |
+| Hori Switch Split Pad Pro | `32656664353964393561366362333636` |  |  |  | ✓ |
+| Hori TAC Pro | `030000000d0f00009c00000000000000` | ✓ |  |  |  |
+| Hori Taiko Controller | `030000000d0f0000c900000000000000` | ✓ |  |  |  |
+| Horipad 3TP | `030000000d0f00006400000000000000` | ✓ |  |  |  |
+| Horipad 3W | `030000000d0f00001300000000000000` | ✓ |  |  |  |
+| Horipad 4 FPS | `030000000d0f00005500000000000000` | ✓ |  |  |  |
+| Horipad 4 PS3 | `030000000d0f00006e00000000000000` | ✓ |  |  |  |
+| Horipad 4 PS3 | `030000000d0f00006e00000000010000` |  | ✓ |  |  |
+| Horipad 4 PS3 | `030000000d0f00006e00000011010000` |  |  | ✓ |  |
+| Horipad 4 PS4 | `030000000d0f00006600000000000000` | ✓ |  |  |  |
+| Horipad 4 PS4 | `030000000d0f00006600000000010000` |  | ✓ |  |  |
+| Horipad 4 PS4 | `030000000d0f00006600000011010000` |  |  | ✓ |  |
+| Horipad A | `030000000d0f00004200000000000000` | ✓ |  |  |  |
+| Horipad EXT2 | `03000000ad1b000001f5000000000000` | ✓ |  |  |  |
+| Horipad FPS Plus 4 | `030000000d0f00006600000000000000` |  | ✓ |  |  |
+| Horipad Mini 4 | `030000000d0f0000ee00000000000000` | ✓ |  |  |  |
+| Horipad Mini 4 | `030000000d0f0000ee00000000010000` |  | ✓ |  |  |
+| Horipad Mini 4 | `030000000d0f0000ee00000011010000` |  |  | ✓ |  |
+| Horipad Nintendo Switch Controller | `030000000d0f0000c100000000000000` | ✓ |  |  |  |
+| Horipad Nintendo Switch Controller | `030000000d0f0000f600000000000000` | ✓ |  |  |  |
+| Horipad Nintendo Switch Controller | `030000000d0f0000c100000072050000` |  | ✓ |  |  |
+| Horipad Nintendo Switch Controller | `030000000d0f0000c100000011010000` |  |  | ✓ |  |
+| Horipad O Nintendo Switch 2 Controller | `030000000d0f00000202000000000000` | ✓ |  |  |  |
+| Horipad One | `030000000d0f00006700000000000000` | ✓ |  |  |  |
+| Horipad One | `030000000d0f00006700000001010000` |  |  | ✓ |  |
+| Horipad Steam | `030000000d0f00009601000000000000` | ✓ |  |  |  |
+| Horipad Steam | `030000000d0f0000ab01000011010000` |  |  | ✓ |  |
+| Horipad Steam | `050000000d0f00009601000091000000` |  |  | ✓ |  |
+| Horipad Switch | `030000000d0f0000dc00000000000000` | ✓ |  |  |  |
+| Horipad Switch Pro Controller | `050000000d0f0000f600000001000000` |  |  | ✓ |  |
+| HORIPAD Switch Pro Controller | `30306539356238653637313730656134` |  |  |  | ✓ |
+| HuiJia GameCube Controller Adapter | `03000000341a000005f7000010010000` |  |  | ✓ |  |
+| Hyperkin Admiral N64 Controller | `03000000242e00000b20000000000000` | ✓ |  |  |  |
+| Hyperkin Admiral N64 Controller | `05000000242e00000b20000001000000` |  |  | ✓ |  |
+| Hyperkin Admiral N64 Controller | `48797065726b696e2050616400000000` |  |  |  | ✓ |
+| Hyperkin Admiral N64 Controller | `62333331353131353034386136626636` |  |  |  | ✓ |
+| Hyperkin N64 Adapter | `03000000242e0000ff0b000000000000` | ✓ |  |  |  |
+| Hyperkin N64 Adapter | `03000000242e0000ff0b000000010000` |  | ✓ |  |  |
+| Hyperkin N64 Adapter | `03000000242e0000ff0b000011010000` |  |  | ✓ |  |
+| Hyperkin N64 Adapter | `31306635363562663834633739396333` |  |  |  | ✓ |
+| Hyperkin N64 Adapter | `5368616e57616e202020202048797065` |  |  |  | ✓ |
+| Hyperkin N64 Controller Adapter | `03000000790000004e95000000000000` | ✓ |  |  |  |
+| Hyperkin N64 Controller Adapter | `03000000790000004e95000000010000` |  | ✓ |  |  |
+| Hyperkin RetroN Sq | `03000000242e00006a48000000000000` | ✓ |  |  |  |
+| Hyperkin Scout | `03000000242f00000a20000000000000` | ✓ |  |  |  |
+| Hyperkin Scout Premium SNES Controller | `03000000242e00000a20000000000000` | ✓ |  |  |  |
+| Hyperkin Trooper 2 | `03000000242e00006a38000000000000` | ✓ |  |  |  |
+| Hyperkin Trooper 2 | `03000000242e00006a38000010010000` |  |  | ✓ |  |
+| Hyperkin X91 | `03000000242e00008816000001010000` |  |  | ✓ |  |
+| HyperX Clutch | `03000000f00300008d04000000000000` | ✓ |  |  |  |
+| HyperX Clutch | `03000000f00300008d03000011010000` |  |  | ✓ |  |
+| iBuffalo AC02 Arcade Joystick | `03000000d81d00000e00000000000000` | ✓ |  |  |  |
+| iBuffalo BSGP1204 Series | `03000000d81d00000f00000000000000` | ✓ |  |  |  |
+| iBuffalo BSGP1204P Series | `03000000d81d00001000000000000000` | ✓ |  |  |  |
+| iBuffalo SNES Controller | `0500000083050000602000000ffe0000` |  |  |  | ✓ |
+| iBuffalo Super Famicom Controller | `03000000830500006020000000000000` |  | ✓ |  |  |
+| iBuffalo Super Famicom Controller | `03000000830500006020000010010000` |  |  | ✓ |  |
+| iBuffalo Super Famicom Controller | `5553422c322d6178697320382d627574` |  |  |  | ✓ |
+| iCode Retro Adapter | `030000008f0e00001330000001010000` |  |  | ✓ |  |
+| iDroidCon | `030000005c0a00000285000000000000` | ✓ |  |  |  |
+| idroidcon Controller | `050000006964726f69643a636f6e0000` |  |  | ✓ |  |
+| iDroidCon Controller | `03000000696400006964000000000000` | ✓ |  |  |  |
+| iGUGU Gamecore | `03000000511d00000230000000000000` | ✓ |  |  |  |
+| Impact | `03000000b50700001503000010010000` |  |  | ✓ |  |
+| Impact Black | `03000000b50700001403000000000000` | ✓ |  |  |  |
+| IMS PCU0 | `03000000d80400008200000003000000` |  |  | ✓ |  |
+| Injustice Fightstick PS3 Controller | `030000006f0e00002401000000000000` | ✓ |  |  |  |
+| InterAct ActionPad | `03000000830500005130000000000000` | ✓ |  |  |  |
+| InterAct AxisPad | `03000000ef0500000300000000000000` | ✓ |  |  |  |
+| InterAct AxisPad | `03000000fd0500000230000000000000` | ✓ |  |  |  |
+| InterAct AxisPad | `03000000ef0500000300000000020000` |  | ✓ |  |  |
+| InterAct AxisPad | `03000000120c00000500000010010000` |  |  | ✓ |  |
+| InterAct AxisPad | `03000000ef0500000300000000010000` |  |  | ✓ |  |
+| Interact GoPad | `03000000fd0500000030000000000000` | ✓ |  |  |  |
+| Interact GoPad | `03000000fd0500000030000010010000` |  | ✓ |  |  |
+| InterAct GoPad | `03000000fd0500000030000000010000` |  |  | ✓ |  |
+| InterAct GoPad | `64306137363261396266353433303531` |  |  |  | ✓ |
+| InterAct Hammerhead | `03000000fd0500003902000000000000` | ✓ |  |  |  |
+| InterAct Hammerhead FX | `03000000fd0500002a26000000000000` | ✓ |  |  |  |
+| InterAct Hammerhead FX | `03000000fd0500002f26000000000000` | ✓ |  |  |  |
+| InterAct HammerHead FX | `03000000fd0500002a26000000010000` |  |  | ✓ |  |
+| InterAct HammerHead FX | `532e542e442e20496e74657261637420` |  |  |  | ✓ |
+| InterAct ProPad | `03000000fd0500005302000000000000` | ✓ |  |  |  |
+| Ipega Controller | `03000000ac0500002c02000000000000` | ✓ |  |  |  |
+| Ipega PG 9069 | `0500000049190000020400001b010000` |  |  | ✓ |  |
+| Ipega PG 9099 | `03000000632500007505000011010000` |  |  | ✓ |  |
+| Ipega PG9023 | `03000000491900000204000000000000` | ✓ |  |  |  |
+| Ipega PG9087 | `03000000491900000304000000000000` | ✓ |  |  |  |
+| Ipega PG9099 | `0500000049190000030400001b010000` |  |  | ✓ |  |
+| Ipega PG9118 | `05000000491900000204000000000000` |  |  | ✓ |  |
+| Jess Tech Colour Rumble Pad | `03000000300f00001101000010010000` |  |  | ✓ |  |
+| Jess Tech Dual Analog Rumble | `03000000300f00001001000010010000` |  |  | ✓ |  |
+| Jess Tech GGE909 PC Recoil | `03000000300f00000b01000010010000` |  |  | ✓ |  |
+| Jess Technology Controller | `03000000ba2200002010000001010000` |  |  | ✓ |  |
+| Joy-Con | `65346535636333663931613264643164` |  |  |  | ✓ |
+| Joy-Con (L) | `030000007e0500000620000000000000` | ✓ |  |  |  |
+| Joy-Con (L) | `030000007e0500000620000001000000` |  | ✓ | ✓ |  |
+| Joy-Con (L) | `050000007e0500000620000001000000` |  |  | ✓ |  |
+| Joy-Con (L) | `33346566643039343630376565326335` |  |  |  | ✓ |
+| Joy-Con (L) | `35313531613435623366313835326238` |  |  |  | ✓ |
+| Joy-Con (L) | `4a6f792d436f6e20284c290000000000` |  |  |  | ✓ |
+| Joy-Con (R) | `030000007e0500000720000000000000` | ✓ |  |  |  |
+| Joy-Con (R) | `030000007e0500000720000001000000` |  | ✓ | ✓ |  |
+| Joy-Con (R) | `050000007e0500000720000001000000` |  |  | ✓ |  |
+| Joy-Con (R) | `38383665633039363066383334653465` |  |  |  | ✓ |
+| Joy-Con (R) | `39363561613936303237333537383931` |  |  |  | ✓ |
+| Joy-Con (R) | `39373064396565646338333134303131` |  |  |  | ✓ |
+| Joy-Con (R) | `4a6f792d436f6e202852290000000000` |  |  |  | ✓ |
+| Joypad Adapter | `03000000250900000017000000000000` | ✓ |  |  |  |
+| Joypad Alpha Shock | `03000000bd12000003c0000000000000` | ✓ |  |  |  |
+| Joypad Alpha Shock | `03000000bd12000003c0000010010000` |  |  | ✓ |  |
+| JPD FFB | `03000000ff1100004033000000000000` | ✓ |  |  |  |
+| JYS Aapter | `39656136363638323036303865326464` |  |  |  | ✓ |
+| JYS Adapter | `03000000242f00002d00000000000000` | ✓ |  |  |  |
+| JYS Adapter | `03000000242f00008a00000000000000` | ✓ |  |  |  |
+| JYS Adapter | `03000000242f00002d00000007010000` |  | ✓ |  |  |
+| JYS Adapter | `03000000242f00002d00000011010000` |  |  | ✓ |  |
+| JYS Adapter | `03000000242f00008a00000011010000` |  |  | ✓ |  |
+| JYS Adapter | `63316564383539663166353034616434` |  |  |  | ✓ |
+| KADE | `03000000c4100000c082000000000000` | ✓ |  |  |  |
+| Keio | `03000000828200000180000000000000` | ✓ |  |  |  |
+| King PS3 Controller | `03000000790000000200000000000000` | ✓ |  |  |  |
+| Leadership | `03000000bd12000001e0000000000000` | ✓ |  |  |  |
+| Logic3 | `030000006f0e00000103000000000000` | ✓ |  |  |  |
+| Logic3 | `030000006f0e00000104000000000000` | ✓ |  |  |  |
+| Logic3 | `030000008f0e00001300000000000000` | ✓ |  |  |  |
+| Logic3 Controller | `030000006f0e00000103000000020000` |  |  | ✓ |  |
+| Logitech Chillstream | `030000006d040000d1ca000000000000` |  |  | ✓ |  |
+| Logitech Chillstream | `030000006d040000d1ca000011010000` |  |  | ✓ |  |
+| Logitech ChillStream | `030000006d040000d1ca000000000000` | ✓ |  |  |  |
+| Logitech Controller | `030000006d04000019c2000000000000` |  | ✓ |  |  |
+| Logitech Cordless Precision | `030000006d040000d2ca000000000000` | ✓ |  |  |  |
+| Logitech Cordless RumblePad 2 | `030000006d04000019c2000010010000` |  |  | ✓ |  |
+| Logitech Cordless Wingman | `030000006d04000011c2000000000000` | ✓ |  |  |  |
+| Logitech Dual Action | `030000006d04000016c2000000000000` | ✓ |  |  |  |
+| Logitech Dual Action | `030000006d04000016c2000000020000` |  | ✓ |  |  |
+| Logitech Dual Action | `030000006d04000016c2000000030000` |  | ✓ |  |  |
+| Logitech Dual Action | `030000006d04000016c2000014040000` |  | ✓ |  |  |
+| Logitech Dual Action | `030000006d04000016c2000010010000` |  |  | ✓ |  |
+| Logitech Dual Action | `030000006d04000016c2000011010000` |  |  | ✓ |  |
+| Logitech F310 | `030000006d0400001dc2000000000000` | ✓ |  |  |  |
+| Logitech F310 | `030000006d04000016c2000000000000` |  | ✓ |  |  |
+| Logitech F310 | `030000006d0400001dc2000014400000` |  |  | ✓ |  |
+| Logitech F310 | `64623163333561643339623235373232` |  |  |  | ✓ |
+| Logitech F510 | `030000006d04000018c2000000000000` | ✓ | ✓ |  |  |
+| Logitech F510 | `030000006d0400001ec2000000000000` | ✓ |  |  |  |
+| Logitech F510 | `030000006d0400001ec2000019200000` |  |  | ✓ |  |
+| Logitech F510 | `030000006d0400001ec2000020200000` |  |  | ✓ |  |
+| Logitech F710 | `030000006d04000019c2000000000000` | ✓ |  |  |  |
+| Logitech F710 | `030000006d0400001fc2000000000000` | ✓ | ✓ |  |  |
+| Logitech F710 | `030000006d04000019c2000005030000` |  | ✓ |  |  |
+| Logitech F710 | `030000006d04000019c2000011010000` |  |  | ✓ |  |
+| Logitech F710 | `030000006d0400001fc2000005030000` |  |  | ✓ |  |
+| Logitech F710 | `35623364393661626231343866613337` |  |  |  | ✓ |
+| Logitech F710 | `4c6f6769746563682047616d65706164` |  |  |  | ✓ |
+| Logitech F710 | `64396331333230326333313330336533` |  |  |  | ✓ |
+| Logitech G Cloud | `39653365373864633935383236363438` |  |  |  | ✓ |
+| Logitech Precision | `030000006d0400001ac2000000000000` | ✓ |  |  |  |
+| Logitech RumblePad 2 | `030000006d04000018c2000000010000` |  | ✓ |  |  |
+| Logitech RumblePad 2 | `030000006d04000018c2000010010000` |  |  | ✓ |  |
+| Logitech WingMan | `030000006d04000009c2000000000000` | ✓ |  |  |  |
+| Logitech WingMan Action Pad | `030000006d0400000bc2000000000000` | ✓ |  |  |  |
+| Logitech WingMan Cordless RumblePad | `030000006d04000011c2000010010000` |  |  | ✓ |  |
+| Logitech WingMan RumblePad | `030000006d0400000ac2000000000000` | ✓ |  |  |  |
+| Logitech WingMan RumblePad | `030000006d0400000ac2000010010000` |  |  | ✓ |  |
+| Luna Controller | `416d617a6f6e2047616d6520436f6e74` |  |  |  | ✓ |
+| Luna Controller | `4c756e612047616d6570616400000000` |  |  |  | ✓ |
+| Lynx | `03000000380700005645000000000000` | ✓ |  |  |  |
+| Macally | `03000000222200006000000000000000` | ✓ |  |  |  |
+| Mad Catz Arcade Fightstick TE S Plus PS3 | `03000000380700003888000000000000` | ✓ |  |  |  |
+| Mad Catz Arcade Fightstick TE S PS3 | `03000000380700008532000000000000` | ✓ |  |  |  |
+| Mad Catz CTRLR | `03000000380700006352000000000000` | ✓ |  |  |  |
+| Mad Catz CTRLR | `03000000380700006652000000000000` | ✓ |  |  |  |
+| Mad Catz CTRLR | `05000000380700006652000025010000` |  |  | ✓ |  |
+| Mad Catz Fightpad | `03000000380700008532000010010000` |  |  | ✓ |  |
+| Mad Catz Fightpad Pro PS3 | `03000000380700005032000000000000` | ✓ |  |  |  |
+| Mad Catz Fightpad Pro PS3 | `03000000380700005032000011010000` |  |  | ✓ |  |
+| Mad Catz Fightpad Pro PS4 | `03000000380700005082000000000000` | ✓ |  |  |  |
+| Mad Catz Fightpad Pro PS4 | `03000000380700005082000011010000` |  |  | ✓ |  |
+| Mad Catz Fightpad SFxT | `03000000ad1b00002ef0000090040000` |  |  | ✓ |  |
+| Mad Catz FightStick Alpha PS3 | `03000000380700008031000000000000` | ✓ |  |  |  |
+| Mad Catz FightStick Alpha PS3 | `03000000380700008031000011010000` |  |  | ✓ |  |
+| Mad Catz FightStick Alpha PS4 | `03000000380700008081000011010000` |  |  | ✓ |  |
+| Mad Catz Fightstick PS3 | `03000000380700008034000011010000` |  |  | ✓ |  |
+| Mad Catz Fightstick PS4 | `03000000380700008084000011010000` |  |  | ✓ |  |
+| Mad Catz Fightstick TE | `030000003807000038b7000000000000` | ✓ |  |  |  |
+| Mad Catz Fightstick TE S PS3 | `03000000380700008433000000000000` | ✓ |  |  |  |
+| Mad Catz Fightstick TE S PS3 | `03000000380700008433000011010000` |  |  | ✓ |  |
+| Mad Catz Fightstick TE S PS4 | `03000000380700008483000000000000` | ✓ |  |  |  |
+| Mad Catz Fightstick TE S PS4 | `03000000380700008483000011010000` |  |  | ✓ |  |
+| Mad Catz Fightstick TE2 PS3 | `03000000380700008134000000000000` | ✓ |  |  |  |
+| Mad Catz Fightstick TE2 PS4 | `03000000380700008184000000000000` | ✓ |  |  |  |
+| Mad Catz Joystick | `03000000380700001888000010010000` |  |  | ✓ |  |
+| Mad Catz Joystick | `03000000380700003888000010010000` |  |  | ✓ |  |
+| Mad Catz Micro CTRLR | `03000000380700006252000000000000` | ✓ |  |  |  |
+| Mad Catz PlayStation Brawlpad | `03000000380700008232000000000000` | ✓ |  |  |  |
+| Mad Catz PlayStation Fightstick | `03000000380700008731000000000000` | ✓ |  |  |  |
+| Mad Catz PS3 Controller | `030000003807000056a8000000000000` | ✓ |  |  |  |
+| Mad Catz PS3 Fightpad Pro | `03000000380700005032000000010000` |  | ✓ |  |  |
+| Mad Catz PS3 Fightstick TE S Plus | `03000000380700008433000000010000` |  | ✓ |  |  |
+| Mad Catz PS4 Fightpad Pro | `03000000380700005082000000010000` |  | ✓ |  |  |
+| Mad Catz PS4 Fightstick TE S Plus | `03000000380700008483000000010000` |  | ✓ |  |  |
+| Mad Catz SFIV Fightstick PS3 | `03000000380700001888000000000000` | ✓ |  |  |  |
+| Mad Catz SFV Arcade Fightstick Alpha PS4 | `03000000380700008081000000000000` | ✓ |  |  |  |
+| Mad Catz Street Fighter 4 Xbox 360 FightStick | `03000000380700001847000000000000` | ✓ |  |  |  |
+| Mad Catz TE2 PS3 Fightstick | `03000000380700008034000000000000` | ✓ |  |  |  |
+| Mad Catz TE2 PS4 Fightstick | `03000000380700008084000000000000` | ✓ |  |  |  |
+| Mad Catz Xbox 360 Controller | `03000000380700001647000010040000` |  |  | ✓ |  |
+| Mad Catz Xbox 360 Controller | `03000000380700003847000090040000` |  |  | ✓ |  |
+| Mad Catz Xbox 360 Controller | `03000000ad1b000016f0000090040000` |  |  | ✓ |  |
+| Magic NS | `30363066623539323534363639323363` |  |  |  | ✓ |
+| Magic NS | `31353762393935386662336365626334` |  |  |  | ✓ |
+| Magic NS | `39623565346366623931666633323530` |  |  |  | ✓ |
+| Manba One | `0300000049190000020400001b010000` |  | ✓ |  |  |
+| Manta DualShock 2 | `03000000120c00000500000000010000` |  |  | ✓ |  |
+| Marvo GT-004 | `03000000790000000600000007010000` |  | ✓ |  |  |
+| Matricom | `030000002a0600001024000000000000` | ✓ |  |  |  |
+| MaxJoypad Virtual Controller | `030000009f000000adbb000000000000` | ✓ |  |  |  |
+| Mayflash Arcade Stick | `03000000250900000128000000000000` | ✓ |  |  |  |
+| Mayflash Controller Adapter | `030000008f0e00001330000000000000` | ✓ |  |  |  |
+| Mayflash Controller Adapter | `030000008f0e00001330000011010000` |  | ✓ |  |  |
+| Mayflash Controller Adapter | `030000008f0e00001330000010010000` |  |  | ✓ |  |
+| Mayflash F101 | `03000000242f00003700000000000000` | ✓ |  |  |  |
+| Mayflash F300 Arcade Joystick | `03000000790000003018000000000000` | ✓ |  |  |  |
+| Mayflash F300 Elite Arcade Joystick | `03000000242f00003900000000000000` | ✓ |  |  |  |
+| Mayflash GameCube Adapter | `03000000790000004318000000010000` |  | ✓ |  |  |
+| Mayflash GameCube Adapter | `03000000790000004318000010010000` |  |  | ✓ |  |
+| Mayflash GameCube Adapter | `6d6179666c617368206c696d69746564` |  |  |  | ✓ |
+| Mayflash GameCube Controller | `03000000790000004418000000000000` | ✓ |  |  |  |
+| Mayflash GameCube Controller | `03000000790000004418000000010000` |  | ✓ |  |  |
+| Mayflash GameCube Controller | `03000000790000004418000010010000` |  |  | ✓ |  |
+| Mayflash GameCube Controller Adapter | `03000000790000004318000000000000` | ✓ |  |  |  |
+| Mayflash Magic NS | `03000000242f00007300000000000000` | ✓ |  |  |  |
+| Mayflash Magic NS | `0300000079000000d218000000000000` | ✓ |  |  |  |
+| Mayflash Magic NS | `03000000d620000010a7000000000000` | ✓ |  |  |  |
+| Mayflash Magic NS | `03000000242f00007300000000020000` |  | ✓ |  |  |
+| Mayflash Magic NS | `0300000079000000d218000026010000` |  | ✓ |  |  |
+| Mayflash Magic NS | `03000000d620000010a7000003010000` |  | ✓ |  |  |
+| Mayflash Magic NS | `03000000242f00007300000011010000` |  |  | ✓ |  |
+| Mayflash Magic NS | `0300000079000000d218000011010000` |  |  | ✓ |  |
+| Mayflash Magic NS | `03000000d620000010a7000011010000` |  |  | ✓ |  |
+| Mayflash Magic S Pro | `03000000242f0000f700000001010000` |  |  | ✓ |  |
+| Mayflash N64 Adapter | `03000000242f0000f500000000000000` | ✓ |  |  |  |
+| Mayflash N64 Adapter | `436f6e74726f6c6c6572000000000000` |  |  |  | ✓ |
+| Mayflash N64 Adapter | `65666330633838383061313633326461` |  |  |  | ✓ |
+| Mayflash N64 Controller Adapter | `03000000242f0000f400000000000000` | ✓ |  |  |  |
+| Mayflash N64 Controller Adapter | `03000000790000007918000000000000` | ✓ |  |  |  |
+| Mayflash Saturn Adapter | `030000008f0e00001030000000000000` | ✓ |  |  |  |
+| Mayflash Saturn Adapter | `030000008f0e00001030000011010000` |  | ✓ |  |  |
+| Mayflash Saturn Adapter | `030000008f0e00001030000010010000` |  |  | ✓ |  |
+| Mayflash Saturn Adapter | `37316565396364386635383230353365` |  |  |  | ✓ |
+| Mayflash Saturn Adapter | `4875694a696120205553422047616d65` |  |  |  | ✓ |
+| Mayflash Wii Classic Adapter | `0300000025090000e803000000000000` | ✓ | ✓ |  |  |
+| Mayflash Wii Classic Adapter | `0300000025090000e803000001010000` |  |  | ✓ |  |
+| Mayflash Wii Classic Adapter | `535a4d792d706f776572204c54442043` |  |  |  | ✓ |
+| Mayflash Wii DolphinBar | `03000000790000000318000000000000` | ✓ |  |  |  |
+| Mayflash Wii DolphinBar | `03000000790000000318000000010000` |  | ✓ |  |  |
+| Mayflash Wii DolphinBar | `03000000790000000318000011010000` |  |  | ✓ |  |
+| Mayflash Wii DolphinBar | `30653962643666303631376438373532` |  |  |  | ✓ |
+| Mayflash Wii U Pro Adapter | `03000000790000000018000000000000` | ✓ | ✓ |  |  |
+| Mayflash Wii U Pro Adapter | `03000000790000000018000000010000` |  | ✓ |  |  |
+| Mayflash Wii U Pro Adapter | `03000000790000000018000011010000` |  |  | ✓ |  |
+| Mayflash Wii U Pro Adapter | `39346131396233376535393665363161` |  |  |  | ✓ |
+| Mega Drive | `31323564663862633234646330373138` |  |  |  | ✓ |
+| Mega Drive | `37333564393261653735306132613061` |  |  |  | ✓ |
+| Mega Drive | `64363363336633363736393038313464` |  |  |  | ✓ |
+| Mega Drive Controller | `03000000790000002418000000000000` | ✓ |  |  |  |
+| Mega Drive Controller | `0300000079000000ae18000000000000` | ✓ |  |  |  |
+| Mega Drive Controller | `03000000c0160000990a000000000000` | ✓ |  |  |  |
+| Mega World Logic 3 Controller | `03000000b50700001203000010010000` |  |  | ✓ |  |
+| Mega World Logic 3 Controller | `03000000b50700004f00000000010000` |  |  | ✓ |  |
+| MFi Extended Gamepad | `4d466947616d65706164010000000000` |  |  |  |  |
+| MFi Gamepad | `4d466947616d65706164020000000000` |  |  |  |  |
+| Microntek Joystick | `03000000780000000600000010010000` |  |  | ✓ |  |
+| Microsoft Dual Strike | `030000005e0400002800000000000000` | ✓ |  |  |  |
+| Microsoft Dual Strike | `030000005e0400002800000002010000` |  | ✓ |  |  |
+| Microsoft Dual Strike | `030000005e0400002800000000010000` |  |  | ✓ |  |
+| Microsoft Dual Strike | `33323763323132376537376266393366` |  |  |  | ✓ |
+| Microsoft SideWinder | `030000005e0400000300000000000000` | ✓ |  |  |  |
+| Microsoft SideWinder | `030000005e0400000700000000000000` | ✓ |  |  |  |
+| Microsoft SideWinder | `030000005e0400000300000006010000` |  | ✓ |  |  |
+| Microsoft SideWinder | `030000005e0400000700000006010000` |  | ✓ |  |  |
+| Microsoft SideWinder | `030000005e0400000300000000010000` |  |  | ✓ |  |
+| Microsoft SideWinder | `030000005e0400000700000000010000` |  |  | ✓ |  |
+| Microsoft SideWinder Freestyle Pro | `030000005e0400000e00000000000000` | ✓ |  |  |  |
+| Microsoft SideWinder Freestyle Pro | `030000005e0400000e00000000010000` |  |  | ✓ |  |
+| Microsoft SideWinder Plug and Play | `030000005e0400002700000000000000` | ✓ |  |  |  |
+| Microsoft SideWinder Plug and Play | `030000005e0400002700000001010000` |  | ✓ |  |  |
+| Microsoft SideWinder Plug and Play | `030000005e0400002700000000010000` |  |  | ✓ |  |
+| Microsoft SideWinder Pro | `30306461613834333439303734316539` |  |  |  | ✓ |
+| Microsoft Xbox | `030000005e0400008502000000010000` |  |  | ✓ |  |
+| Microsoft Xbox | `030000005e0400008902000021010000` |  |  | ✓ |  |
+| Microsoft Xbox 360 | `030000005e0400008e02000001000000` |  |  | ✓ |  |
+| Microsoft Xbox 360 | `030000005e0400008e02000004010000` |  |  | ✓ |  |
+| Microsoft Xbox 360 | `030000005e0400008e02000056210000` |  |  | ✓ |  |
+| Microsoft Xbox 360 | `030000005e0400008e02000062230000` |  |  | ✓ |  |
+| Microsoft Xbox One | `030000005e040000d102000001010000` |  |  | ✓ |  |
+| Microsoft Xbox One | `030000005e040000d102000003020000` |  |  | ✓ |  |
+| Microsoft Xbox One | `030000005e040000dd02000003020000` |  |  | ✓ |  |
+| Microsoft Xbox One | `030000005e040000ea02000008040000` |  |  | ✓ |  |
+| Microsoft Xbox One | `030000005e040000ea0200000f050000` |  |  | ✓ |  |
+| Microsoft Xbox One | `060000005e040000120b000009050000` |  |  | ✓ |  |
+| Microsoft Xbox One Elite | `030000005e040000e302000003020000` |  |  | ✓ |  |
+| Microsoft Xbox One Elite 2 | `030000005e040000000b000007040000` |  |  | ✓ |  |
+| Microsoft Xbox One Elite 2 | `030000005e040000000b000008040000` |  |  | ✓ |  |
+| Microsoft Xbox One Elite 2 | `050000005e040000050b000003090000` |  |  | ✓ |  |
+| Microsoft Xbox One Elite 2 | `050000005e0400008e02000030110000` |  |  | ✓ |  |
+| Microsoft Xbox Series Controller | `030000005e040000120b00000b050000` |  |  | ✓ |  |
+| Microsoft Xbox Series Controller | `030000005e040000120b000016050000` |  |  | ✓ |  |
+| Microsoft Xbox Series Controller | `030000005e040000120b000017050000` |  |  | ✓ |  |
+| Microsoft Xbox Series Controller | `060000005e040000120b000001050000` |  |  | ✓ |  |
+| Microsoft Xbox Series Controller | `32386235353630393033393135613831` |  |  |  | ✓ |
+| Miller Lite Cantroller | `03000000280d00000202000000000000` | ✓ |  |  |  |
+| Miroof | `03000000030000000300000002000000` |  |  | ✓ |  |
+| MLG | `03000000ad1b000023f0000000000000` | ✓ |  |  |  |
+| MLG Fightstick TE | `03000000ad1b00003ef0000000000000` | ✓ |  |  |  |
+| MLG PS3 Controller | `03000000380700006382000000000000` | ✓ |  |  |  |
+| Mobapad Chitu HD | `030000004523000015e0000000000000` | ✓ |  |  |  |
+| Mobapad Chitu HD | `03000000491900000904000000000000` | ✓ |  |  |  |
+| Mobapad Chitu HD | `030000004523000015e0000072050000` |  | ✓ |  |  |
+| Mobapad Chitu HD | `03000000790000001c18000010010000` |  |  | ✓ |  |
+| Mobapad Chitu HD | `4d4f42415041442050726f2d48440000` |  |  |  | ✓ |
+| Mocute 053X | `050000004d4f435554452d3035335800` |  |  | ✓ |  |
+| Mocute 053X | `4d4f435554452d303533582d4d35312d` |  |  |  | ✓ |
+| Mocute 053X M59 | `05000000e80400006e0400001b010000` |  |  | ✓ |  |
+| Mocute 054X | `050000004d4f435554452d3035305800` |  |  | ✓ |  |
+| Mocute M053 | `03000000ffff00000000000000000000` | ✓ |  |  |  |
+| Mocute M053 | `33343361376163623438613466616531` |  |  |  | ✓ |
+| Mocute M053 | `39306635663061636563316166303966` |  |  |  | ✓ |
+| Moga 2 | `03000000d6200000e589000000000000` | ✓ |  |  |  |
+| Moga 2 | `05000000d6200000e589000001000000` |  |  | ✓ |  |
+| Moga Pro | `03000000d62000007162000000000000` | ✓ |  |  |  |
+| Moga Pro | `03000000d6200000ad0d000000000000` | ✓ |  |  |  |
+| Moga Pro | `05000000d6200000ad0d000001000000` |  |  | ✓ |  |
+| Moga Pro 2 | `03000000d62000007162000001000000` |  | ✓ |  |  |
+| Moga Pro 2 | `05000000d62000007162000001000000` |  |  | ✓ |  |
+| Moga XP5A Plus | `03000000c62400002a89000000000000` | ✓ |  |  |  |
+| Moga XP5A Plus | `03000000c62400002b89000000000000` | ✓ |  |  |  |
+| MOGA XP5A Plus | `03000000c62400002a89000000010000` |  | ✓ |  |  |
+| MOGA XP5A Plus | `03000000c62400002b89000000010000` |  | ✓ |  |  |
+| MOGA XP5A Plus | `03000000c62400002b89000011010000` |  |  | ✓ |  |
+| MOGA XP5A Plus | `05000000c62400002a89000000010000` |  |  | ✓ |  |
+| Moga XP5X Plus | `03000000c62400001a89000000000000` | ✓ |  |  |  |
+| Moga XP5X Plus | `03000000c62400001b89000000000000` | ✓ |  |  |  |
+| MOGA XP5X Plus | `05000000c62400001a89000000010000` |  |  | ✓ |  |
+| MP-8866 Super Dual Box | `03000000250900006688000000000000` | ✓ |  |  |  |
+| MP8866 Super Dual Box | `03000000250900006688000000010000` |  |  | ✓ |  |
+| MSI GC20 V2 | `030000005e0400008e02000010020000` |  |  | ✓ |  |
+| MUSIA PlayStation 2 Input Display | `03000000091200004488000000000000` | ✓ |  |  |  |
+| N64 Adaptoid | `03000000f70600000100000000000000` | ✓ |  |  |  |
+| N64 Adaptoid | `03000000f70600000100000000010000` |  |  | ✓ |  |
+| Nacon Asymmetric Wireless PS4 Controller | `030000006b1400000906000014010000` |  |  | ✓ |  |
+| Nacon GC 400ES | `030000006b140000010c000000000000` | ✓ |  |  |  |
+| Nacon GC 400ES | `030000006b140000010c000010010000` |  |  | ✓ |  |
+| Nacon GC-100 | `03000000853200000706000012010000` |  |  | ✓ |  |
+| Nacon MG-X Pro | `05000000853200000503000000010000` |  |  | ✓ |  |
+| Nacon Revolution 3 PS4 Controller | `030000006b1400001106000000000000` | ✓ |  |  |  |
+| Nacon Revolution 5 Pro | `0300000085320000170d000000000000` | ✓ |  |  |  |
+| Nacon Revolution 5 Pro | `0300000085320000190d000000000000` | ✓ |  |  |  |
+| Nacon Revolution 5 Pro | `0300000085320000170d000011010000` |  |  | ✓ |  |
+| Nacon Revolution 5 Pro | `0300000085320000190d000011010000` |  |  | ✓ |  |
+| Nacon Revolution Infinity PS4 Controller | `030000006b140000100d000000000000` | ✓ |  |  |  |
+| Nacon Revolution Unlimited Pro Controller | `030000006b140000080d000000000000` | ✓ |  |  |  |
+| Nacon Revolution X Unlimited | `03000000853200008906000000010000` |  | ✓ |  |  |
+| Natec Genesis P44 | `030000000d0f00000900000010010000` |  |  | ✓ |  |
+| Nebular | `03000000bd12000001c0000000000000` | ✓ |  |  |  |
+| NeGcon Adapter | `03000000eb0300000000000000000000` | ✓ |  |  |  |
+| NEO SE | `0300000038070000efbe000000000000` | ✓ |  |  |  |
+| NeoGeo mini PAD Controller | `03000000632500007505000000020000` |  | ✓ |  |  |
+| NeoGeo PS3 | `030000004f1f00000800000011010000` |  |  | ✓ |  |
+| NeoGeo X Arcade Stick | `0300000092120000474e000000000000` | ✓ |  |  |  |
+| NeoGeo X Arcade Stick | `0300000092120000474e000000010000` |  |  | ✓ |  |
+| NES 2 port Adapter | `03000000921200004b46000000000000` | ✓ |  |  |  |
+| NES 2-port Adapter | `03000000921200004b46000003020000` |  | ✓ |  |  |
+| NES Controller | `03000000000f00000100000000000000` | ✓ |  |  |  |
+| NES Controller | `03000000921200004346000000000000` | ✓ |  |  |  |
+| Nexilux GameCube Controller Adapter | `03000000790000004518000010010000` |  |  | ✓ |  |
+| NEXILUX GameCube Controller Adapter | `03000000790000004518000000000000` | ✓ |  |  |  |
+| NEXT SNES Controller | `030000001008000001e5000000000000` | ✓ |  |  |  |
+| NEXT SNES Controller | `030000001008000001e5000006010000` |  | ✓ |  |  |
+| NEXT SNES Controller | `030000001008000001e5000010010000` |  |  | ✓ |  |
+| NEXT SNES Controller | `7573622067616d657061642020202020` |  |  |  | ✓ |
+| Nexus | `03000000050b00000045000000000000` | ✓ |  |  |  |
+| NGDS | `03000000152000000182000000000000` | ✓ |  |  |  |
+| Nintendo 3DS | `060000007e0500003713000000000000` |  |  | ✓ |  |
+| Nintendo GameCube Controller Adapter | `03000000790000004618000010010000` |  |  | ✓ |  |
+| Nintendo Switch | `03000000ec110000e1a7000000000000` | ✓ |  |  |  |
+| Nintendo Switch | `03000000ec110000e1a7000001010000` |  | ✓ |  |  |
+| Nintendo Switch | `03000000ec110000e1a7000010010000` |  |  | ✓ |  |
+| Nintendo Switch 2 Pro Controller | `030000007e0500006920000000000000` | ✓ |  |  |  |
+| Nintendo Switch 2 Pro Controller | `030000007e0500006920000001010000` |  | ✓ |  |  |
+| Nintendo Switch 2 Pro Controller | `030000007e0500006920000011010000` |  |  | ✓ |  |
+| Nintendo Switch Combined Joy-Cons | `060000004e696e74656e646f20537700` |  |  | ✓ |  |
+| Nintendo Switch Combined Joy-Cons | `060000007e0500000620000000000000` |  |  | ✓ |  |
+| Nintendo Switch Combined Joy-Cons | `060000007e0500000820000000000000` |  |  | ✓ |  |
+| Nintendo Switch Controller | `050000004c69632050726f20436f6e00` |  |  | ✓ |  |
+| Nintendo Switch Joy-Con (L) | `050000007e050000062000000f060000` |  |  |  |  |
+| Nintendo Switch Joy-Con (L) | `050000007e050000062000004f060000` |  |  |  |  |
+| Nintendo Switch Joy-Con (L/R) | `050000007e05000008200000df070000` |  |  |  |  |
+| Nintendo Switch Joy-Con (L/R) | `050000007e0500000e200000df070000` |  |  |  |  |
+| Nintendo Switch Joy-Con (R) | `050000007e050000072000000f060000` |  |  |  |  |
+| Nintendo Switch Joy-Con (R) | `050000007e050000072000004f060000` |  |  |  |  |
+| Nintendo Switch Left Joy-Con | `050000007e0500000620000001800000` |  |  | ✓ |  |
+| Nintendo Switch Pro Controller | `030000007e0500000920000000000000` | ✓ | ✓ |  |  |
+| Nintendo Switch Pro Controller | `030000007e0500000920000001000000` |  | ✓ |  |  |
+| Nintendo Switch Pro Controller | `030000007e0500000920000010020000` |  | ✓ |  |  |
+| Nintendo Switch Pro Controller | `050000007e05000009200000ff070000` |  | ✓ |  |  |
+| Nintendo Switch Pro Controller | `030000007e0500000920000000026803` |  |  | ✓ |  |
+| Nintendo Switch Pro Controller | `030000007e0500000920000011810000` |  |  | ✓ |  |
+| Nintendo Switch Pro Controller | `050000007e0500000920000001000000` |  |  | ✓ |  |
+| Nintendo Switch Pro Controller | `050000007e0500000920000001800000` |  |  | ✓ |  |
+| Nintendo Switch Pro Controller | `050000007e05000009200000ffff0f00` |  |  |  | ✓ |
+| Nintendo Switch Pro Controller | `31316661666466633938376335383661` |  |  |  | ✓ |
+| Nintendo Switch Pro Controller | `34323437396534643531326161633738` |  |  |  | ✓ |
+| Nintendo Switch Pro Controller | `50726f20436f6e74726f6c6c65720000` |  |  |  | ✓ |
+| Nintendo Switch Pro Controller | `050000007e05000009200000df870000` |  |  |  |  |
+| Nintendo Switch Pro Controller | `050000007e05000009200000ff870000` |  |  |  |  |
+| Nintendo Switch Right Joy-Con | `050000007e0500000720000001800000` |  |  | ✓ |  |
+| Nintendo Wii Remote | `05000000010000000100000003000000` |  |  | ✓ |  |
+| Nintendo Wii U Pro Controller | `050000007e0500003003000001000000` |  |  | ✓ |  |
+| Nokia GC 5000 | `050000005a1d00000218000003000000` |  |  | ✓ |  |
+| Nostromo N45 | `030000000d0500000308000000000000` | ✓ |  |  |  |
+| Nostromo n45 Dual Analog | `030000000d0500000308000010010000` |  |  | ✓ |  |
+| NSO GameCube Controller | `030000007e0500007320000000000000` | ✓ |  |  |  |
+| NSO GameCube Controller | `030000007e0500007320000001010000` |  | ✓ |  |  |
+| NSO GameCube Controller | `030000007e0500007320000011010000` |  |  | ✓ |  |
+| NSO N64 Controller | `030000007e0500001920000000000000` | ✓ |  |  |  |
+| NSO N64 Controller | `030000007e0500001920000001000000` |  | ✓ |  |  |
+| NSO N64 Controller | `030000007e0500001920000011810000` |  |  | ✓ |  |
+| NSO N64 Controller | `050000007e0500001920000001000000` |  |  | ✓ |  |
+| NSO N64 Controller | `050000007e0500001920000001800000` |  |  | ✓ |  |
+| NSO N64 Controller | `36326533353166323965623661303933` |  |  |  | ✓ |
+| NSO N64 Controller | `4e363420436f6e74726f6c6c65720000` |  |  |  | ✓ |
+| NSO Sega Genesis Controller | `030000007e0500001e20000011810000` |  |  | ✓ |  |
+| NSO SNES Controller | `030000007e0500001720000000000000` | ✓ |  |  |  |
+| NSO SNES Controller | `030000007e0500001720000001000000` |  | ✓ |  |  |
+| NSO SNES Controller | `030000007e0500001720000011810000` |  |  | ✓ |  |
+| NSO SNES Controller | `050000007e0500001720000001000000` |  |  | ✓ |  |
+| NSO SNES Controller | `050000007e0500001720000001800000` |  |  | ✓ |  |
+| NSO SNES Controller | `534e455320436f6e74726f6c6c657200` |  |  |  | ✓ |
+| NSO SNES Controller | `64623863346133633561626136366634` |  |  |  | ✓ |
+| NVIDIA Controller | `03000000550900001472000000000000` | ✓ |  |  |  |
+| NVIDIA Controller | `03000000550900001472000025050000` |  | ✓ |  |  |
+| NVIDIA Controller | `03000000550900001072000011010000` |  |  | ✓ |  |
+| NVIDIA Controller | `03000000550900001472000011010000` |  |  | ✓ |  |
+| NVIDIA Controller | `05000000550900001472000001000000` |  |  | ✓ |  |
+| NVIDIA Controller | `050000005509000003720000cf7f3f00` |  |  |  | ✓ |
+| NVIDIA Controller | `050000005509000010720000ffff3f00` |  |  |  | ✓ |
+| NVIDIA Controller | `050000005509000014720000df7f3f00` |  |  |  | ✓ |
+| NVIDIA Controller | `050000005509000014720000df7f3f80` |  |  |  | ✓ |
+| NVIDIA Controller | `37336435666338653565313731303834` |  |  |  | ✓ |
+| NVIDIA Controller | `4e564944494120436f72706f72617469` |  |  |  | ✓ |
+| NVIDIA Controller | `61363931656135336130663561616264` |  |  |  | ✓ |
+| NVIDIA Shield | `03000000550900001072000000000000` | ✓ |  |  |  |
+| NVIDIA Virtual | `030000005509000000b4000000000000` | ✓ |  |  |  |
+| Nyko Air Flo Xbox Controller | `03000000120c00000288000000000000` | ✓ |  |  |  |
+| Nyko Airflo EX | `030000004b120000014d000000010000` |  | ✓ |  |  |
+| NYKO Airflo EX | `030000004b120000014d000000000000` | ✓ |  |  |  |
+| NYKO Airflo EX | `030000004b120000014d000000010000` |  |  | ✓ |  |
+| Nyko Airflo PS3 Controller | `03000000d62000001d57000000000000` | ✓ |  |  |  |
+| NYKO CORE | `03000000451300000830000010010000` |  |  | ✓ |  |
+| Nyko Playpad | `03000000791d00000900000000000000` | ✓ |  |  |  |
+| ODROID Go 2 | `19000000010000000100000001010000` |  |  | ✓ |  |
+| ODROID Go 2 | `19000000010000000200000011000000` |  |  | ✓ |  |
+| Onlive Controller | `03000000782300000a10000000000000` | ✓ |  |  |  |
+| Onyx | `030000000d0f00000401000000000000` | ✓ |  |  |  |
+| Onza CE | `030000008916000001fd000000000000` | ✓ |  |  |  |
+| Onza TE | `030000008916000000fd000000000000` | ✓ |  |  |  |
+| OPP PS3 Controller | `03000000d62000006d57000000000000` | ✓ |  |  |  |
+| Orange Controller | `030000006b14000001a1000000000000` | ✓ |  |  |  |
+| OrangeFox86 DreamPicoPort | `0300000009120000072f000000000000` | ✓ |  |  |  |
+| OrangeFox86 DreamPicoPort | `0300000009120000072f000000010000` |  | ✓ |  |  |
+| OUYA Controller | `03000000362800000100000000000000` | ✓ |  |  |  |
+| OUYA Controller | `05000000362800000100000002010000` |  |  | ✓ |  |
+| OUYA Controller | `05000000362800000100000003010000` |  |  | ✓ |  |
+| OUYA Controller | `05000000362800000100000004010000` |  |  | ✓ |  |
+| OUYA Controller | `39383335313438623439373538343266` |  |  |  | ✓ |
+| OUYA Controller | `4f5559412047616d6520436f6e74726f` |  |  |  | ✓ |
+| P4 Gamepad | `03000000120c0000f60e000000000000` | ✓ |  |  |  |
+| Padix Rockfire PlayStation Bridge | `03000000830500005020000010010000` |  |  | ✓ |  |
+| PC Controller | `03000000790000002201000000000000` | ✓ |  |  |  |
+| PC Controller | `03000000ff1100003133000010010000` |  |  | ✓ |  |
+| PDP Afterglow Xbox One Controller | `030000006f0e0000b802000001010000` |  |  | ✓ |  |
+| PDP Afterglow Xbox One Controller | `030000006f0e0000b802000013020000` |  |  | ✓ |  |
+| PDP Battlefield One | `030000006f0e00006401000001010000` |  |  | ✓ |  |
+| PDP Black Camo Wired Xbox Series Controller | `030000006f0e0000d702000006640000` |  |  | ✓ |  |
+| PDP EA Sports Controller | `030000006f0e00003101000000010000` |  |  | ✓ |  |
+| PDP Fightpad Pro Gamecube Controller | `030000006f0e00008501000011010000` |  |  | ✓ |  |
+| PDP Fightpad Pro GameCube Controller | `030000006f0e00008501000000000000` | ✓ |  |  |  |
+| PDP Kingdom Hearts Controller | `030000006f0e0000c802000012010000` |  |  | ✓ |  |
+| PDP PS3 Rock Candy Controller | `030000006f0e00002801000011010000` |  |  | ✓ |  |
+| PDP PS3 Rock Candy Controller | `506572666f726d616e63652044657369` |  |  |  | ✓ |
+| PDP PS3 Versus Fighting | `030000006f0e00000901000000000000` | ✓ |  |  |  |
+| PDP PS3 Versus Fighting | `030000006f0e00000901000002010000` |  | ✓ |  |  |
+| PDP PS3 Versus Fighting | `030000006f0e00000901000011010000` |  |  | ✓ |  |
+| PDP Realmz Nintendo Switch Controller | `030000006f0e00008901000000000000` | ✓ |  |  |  |
+| PDP Wired PS3 Controller | `030000006f0e00002f01000011010000` |  |  | ✓ |  |
+| PDP Xbox 360 Versus Fighting | `03000000ad1b000004f9000000010000` |  |  | ✓ |  |
+| PDP Xbox Atomic | `030000006f0e0000f102000000000000` |  |  | ✓ |  |
+| PDP Xbox One Controller | `030000006f0e0000a802000023020000` |  |  | ✓ |  |
+| PDP Xbox One Raven Black | `030000006f0e0000a702000023020000` |  |  | ✓ |  |
+| PDP Xbox Series Controller | `030000006f0e0000d802000006640000` |  |  | ✓ |  |
+| PDP Xbox Series Kinetic Wired Controller | `030000006f0e0000ef02000007640000` |  |  | ✓ |  |
+| Piranha Xtreme PS3 Controller | `030000008f0e00000300000000000000` |  | ✓ |  |  |
+| PlaySega | `030000008f0e00004100000000000000` | ✓ |  |  |  |
+| Pokken | `61653962353232366130326530363061` |  |  |  | ✓ |
+| PowerA | `03000000c62400000053000000010000` |  |  | ✓ |  |
+| PowerA 1428124-01 | `03000000c62400003a54000001010000` |  |  | ✓ |  |
+| PowerA Advantage Xbox Series Controller | `03000000d62000000540000001010000` |  |  | ✓ |  |
+| PowerA Core Controller | `03000000d620000011a7000000000000` | ✓ |  |  |  |
+| PowerA Core Controller | `03000000d620000011a7000011010000` |  |  | ✓ |  |
+| PowerA Core Plus Gamecube Controller | `03000000d620000011a7000000020000` |  | ✓ |  |  |
+| PowerA Fusion Nintendo Switch Arcade Stick | `03000000dd62000015a7000000000000` | ✓ |  |  |  |
+| PowerA Fusion Nintendo Switch Arcade Stick | `03000000dd62000015a7000011010000` |  |  | ✓ |  |
+| PowerA Fusion Nintendo Switch Fight Pad | `03000000d620000012a7000000000000` | ✓ |  |  |  |
+| PowerA Fusion Nintendo Switch Fight Pad | `03000000d620000012a7000011010000` |  |  | ✓ |  |
+| PowerA Fusion Pro 2 Controller | `03000000d62000000140000001010000` |  |  | ✓ |  |
+| PowerA Fusion Pro Nintendo Switch Controller | `03000000dd62000016a7000000000000` | ✓ |  | ✓ |  |
+| PowerA Mini Pro Ex | `03000000c62400001a53000000010000` |  |  | ✓ |  |
+| PowerA Nintendo Switch Controller | `03000000d620000013a7000000000000` | ✓ |  |  |  |
+| PowerA Nintendo Switch Controller | `03000000d620000011a7000010050000` |  | ✓ |  |  |
+| PowerA Nintendo Switch Controller | `03000000d620000013a7000011010000` |  |  | ✓ |  |
+| PowerA OPS Pro Wireless Controller | `03000000d62000003340000000000000` | ✓ |  |  |  |
+| PowerA OPS Wireless Controller | `03000000d62000002640000000000000` | ✓ |  |  |  |
+| PowerA Pro Ex | `03000000d62000006dca000000000000` | ✓ |  |  |  |
+| PowerA Pro Ex | `03000000d62000006dca000000010000` |  | ✓ |  |  |
+| PowerA Pro Ex | `03000000d62000006dca000011010000` |  |  | ✓ |  |
+| PowerA PS3 Controller | `0300000062060000d570000000000000` | ✓ |  |  |  |
+| PowerA Spectra Nintendo Switch Controller | `03000000d620000014a7000000000000` | ✓ |  |  |  |
+| PowerA Spectra Nintendo Switch Controller | `03000000d620000014a7000011010000` |  |  | ✓ |  |
+| PowerA Xbox One | `03000000c62400001a58000001010000` |  |  | ✓ |  |
+| PowerA Xbox One Controller | `03000000d62000000220000001010000` |  |  | ✓ |  |
+| PowerA Xbox One Controller | `03000000d62000000228000001010000` |  |  | ✓ |  |
+| PowerA Xbox One Mini Controller | `03000000c62400001a54000001010000` |  |  | ✓ |  |
+| PowerA Xbox One Spectra Infinity | `03000000d62000000240000001010000` |  |  | ✓ |  |
+| PowerA Xbox Series Controller | `03000000d62000000520000050010000` |  |  | ✓ |  |
+| PowerA Xbox Series Controller | `03000000d62000000b20000001010000` |  |  | ✓ |  |
+| PowerA Xbox Series Controller | `03000000d62000000f20000001010000` |  |  | ✓ |  |
+| Precision | `030000006d04000084ca000000000000` | ✓ |  |  |  |
+| Precision Controller | `030000006d040000d2ca000011010000` |  |  | ✓ |  |
+| Pro Elite PS3 Controller | `03000000d62000009557000000000000` | ✓ |  |  |  |
+| Pro Ex Mini | `03000000c62400001a53000000000000` | ✓ |  |  |  |
+| Pro Ex mini PS3 Controller | `03000000d62000009f31000000000000` | ✓ |  |  |  |
+| Pro Ex mini PS3 Controller | `03000000d6200000c757000000000000` | ✓ |  |  |  |
+| Pro5 | `03000000120c0000110e000000000000` | ✓ |  |  |  |
+| PS/SS/N64 Adapter | `03000000250900000017000010010000` |  |  | ✓ |  |
+| PS1 Controller | `03000000100800000100000000000000` | ✓ |  |  |  |
+| PS1 Controller | `030000008f0e00007530000000000000` | ✓ |  |  |  |
+| PS2 | `32666633663735353234363064386132` |  |  |  | ✓ |
+| PS2 Adapter | `03000000100800000300000006010000` |  | ✓ |  |  |
+| PS2 Controller | `03000000100800000300000000000000` | ✓ |  |  |  |
+| PS2 Controller | `03000000250900000088000000000000` | ✓ |  |  |  |
+| PS2 Controller | `03000000250900006888000000000000` | ✓ |  |  |  |
+| PS2 Controller | `03000000250900008888000000000000` | ✓ |  |  |  |
+| PS2 Controller | `030000006b1400000303000000000000` | ✓ |  |  |  |
+| PS2 Controller | `030000009d0d00001330000000000000` | ✓ |  |  |  |
+| PS2 Controller | `03000000ff1100004133000010010000` |  |  | ✓ |  |
+| PS2 Dual Plus Adapter | `03000000151a00006222000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000120a00000100000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000120c00001307000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000120c00001cf1000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000120c0000f90e000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000250900000118000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000250900000500000000000000` | ✓ |  |  |  |
+| PS3 Controller | `030000004c0500006802000000000000` | ✓ | ✓ |  |  |
+| PS3 Controller | `030000004f1f00000800000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000632500007505000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000888800000803000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000888800000804000000000000` | ✓ |  |  |  |
+| PS3 Controller | `030000008f0e00000300000000000000` | ✓ |  |  |  |
+| PS3 Controller | `030000008f0e00001431000000000000` | ✓ |  |  |  |
+| PS3 Controller | `03000000ba2200002010000000000000` | ✓ |  |  |  |
+| PS3 Controller | `030000004c0500006802000000010000` |  | ✓ |  |  |
+| PS3 Controller | `030000004c0500006802000072050000` |  | ✓ |  |  |
+| PS3 Controller | `03000000341a00003608000011010000` |  |  | ✓ |  |
+| PS3 Controller | `030000004c0500006802000010010000` |  |  | ✓ |  |
+| PS3 Controller | `030000004c0500006802000010810000` |  |  | ✓ |  |
+| PS3 Controller | `030000004c0500006802000011010000` |  |  | ✓ |  |
+| PS3 Controller | `030000004c0500006802000011810000` |  |  | ✓ |  |
+| PS3 Controller | `030000005f1400003102000010010000` |  |  | ✓ |  |
+| PS3 Controller | `030000006f0e00001402000011010000` |  |  | ✓ |  |
+| PS3 Controller | `030000008f0e00000300000010010000` |  |  | ✓ |  |
+| PS3 Controller | `050000004c0500006802000000000000` |  |  | ✓ |  |
+| PS3 Controller | `050000004c0500006802000000010000` |  |  | ✓ |  |
+| PS3 Controller | `050000004c0500006802000000800000` |  |  | ✓ |  |
+| PS3 Controller | `050000004c0500006802000000810000` |  |  | ✓ |  |
+| PS3 Controller | `05000000504c415953544154494f4e00` |  |  | ✓ |  |
+| PS3 Controller | `060000004c0500006802000000010000` |  |  | ✓ |  |
+| PS3 Controller | `050000004c05000068020000dfff3f00` |  |  |  | ✓ |
+| PS3 Controller | `536f6e7920504c415953544154494f4e` |  |  |  | ✓ |
+| PS3 Controller | `61363034663839376638653463633865` |  |  |  | ✓ |
+| PS3 Controller | `66366539656564653432353139356536` |  |  |  | ✓ |
+| PS3 Controller | `66383132326164626636313737373037` |  |  |  | ✓ |
+| PS4 Controller | `03000000120c00000807000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000111e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000121e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000130e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000150e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000180e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000181e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000191e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c00001e0e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000a957000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000aa57000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000f21c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000f31c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000f41c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000f51c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120c0000f70e000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000120e0000120c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `03000000160e0000120c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `030000001a1e0000120c000000000000` | ✓ |  |  |  |
+| PS4 Controller | `030000004c050000a00b000000000000` | ✓ |  |  |  |
+| PS4 Controller | `030000004c050000c405000000000000` | ✓ | ✓ |  |  |
+| PS4 Controller | `030000004c050000cc09000000000000` | ✓ |  |  |  |
+| PS4 Controller | `030000004c050000a00b000000010000` |  | ✓ |  |  |
+| PS4 Controller | `030000004c050000c405000000010000` |  | ✓ |  |  |
+| PS4 Controller | `030000004c050000cc09000000010000` |  | ✓ | ✓ |  |
+| PS4 Controller | `030000004c050000a00b000011010000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000a00b000011810000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000c405000000810000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000c405000011010000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000c405000011810000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000cc09000011010000` |  |  | ✓ |  |
+| PS4 Controller | `030000004c050000cc09000011810000` |  |  | ✓ |  |
+| PS4 Controller | `03000000c01100000140000011010000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000c405000000010000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000c405000000810000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000c405000001800000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000cc09000000010000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000cc09000000810000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000cc09000001800000` |  |  | ✓ |  |
+| PS4 Controller | `050000004c050000c405000000783f00` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000c4050000fffe3f00` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000c4050000fffe3f80` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000c4050000ffff3f00` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000cc090000fffe3f00` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000cc090000ffff3f00` |  |  |  | ✓ |
+| PS4 Controller | `30303839663330346632363232623138` |  |  |  | ✓ |
+| PS4 Controller | `31326235383662333266633463653332` |  |  |  | ✓ |
+| PS4 Controller | `31373231336561636235613666323035` |  |  |  | ✓ |
+| PS4 Controller | `31663838336334393132303338353963` |  |  |  | ✓ |
+| PS4 Controller | `34613139376634626133336530386430` |  |  |  | ✓ |
+| PS4 Controller | `35643031303033326130316330353564` |  |  |  | ✓ |
+| PS4 Controller | `37626233336235343937333961353732` |  |  |  | ✓ |
+| PS4 Controller | `37626464343430636562316661643863` |  |  |  | ✓ |
+| PS4 Controller | `38393161636261653636653532386639` |  |  |  | ✓ |
+| PS4 Controller | `63313733393535663339656564343962` |  |  |  | ✓ |
+| PS4 Controller | `63393662363836383439353064663939` |  |  |  | ✓ |
+| PS4 Controller | `65366465656364636137653363376531` |  |  |  | ✓ |
+| PS4 Controller | `66613532303965383534396638613230` |  |  |  | ✓ |
+| PS4 Controller | `050000004c050000cc090000df070000` |  |  |  |  |
+| PS4 Controller | `050000004c050000cc090000df870001` |  |  |  |  |
+| PS4 Controller | `050000004c050000cc090000ff070000` |  |  |  |  |
+| PS4 Controller | `050000004c050000cc090000ff870001` |  |  |  |  |
+| PS4 Controller | `050000004c050000cc090000ff876d01` |  |  |  |  |
+| PS5 Access Controller | `030000004c0500005f0e000000000000` | ✓ |  |  |  |
+| PS5 Access Controller | `0300004b4c0500005f0e000000010000` |  | ✓ |  |  |
+| PS5 Access Controller | `0300004b4c0500005f0e000011010000` |  |  | ✓ |  |
+| PS5 Controller | `030000004c050000e60c000000000000` | ✓ |  |  |  |
+| PS5 Controller | `030000004c050000f20d000000000000` | ✓ |  |  |  |
+| PS5 Controller | `030000004c050000e60c000000010000` |  | ✓ |  |  |
+| PS5 Controller | `030000004c050000f20d000000010000` |  | ✓ |  |  |
+| PS5 Controller | `050000004c050000e60c000000010000` |  | ✓ | ✓ |  |
+| PS5 Controller | `050000004c050000f20d000000010000` |  | ✓ | ✓ |  |
+| PS5 Controller | `030000004c050000e60c000011010000` |  |  | ✓ |  |
+| PS5 Controller | `030000004c050000e60c000011810000` |  |  | ✓ |  |
+| PS5 Controller | `030000004c050000f20d000011010000` |  |  | ✓ |  |
+| PS5 Controller | `030000004c050000f20d000011810000` |  |  | ✓ |  |
+| PS5 Controller | `050000004c050000e60c000000810000` |  |  | ✓ |  |
+| PS5 Controller | `050000004c050000f20d000000810000` |  |  | ✓ |  |
+| PS5 Controller | `050000004c050000e60c0000fffe3f00` |  |  |  | ✓ |
+| PS5 Controller | `050000004c050000e60c0000fffe3f80` |  |  |  | ✓ |
+| PS5 Controller | `050000004c050000e60c0000ffff3f00` |  |  |  | ✓ |
+| PS5 Controller | `32346465346533616263386539323932` |  |  |  | ✓ |
+| PS5 Controller | `32633532643734376632656664383733` |  |  |  | ✓ |
+| PS5 Controller | `37363764353731323963323639666565` |  |  |  | ✓ |
+| PS5 Controller | `61303162353165316365336436343139` |  |  |  | ✓ |
+| PS5 Controller | `050000004c050000e60c0000df870000` |  |  |  |  |
+| PS5 Controller | `050000004c050000e60c0000ff870000` |  |  |  |  |
+| PSX | `03000000830500005020000000000000` | ✓ |  |  |  |
+| PXN P30 Pro Mobile | `030000005e040000e002000001000000` |  | ✓ |  |  |
+| Qanba 2 | `03000000300f00000111000000000000` | ✓ |  |  |  |
+| Qanba 2P | `03000000300f00000211000000000000` | ✓ |  |  |  |
+| Qanba 4RAF | `64336263393933626535303339616332` |  |  |  | ✓ |
+| Qanba Arcade Joystick | `03000000300f00001211000011010000` |  |  | ✓ |  |
+| Qanba Arcade Stick 1008 | `03000000300f00000011000000000000` | ✓ |  |  |  |
+| Qanba Arcade Stick 4018 | `03000000300f00001611000000000000` | ✓ |  |  |  |
+| Qanba Dragon Arcade Joystick | `03000000222c00000025000000000000` | ✓ |  |  |  |
+| Qanba Dragon Arcade Joystick PS3 | `03000000222c00000225000000010000` |  | ✓ |  |  |
+| Qanba Dragon Arcade Joystick PS3 | `03000000222c00000225000011010000` |  |  | ✓ |  |
+| Qanba Dragon Arcade Joystick PS4 | `03000000222c00000025000011010000` |  |  | ✓ |  |
+| Qanba Drone 2 Arcade Joystick PS4 | `03000000222c00001220000011010000` |  |  | ✓ |  |
+| Qanba Drone 2 Arcade Joystick PS5 | `03000000222c00001020000011010000` |  |  | ✓ |  |
+| Qanba Drone Arcade PS4 Joystick | `03000000222c00000020000011010000` |  |  | ✓ |  |
+| Qanba Drone Arcade Stick | `03000000222c00000020000000000000` | ✓ |  |  |  |
+| Qanba Drone Arcade Stick | `03000000222c00000020000000010000` |  | ✓ |  |  |
+| Qanba Joystick | `03000000300f00001211000000000000` | ✓ |  |  |  |
+| Qanba Joystick Plus | `03000000300f00001210000000000000` | ✓ |  |  |  |
+| Qanba Joystick Plus | `03000000300f00001210000010010000` |  |  | ✓ |  |
+| Qanba Joystick Q4RAF | `03000000341a00000104000000000000` | ✓ |  |  |  |
+| Qanba Obsidian Arcade Joystick PS3 | `03000000222c00000223000011010000` |  |  | ✓ |  |
+| Qanba Obsidian Arcade Joystick PS4 | `03000000222c00000023000011010000` |  |  | ✓ |  |
+| Qanba Obsidian Arcade Stick PS3 | `03000000222c00000223000000000000` | ✓ |  |  |  |
+| Qanba Obsidian Arcade Stick PS4 | `03000000222c00000023000000000000` | ✓ |  |  |  |
+| R1 Mobile Controller | `030000008a2400006682000000000000` | ✓ |  |  |  |
+| RadioShack | `03000000086700006626000000000000` | ✓ |  |  |  |
+| Ramox FPS Controller | `03000000ff1100004733000000000000` | ✓ |  |  |  |
+| Raphnet 3DO Adapter | `030000009b2800002300000000000000` | ✓ |  |  |  |
+| Raphnet 3DO Adapter | `030000009b2800006900000000000000` | ✓ |  |  |  |
+| Raphnet 4nes4snes | `030000009b2800000300000001010000` |  |  | ✓ |  |
+| Raphnet Dreamcast Adapter | `030000009b2800000800000000000000` | ✓ |  |  |  |
+| Raphnet Dreamcast Adapter | `030000009b280000d000000000000000` | ✓ |  |  |  |
+| Raphnet Dual NES Adapter | `030000009b2800004200000001010000` |  |  | ✓ |  |
+| Raphnet GameCube Adapter | `030000009b2800006200000000000000` | ✓ |  |  |  |
+| Raphnet GameCube Adapter | `0300132d9b2800006500000000000000` |  |  | ✓ |  |
+| Raphnet GameCube Adapter | `0300132d9b2800006500000001010000` |  |  | ✓ |  |
+| Raphnet GC and N64 Adapter | `030000009b2800003200000000000000` | ✓ |  |  |  |
+| Raphnet GC and N64 Adapter | `030000009b2800006000000000000000` | ✓ |  |  |  |
+| Raphnet GC and N64 Adapter | `030000009b2800003200000001010000` |  |  | ✓ |  |
+| Raphnet GC and N64 Adapter | `030000009b2800006000000001010000` |  |  | ✓ |  |
+| Raphnet Jaguar Adapter | `030000009b2800001800000000000000` | ✓ |  |  |  |
+| Raphnet N64 Adapter | `030000009b2800003c00000000000000` | ✓ |  |  |  |
+| Raphnet N64 Adapter | `030000009b2800006100000000000000` | ✓ |  |  |  |
+| Raphnet N64 Adapter | `030000009b2800006300000000000000` | ✓ |  |  |  |
+| Raphnet N64 Adapter | `030000009b2800006400000000000000` | ✓ |  |  |  |
+| Raphnet N64 Adapter | `030000009b2800003c00000001010000` |  |  | ✓ |  |
+| Raphnet N64 Adapter | `030000009b2800006100000001010000` |  |  | ✓ |  |
+| Raphnet N64 Adapter | `030000009b2800006300000001010000` |  |  | ✓ |  |
+| Raphnet N64 Adapter | `030000009b2800006400000001010000` |  |  | ✓ |  |
+| Raphnet NES Adapter | `030000009b2800000200000000000000` | ✓ |  |  |  |
+| Raphnet PS1 and PS2 Adapter | `030000009b2800004400000000000000` | ✓ |  |  |  |
+| Raphnet Saturn | `030000009b2800004300000000000000` | ✓ |  |  |  |
+| Raphnet Saturn Adapter 2.0 | `030000009b2800000500000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800000300000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800002600000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800002e00000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800002f00000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800005600000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800005700000000000000` | ✓ |  |  |  |
+| Raphnet SNES Adapter | `030000009b2800005600000020020000` |  | ✓ |  |  |
+| Raphnet Vectrex Adapter | `030000009b2800001e00000000000000` | ✓ |  |  |  |
+| Raphnet Wii Classic Adapter | `030000009b2800002b00000000000000` | ✓ |  |  |  |
+| Raphnet Wii Classic Adapter | `030000009b2800002c00000000000000` | ✓ |  |  |  |
+| Raphnet Wii Classic Adapter | `030000009b2800008000000000000000` | ✓ |  |  |  |
+| Raphnet Wii Classic Adapter | `030000009b2800008000000022020000` |  | ✓ |  |  |
+| Raphnet Wii Classic Adapter | `030000009b2800008000000020020000` |  |  | ✓ |  |
+| Raphnet Wii Classic Adapter V3 | `030000009b2800008000000001010000` |  |  | ✓ |  |
+| Rapoo Gamepad | `03000000790000008f18000000000000` | ✓ |  |  |  |
+| Razer Huntsman V3 Pro | `0300000032150000a602000000000000` | ✓ |  |  |  |
+| Razer Hydra | `03000000321500000003000000000000` | ✓ |  |  |  |
+| Razer Junglecat | `36626666353861663864336130363137` |  |  |  | ✓ |
+| Razer Kishi | `03000000f8270000bf0b000000000000` | ✓ |  |  |  |
+| Razer Kishi | `03000000f8270000bf0b000011010000` |  |  | ✓ |  |
+| Razer Kishi | `05000000f8270000bf0b0000ffff3f00` |  |  |  | ✓ |
+| Razer Kishi | `62653861643333663663383332396665` |  |  |  | ✓ |
+| Razer Onza Classic Edition | `030000008916000001fd000024010000` |  |  | ✓ |  |
+| Razer Onza TE | `030000008916000000fd000000000000` |  | ✓ |  |  |
+| Razer Panthera PS3 | `03000000321500000204000011010000` |  |  | ✓ |  |
+| Razer Panthera PS3 Controller | `03000000321500000204000000000000` | ✓ |  |  |  |
+| Razer Panthera PS3 Controller | `03000000321500000204000000010000` |  | ✓ |  |  |
+| Razer Panthera PS4 | `03000000321500000104000000000000` | ✓ |  |  |  |
+| Razer Panthera PS4 | `03000000321500000104000000010000` |  | ✓ |  |  |
+| Razer Panthera PS4 | `03000000321500000104000011010000` |  |  | ✓ |  |
+| Razer Panthera PS4 Evo Arcade Stick | `03000000321500000810000011010000` |  |  | ✓ |  |
+| Razer Raiju | `03000000321500000010000000000000` | ✓ |  |  |  |
+| Razer Raiju | `03000000321500000010000000010000` |  | ✓ |  |  |
+| Razer Raiju | `03000000321500000010000011010000` |  |  | ✓ |  |
+| Razer Raiju Mobile | `03000000321500000507000000000000` | ✓ |  |  |  |
+| Razer Raiju Mobile | `03000000321500000707000000000000` | ✓ |  |  |  |
+| Razer Raiju Mobile | `03000000321500000507000001010000` |  | ✓ |  |  |
+| Razer Raiju Mobile | `03000000321500000507000000010000` |  |  | ✓ |  |
+| Razer Raiju Mobile | `050000003215000005070000ffff3f00` |  |  |  | ✓ |
+| Razer Raiju Mobile | `050000003215000007070000ffff3f00` |  |  |  | ✓ |
+| Razer Raiju TE | `03000000321500000710000000000000` | ✓ |  |  |  |
+| Razer Raiju TE | `03000000321500000a10000000000000` | ✓ |  |  |  |
+| Razer Raiju Tournament Edition | `05000000321500000a10000001000000` |  |  | ✓ |  |
+| Razer Raiju UE | `03000000321500000410000000000000` | ✓ |  |  |  |
+| Razer Raiju UE | `03000000321500000910000000000000` | ✓ |  |  |  |
+| Razer Raion PS4 Fightpad | `03000000321500000011000000000000` | ✓ |  |  |  |
+| Razer Raion PS4 Fightpad | `03000000321500000011000000010000` |  | ✓ |  |  |
+| Razer Raion PS4 Fightpad | `03000000321500000011000011010000` |  |  | ✓ |  |
+| Razer Sabertooth | `030000008916000000fe000024010000` |  |  | ✓ |  |
+| Razer Sabertooth | `03000000c6240000045d000024010000` |  |  | ✓ |  |
+| Razer Sabertooth | `03000000c6240000045d000025010000` |  |  | ✓ |  |
+| Razer Serval | `03000000321500000009000000000000` | ✓ |  |  |  |
+| Razer Serval | `03000000321500000009000000020000` |  | ✓ |  |  |
+| Razer Serval | `030000003215000000090000163a0000` |  | ✓ |  |  |
+| Razer Serval | `03000000321500000009000011010000` |  |  | ✓ |  |
+| Razer Serval | `050000003215000000090000163a0000` |  |  | ✓ |  |
+| Razer Serval | `050000003215000000090000bf7f3f00` |  |  |  | ✓ |
+| Razer Wildcat | `0300000032150000030a000000000000` |  | ✓ |  |  |
+| Razer Wildcat | `0300000032150000030a000001010000` |  |  | ✓ |  |
+| Razer Wolverine PS5 Controller | `03000000321500000b10000011010000` |  |  | ✓ |  |
+| Razer Wolverine Ultimate Xbox | `0300000032150000140a000001010000` |  |  | ✓ |  |
+| Redgear | `03000000632500008005000000010000` |  | ✓ |  |  |
+| Redragon Saturn | `03000000632500002305000000010000` |  | ✓ |  |  |
+| Remote | `05000000ac0500000300000000006d03` |  |  |  |  |
+| Remote | `05000000ac0500000300000043006d03` |  |  |  |  |
+| Retro Bit Legacy16 | `030000000d0f0000c100000010010000` |  |  | ✓ |  |
+| Retro Bit Saturn Controller | `5a6869587520526574726f2042697420` |  |  |  | ✓ |
+| Retro Bit Sega Genesis Controller Adapter | `03000000921200004547000000000000` | ✓ |  |  |  |
+| Retro Bit Sega Genesis Controller Adapter | `03000000921200004547000000020000` |  | ✓ |  |  |
+| Retro Bit SNES Controller | `32417865732031314b6579732047616d` |  |  |  | ✓ |
+| Retro Bit SNES Controller | `36313938306539326233393732613361` |  |  |  | ✓ |
+| Retro Controller | `03000000790000001100000000000000` | ✓ | ✓ |  |  |
+| Retro Controller | `03000000830500006020000000000000` | ✓ |  |  |  |
+| Retro Controller | `03000000790000001100000005010000` |  | ✓ |  |  |
+| Retro Controller | `03000000830500006020000000010000` |  | ✓ |  |  |
+| Retro Controller | `03000000790000001100000010010000` |  |  | ✓ |  |
+| Retro Controller | `526574726f466c616720576972656420` |  |  |  | ✓ |
+| Retro Controller | `61343739353764363165343237303336` |  |  |  | ✓ |
+| Retro Fighters Controller | `03000000632500007805000000000000` | ✓ |  |  |  |
+| Retrode Adapter | `0300000003040000c197000000000000` | ✓ | ✓ |  |  |
+| Retrode Adapter | `0300000003040000c197000011010000` |  |  | ✓ |  |
+| RetroGame Joypad | `190000004b4800000111000000010000` |  |  | ✓ |  |
+| Retroid Pocket | `526574726f696420506f636b65742043` |  |  |  | ✓ |
+| Retroid Pocket | `582d426f7820436f6e74726f6c6c6572` |  |  |  | ✓ |
+| Retroid Pocket | `64633735616665613536653363336132` |  |  |  | ✓ |
+| Retroid Pocket 2 | `38653130373365613538333235303036` |  |  |  | ✓ |
+| Retrolink | `64363363336633363736393038313463` |  |  |  | ✓ |
+| Retrolink Sega Saturn Classic Controller | `03000000bd12000013d0000000000000` | ✓ |  |  |  |
+| Retrolink SNES Controller | `03000000bd12000015d0000000000000` | ✓ |  |  |  |
+| Retrolink SNES Controller | `03000000790000001100000006010000` |  | ✓ |  |  |
+| Retronic Adapter | `0300000081170000990a000001010000` |  |  | ✓ |  |
+| RetroPad | `0300000000f000000300000000010000` |  |  | ✓ |  |
+| RetroStone 2 Controller | `00000000526574726f53746f6e653200` |  |  | ✓ |  |
+| RetroUSB N64 RetroPort | `03000000341200000400000000000000` | ✓ | ✓ |  |  |
+| RetroUSB N64 RetroPort | `03000000341200000400000000010000` |  |  | ✓ |  |
+| RetroUSB N64 RetroPort | `37393234373533633333323633646531` |  |  |  | ✓ |
+| RetroUSB N64 RetroPort | `5365616c6965436f6d707574696e6720` |  |  |  | ✓ |
+| RetroUSB RetroPad | `0300000000f000000300000000000000` | ✓ |  |  |  |
+| RetroUSB SNES RetroPort | `526574726f5553422e636f6d20534e45` |  |  |  | ✓ |
+| RetroUSB SNES RetroPort | `64643037633038386238303966376137` |  |  |  | ✓ |
+| RetroUSB Super RetroPort | `0300000000f00000f100000000000000` | ✓ |  |  |  |
+| Revenger | `03000000830500000960000000000000` | ✓ |  |  |  |
+| Revolution Pro Controller | `030000006b140000010d000000000000` | ✓ |  |  |  |
+| Revolution Pro Controller | `030000006b140000010d000000010000` |  | ✓ |  |  |
+| Revolution Pro Controller | `030000006b140000010d000011010000` |  |  | ✓ |  |
+| Revolution Pro Controller 2 | `030000006b140000020d000000000000` | ✓ |  |  |  |
+| Revolution Pro Controller 3 | `030000006b140000130d000000000000` | ✓ |  |  |  |
+| Revolution Pro Controller 3 | `030000006b140000130d000000010000` |  | ✓ |  |  |
+| Revolution Pro Controller 3 | `030000006b140000130d000011010000` |  |  | ✓ |  |
+| Rii RK707 | `030000004c0500006802000002100000` |  | ✓ |  |  |
+| Rock Candy | `030000006f0e00001f01000000000000` | ✓ |  |  |  |
+| Rock Candy | `030000006f0e00004601000000000000` | ✓ |  |  |  |
+| Rock Candy | `030000006f0e00001f01000000010000` |  |  | ✓ |  |
+| Rock Candy Controller | `03000000c6240000fefa000000000000` | ✓ |  |  |  |
+| Rock Candy Nintendo Switch Controller | `030000006f0e00008701000000000000` | ✓ |  |  |  |
+| Rock Candy Nintendo Switch Controller | `030000006f0e00008701000005010000` |  | ✓ |  |  |
+| Rock Candy Nintendo Switch Controller | `030000006f0e00008701000011010000` |  |  | ✓ |  |
+| Rock Candy PS3 | `03000000c6240000fefa000000000000` |  | ✓ |  |  |
+| Rock Candy PS3 Controller | `030000006f0e00001e01000000000000` | ✓ |  |  |  |
+| Rock Candy PS3 Controller | `030000006f0e00002801000000000000` | ✓ |  |  |  |
+| Rock Candy PS3 Controller | `030000006f0e00002f01000000000000` | ✓ |  |  |  |
+| Rock Candy PS3 Controller | `030000006f0e00001e01000011010000` |  |  | ✓ |  |
+| Rock Candy Switch Controller | `37656564346533643138636436356230` |  |  |  | ✓ |
+| Rock Candy Xbox 360 Controller | `03000000c6240000fefa000000010000` |  |  | ✓ |  |
+| Rock Candy Xbox One Controller | `030000006f0e00004601000001010000` |  |  | ✓ |  |
+| Rockfire Space Ranger | `03000000830500007030000000000000` | ✓ |  |  |  |
+| ROG Chakram | `03000000050b0000e318000000000000` | ✓ |  |  |  |
+| ROG Chakram | `03000000050b0000e518000000000000` | ✓ |  |  |  |
+| ROG Chakram Core | `03000000050b00005819000000000000` | ✓ |  |  |  |
+| ROG Chakram X | `03000000050b0000181a000000000000` | ✓ |  |  |  |
+| ROG Chakram X | `03000000050b00001a1a000000000000` | ✓ |  |  |  |
+| ROG Chakram X | `03000000050b00001c1a000000000000` | ✓ |  |  |  |
+| Rumble Force | `030000004f04000001d0000000000000` | ✓ |  |  |  |
+| RumblePad 2 | `33373336396634316434323337666361` |  |  |  | ✓ |
+| RX Gamepad | `030000000d0f0000ad00000000000000` | ✓ |  |  |  |
+| Sabertooth | `030000008916000000fe000000000000` | ✓ |  |  |  |
+| Sabertooth | `03000000c6240000045d000000000000` | ✓ |  |  |  |
+| Saffun Controller | `030000006f0e00001311000000000000` | ✓ |  |  |  |
+| Saffun Controller | `030000006f0e00001311000011010000` |  |  | ✓ |  |
+| Saitek Cyborg | `03000000a30600001af5000000000000` | ✓ |  |  |  |
+| Saitek Cyborg | `03000000a306000023f6000000000000` | ✓ |  |  |  |
+| Saitek Cyborg PlayStation Controller | `03000000a306000023f6000011010000` |  |  | ✓ |  |
+| Saitek Dual Analog | `03000000300f00001201000000000000` | ✓ |  |  |  |
+| Saitek P150 | `03000000a30600001005000000010000` |  |  | ✓ |  |
+| Saitek P220 | `03000000a30600000701000000000000` | ✓ |  |  |  |
+| Saitek P220 | `03000000a30600000701000000010000` |  |  | ✓ |  |
+| Saitek P2500 Force Rumble | `03000000a30600000cff000000000000` | ✓ |  |  |  |
+| Saitek P2500 Force Rumble | `03000000a30600000cff000010010000` |  |  | ✓ |  |
+| Saitek P2600 | `03000000a30600000d5f000000000000` | ✓ |  |  |  |
+| Saitek P2600 | `03000000a30600000dff000000000000` | ✓ |  |  |  |
+| Saitek P2600 | `03000000a30600000d5f000010010000` |  |  | ✓ |  |
+| Saitek P2900 | `03000000a30600000c04000000000000` | ✓ |  |  |  |
+| Saitek P2900 | `03000000a30600000c04000011010000` |  |  | ✓ |  |
+| Saitek P3200 | `03000000a306000018f5000000000000` | ✓ |  |  |  |
+| Saitek P3200 Rumble | `03000000a306000018f5000010010000` |  |  | ✓ |  |
+| Saitek P380 | `03000000300f00001201000010010000` |  |  | ✓ |  |
+| Saitek P480 Rumble | `03000000300f00001001000000000000` | ✓ |  |  |  |
+| Saitek P880 | `03000000a30600000901000000000000` | ✓ |  |  |  |
+| Saitek P880 | `03000000a30600000901000000010000` |  |  | ✓ |  |
+| Saitek P990 | `03000000a30600000b04000000000000` | ✓ |  |  |  |
+| Saitek P990 Dual Analog | `03000000a30600000b04000000010000` |  |  | ✓ |  |
+| Saitek PS1000 PlayStation Controller | `03000000a30600002106000000000000` | ✓ |  |  |  |
+| Saitek PS2700 PlayStation Controller | `03000000a306000020f6000000000000` | ✓ |  |  |  |
+| Saitek PS2700 Rumble | `03000000a306000020f6000011010000` |  |  | ✓ |  |
+| Saitek Rumble | `03000000300f00001101000000000000` | ✓ |  |  |  |
+| Samsung EIGP20 | `03000000e804000000a0000000000000` | ✓ |  |  |  |
+| Samsung EIGP20 | `03000000e804000000a000001b010000` |  | ✓ |  |  |
+| Samsung EIGP20 | `05000000e804000000a000001b010000` |  |  | ✓ |  |
+| Samsung EIGP20 | `36363537303435333566386638366333` |  |  |  | ✓ |
+| Samsung EIGP20 | `53616d73756e672047616d6520506164` |  |  |  | ✓ |
+| Sanwa Easy Grip | `03000000c01100000252000000000000` | ✓ |  |  |  |
+| Sanwa Micro Grip P3 | `03000000c01100004350000000000000` | ✓ |  |  |  |
+| Sanwa Micro Grip Pro | `03000000411200004550000000000000` | ✓ |  |  |  |
+| Sanwa Micro Grip Pro | `03000000c01100004150000000000000` | ✓ |  |  |  |
+| Sanwa Online Grip | `03000000c01100004450000000000000` | ✓ |  |  |  |
+| Sanwa PlayOnline Mobile | `03000000730700000401000000000000` | ✓ |  |  |  |
+| Sanwa PlayOnline Mobile | `03000000730700000401000000010000` |  | ✓ |  |  |
+| Sanwa PlayOnline Mobile | `66386565396238363534313863353065` |  |  |  | ✓ |
+| Sanwa PlayStation Adapter | `030000009d0d00001130000000000000` | ✓ |  |  |  |
+| Sanwa Smart Grip II | `03000000830500006120000000000000` | ✓ |  |  |  |
+| Satechi Controller | `03000000c01100000051000000000000` | ✓ |  |  |  |
+| Saturn | `32383165316333383766336338373261` |  |  |  | ✓ |
+| Saturn | `38613865396530353338373763623431` |  |  |  | ✓ |
+| Saturn | `61316232336262373631343137633631` |  |  |  | ✓ |
+| Savior | `03000000d81d00000e00000010010000` |  |  | ✓ |  |
+| Score A | `030000004f04000028b3000000000000` | ✓ |  |  |  |
+| Scuf Envision | `03000000952e00004b43000011010000` |  |  | ✓ |  |
+| Scuf Envision | `03000000952e00004d43000011010000` |  |  | ✓ |  |
+| Scuf Envision | `03000000952e00004e43000011010000` |  |  | ✓ |  |
+| Scuf PS4 Controller | `03000000952e00002577000000000000` | ✓ |  |  |  |
+| Sega Genesis Mini 3B Controller | `03000000a30c00002500000000000000` | ✓ |  |  |  |
+| Sega Genesis Mini 3B Controller | `03000000a30c00002500000006020000` |  | ✓ |  |  |
+| Sega Genesis Mini 3B Controller | `03000000a30c00002500000011010000` |  |  | ✓ |  |
+| Sega Mega Drive Mini 6B Controller | `03000000a30c00002400000000000000` | ✓ |  |  |  |
+| Sega Multi Controller | `03000000d804000086e6000000000000` | ✓ |  |  |  |
+| Sega Saturn | `03000000811700007e05000000000000` |  | ✓ |  |  |
+| Sega Saturn | `03000000b40400000a01000000000000` |  | ✓ |  |  |
+| Sega Saturn | `03000000790000001100000011010000` |  |  | ✓ |  |
+| Sega Saturn | `03000000790000002201000011010000` |  |  | ✓ |  |
+| Sega Saturn | `03000000b40400000a01000000010000` |  |  | ✓ |  |
+| Sega Saturn Adapter | `0300000000050000289b000000000000` | ✓ |  |  |  |
+| Sega Saturn Controller | `0300000000f000000800000000000000` | ✓ |  |  |  |
+| Sega Saturn Controller | `03000000730700000601000000000000` | ✓ |  |  |  |
+| Sega Saturn Controller | `03000000b40400000a01000000000000` | ✓ |  |  |  |
+| SFC30 Joystick | `030000003512000021ab000000000000` |  | ✓ |  |  |
+| SFX | `030000003b07000004a1000000000000` | ✓ |  |  |  |
+| SG H510 | `30353835333338613130373363646337` |  |  |  | ✓ |
+| SG H510 | `66386262366536653765333235343634` |  |  |  | ✓ |
+| SG H510 | `66633132393363353531373465633064` |  |  |  | ✓ |
+| ShanWan Gamepad | `03000000632500002305000010010000` |  |  | ✓ |  |
+| ShanWan Gamepad | `03000000632500002605000010010000` |  |  | ✓ |  |
+| ShanWan Gamepad | `03000000632500007505000010010000` |  |  | ✓ |  |
+| ShanWan Gamepad | `03000000bc2000000055000010010000` |  |  | ✓ |  |
+| Shogun Bros Chameleon X1 | `03000000f82100001900000000000000` | ✓ |  |  |  |
+| SL6566 | `03000000341a00000908000010010000` |  |  | ✓ |  |
+| SN30 PP | `62653761636366393366613135366338` |  |  |  | ✓ |
+| SnakeByte 4S PS4 Controller | `03000000120c00001c1e000000000000` | ✓ |  |  |  |
+| Snakebyte Xbox Series Controller | `030000004b2900000430000011000000` |  |  | ✓ |  |
+| SNES | `38376662666661636265313264613039` |  |  |  | ✓ |
+| SNES Adapter | `5346432f555342205061640000000000` |  |  |  | ✓ |
+| SNES Controller | `03000000140300000918000000000000` | ✓ |  |  |  |
+| SNES Controller | `0300000081170000960a000000000000` | ✓ |  |  |  |
+| SNES Controller | `03000000811700009d0a000000000000` | ✓ |  |  |  |
+| SNES Controller | `030000008b2800000300000000000000` | ✓ |  |  |  |
+| SNES Controller | `03000000921200004653000000000000` | ✓ |  |  |  |
+| SNES Controller | `5553422047616d657061642000000000` |  |  |  | ✓ |
+| SNES RetroPort | `0300000000f00000f100000000000000` |  | ✓ |  |  |
+| Sony DualShock 2 | `030000008f0e00000910000000000000` | ✓ |  |  |  |
+| Sony DualShock 3 | `03000000317300000100000000000000` | ✓ |  |  |  |
+| Sony DualShock 4 | `050000004c050000cc09000001000000` |  |  | ✓ |  |
+| Sony DualShock 4 Adapter | `030000004c050000a00b000000000000` |  | ✓ |  |  |
+| Sony DualShock 4 V2 | `030000004c050000cc09000000000000` |  | ✓ |  |  |
+| Sony PlayStation Adapter | `03000000666600006706000000000000` | ✓ |  |  |  |
+| Sony PlayStation Adapter | `03000000e30500009605000000000000` | ✓ |  |  |  |
+| Sony PlayStation Adapter | `03000000fe1400002a23000000000000` | ✓ |  |  |  |
+| Sony PlayStation Adapter | `03000000666600006706000088020000` |  | ✓ |  |  |
+| Sony PlayStation Adapter | `03000000666600006706000000010000` |  |  | ✓ |  |
+| Sony PlayStation Classic Controller | `030000004c050000da0c000000000000` | ✓ |  |  |  |
+| Sony PlayStation Classic Controller | `030000004c050000da0c000000010000` |  | ✓ |  |  |
+| Sony PlayStation Classic Controller | `62653335326261303663356263626339` |  |  |  | ✓ |
+| Sony PlayStation Controller | `03000000632500002306000000000000` | ✓ |  |  |  |
+| Sony PlayStation Controller | `03000000f0250000c183000000000000` | ✓ |  |  |  |
+| Sony PlayStation Controller | `030000004c050000da0c000011010000` |  |  | ✓ |  |
+| Sony PlayStation Controller | `536f6e7920496e746572616374697665` |  |  |  | ✓ |
+| Sony PlayStation Controller | `576972656c65737320436f6e74726f6c` |  |  |  | ✓ |
+| Sony PlayStation Controller Adapter | `03000000d9040000160f000000000000` | ✓ |  |  |  |
+| Sony PlayStation Controller Adapter | `03000000d9040000160f000000010000` |  |  | ✓ |  |
+| Sony PlayStation Portable | `03000000ff000000cb01000000000000` | ✓ |  |  |  |
+| Sony PlayStation Portable | `03000000ff000000cb01000010010000` |  |  | ✓ |  |
+| Sony PlayStation Vita | `030000004c0500003713000000000000` | ✓ |  |  |  |
+| Sony PlayStation Vita | `030000004c0500003713000000010000` |  | ✓ |  |  |
+| Sony PlayStation Vita | `030000004c0500003713000011010000` |  |  | ✓ |  |
+| Sony PS2 pad with SmartJoy Adapter | `03000000250900000500000000010000` |  |  | ✓ |  |
+| Sony PSP | `63303964303462366136616266653561` |  |  |  | ✓ |
+| Sony Vita | `63376637643462343766333462383235` |  |  |  | ✓ |
+| Speedlink 6555 | `03000000341a00000208000000000000` | ✓ |  |  |  |
+| Speedlink 6566 | `03000000341a00000908000000000000` | ✓ |  |  |  |
+| Speedlink Competition Pro | `03000000380700001722000000000000` | ✓ |  |  |  |
+| Speedlink Strike FX | `030000008f0e00000800000000000000` | ✓ |  |  |  |
+| Speedlink Torid | `03000000c01100000591000000000000` | ✓ |  |  |  |
+| Speedlink Torid | `030000005e0400008e02000073050000` |  |  | ✓ |  |
+| SpeedLink Xeox Pro Analog | `030000005e0400008e02000020200000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800000112000001000000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800000112000011010000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800000211000001000000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800000211000011010000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800004211000001000000` |  |  | ✓ |  |
+| Steam Controller | `03000000de2800004211000011010000` |  |  | ✓ |  |
+| Steam Controller | `03000000de280000fc11000001000000` |  |  | ✓ |  |
+| Steam Controller | `05000000de2800000212000001000000` |  |  | ✓ |  |
+| Steam Controller | `05000000de2800000511000001000000` |  |  | ✓ | ✓ |
+| Steam Controller | `05000000de2800000611000001000000` |  |  | ✓ | ✓ |
+| Steam Deck | `03000000de2800000512000010010000` |  |  | ✓ |  |
+| Steam Deck | `03000000de2800000512000011010000` |  |  | ✓ |  |
+| Steam Virtual Gamepad | `03000000de280000fc11000000000000` | ✓ |  |  |  |
+| Steam Virtual Gamepad | `03000000de280000ff11000000000000` | ✓ |  |  |  |
+| Steam Virtual Gamepad | `030000005e0400008e02000001000000` |  | ✓ |  |  |
+| Steam Virtual Gamepad | `03000000de280000ff11000001000000` |  |  | ✓ |  |
+| Steel Play Metaltech PS4 Controller | `03000000120c0000160e000000000000` | ✓ |  |  |  |
+| SteelSeries | `03000000110100001914000000000000` | ✓ |  |  |  |
+| SteelSeries Free | `03000000381000001214000000000000` | ✓ |  |  |  |
+| SteelSeries Nimbus | `03000000110100002014000000000000` |  | ✓ |  |  |
+| SteelSeries Nimbus | `03000000110100002014000001000000` |  | ✓ |  |  |
+| SteelSeries Nimbus | `03000000381000002014000001000000` |  | ✓ |  |  |
+| SteelSeries Nimbus | `0500000011010000201400000f7e0f00` |  |  |  | ✓ |
+| SteelSeries Nimbus Plus | `05000000484944204465766963650000` |  | ✓ |  |  |
+| SteelSeries Nimbus Plus | `050000004e696d6275732b0000000000` |  | ✓ | ✓ |  |
+| SteelSeries Nimbus Plus | `35306436396437373135383665646464` |  |  |  | ✓ |
+| SteelSeries Stratus Duo | `03000000110100003114000000000000` | ✓ |  |  |  |
+| SteelSeries Stratus Duo | `03000000381000003014000000000000` | ✓ | ✓ |  |  |
+| SteelSeries Stratus Duo | `03000000381000003114000000000000` | ✓ | ✓ |  |  |
+| SteelSeries Stratus Duo | `03000000381000003014000075010000` |  |  | ✓ |  |
+| SteelSeries Stratus Duo | `03000000381000003114000075010000` |  |  | ✓ |  |
+| SteelSeries Stratus Duo | `0500000011010000311400001b010000` |  |  | ✓ |  |
+| SteelSeries Stratus XL | `03000000381000001814000000000000` | ✓ |  |  |  |
+| SteelSeries Stratus XL | `03000000110100001714000000000000` |  | ✓ |  |  |
+| SteelSeries Stratus XL | `03000000110100001714000020010000` |  | ✓ |  |  |
+| SteelSeries Stratus XL | `05000000110100001914000009010000` |  |  | ✓ |  |
+| Street Fighter Fightstick TE | `03000000380700003847000000000000` | ✓ |  |  |  |
+| Street Fighter IV Fightstick TE | `03000000ad1b000038f0000090040000` |  |  | ✓ |  |
+| Suncom SFX Plus | `030000003b07000004a1000000010000` |  |  | ✓ |  |
+| Super Famicom Controller | `030000001f08000001e4000000000000` | ✓ |  |  |  |
+| Super Famicom Controller | `03000000790000000418000000000000` | ✓ |  |  |  |
+| Super Famicom Controller | `030000001f08000001e4000010010000` |  |  | ✓ |  |
+| Super Joy Box 5 Pro | `03000000666600000488000000010000` |  |  | ✓ |  |
+| Super Racer | `03000000341200001300000000000000` | ✓ |  |  |  |
+| Super RetroPort | `0300000000f00000f100000000010000` |  |  | ✓ |  |
+| Switch Hori Pad | `030000000d0f0000f600000000010000` |  | ✓ |  |  |
+| SZMY Power 3 Turbo | `030000008f0e00000d31000010010000` |  |  | ✓ |  |
+| SZMY Power DS4 Wired Controller | `03000000457500000401000011010000` |  |  | ✓ |  |
+| SZMY Power Gamepad | `03000000457500002211000010010000` |  |  | ✓ |  |
+| Szmy Power PC Gamepad | `03000000457500002211000000000000` | ✓ |  |  |  |
+| SZMY Power PC Gamepad | `03000000457500002211000000010000` |  | ✓ |  |  |
+| SZMY Power PS3 | `030000008f0e00001431000010010000` |  |  | ✓ |  |
+| T16000M | `030000004f0400000ab1000000000000` | ✓ |  |  |  |
+| TAC GEAR | `030000000d0f00007b00000000000000` | ✓ |  |  |  |
+| Taito Egret II Mini Control Panel | `03000000e40a00000307000000000000` | ✓ |  |  |  |
+| Taito Egret II Mini Control Panel | `03000000e40a00000307000001000000` |  | ✓ |  |  |
+| Taito Egret II Mini Control Panel | `03000000e40a00000307000011010000` |  |  | ✓ |  |
+| Taito Egret II Mini Control Panel | `33313930373536613937326534303931` |  |  |  | ✓ |
+| Taito Egret II Mini Controller | `03000000e40a00000207000000000000` | ✓ |  |  |  |
+| Taito Egret II Mini Controller | `03000000e40a00000207000001000000` |  | ✓ |  |  |
+| Taito Egret II Mini Controller | `03000000e40a00000207000011010000` |  |  | ✓ |  |
+| TE Kitty | `03000000d814000001a0000000000000` | ✓ |  |  |  |
+| Team 5 | `03000000fa1900000706000000000000` | ✓ |  |  |  |
+| Techmobility X6-38V | `03000000b50700001203000000000000` | ✓ |  |  |  |
+| Technology Innovation PS2 Adapter | `03000000ba2200000701000000000000` | ✓ |  |  |  |
+| Technology Innovation PS2 Adapter | `03000000ba2200000701000001010000` |  |  | ✓ |  |
+| Tencent Xianyou Gamepad | `03000000c61100001000000000000000` | ✓ |  |  |  |
+| TGZ Controller | `03000000790000001c18000000000000` | ✓ |  |  |  |
+| TGZ Controller | `03000000790000002601000000000000` | ✓ |  |  |  |
+| TGZ Controller | `03000000790000001c18000000010000` |  | ✓ |  |  |
+| TGZ Controller | `03000000790000001c18000003100000` |  | ✓ |  |  |
+| TGZ Controller | `03000000790000001c18000011010000` |  |  | ✓ |  |
+| TGZ Controller | `54475a20436f6e74726f6c6c65720000` |  |  |  | ✓ |
+| TGZ Controller | `62363434353532386238336663643836` |  |  |  | ✓ |
+| THEC64 Joystick | `03000000591c00002400000000000000` | ✓ |  |  |  |
+| THEC64 Joystick | `03000000591c00002400000021000000` |  | ✓ |  |  |
+| THEC64 Joystick | `03000000591c00002400000010010000` |  |  | ✓ |  |
+| THEC64 Joystick | `37323236633763666465316365313236` |  |  |  | ✓ |
+| THEGamepad | `03000000591c00002600000000000000` | ✓ |  |  |  |
+| THEGamepad | `03000000591c00002600000021000000` |  | ✓ |  |  |
+| THEGamepad | `03000000591c00002600000010010000` |  |  | ✓ |  |
+| THEGamepad | `38346162326232346533316164363336` |  |  |  | ✓ |
+| Thrustmaster Dual Analog 3.2 | `030000004f04000015b3000000000000` |  | ✓ |  |  |
+| Thrustmaster Dual Analog 3.2 | `030000004f04000015b3000001010000` |  |  | ✓ |  |
+| Thrustmaster Dual Analog 4 | `030000004f04000015b3000000000000` | ✓ |  |  |  |
+| Thrustmaster Dual Analog 4 | `030000004f04000015b3000010010000` |  |  | ✓ |  |
+| Thrustmaster Dual Trigger | `030000004f04000020b3000010010000` |  |  | ✓ |  |
+| Thrustmaster Dual Trigger PlayStation Controller | `030000004f04000023b3000000000000` | ✓ |  |  |  |
+| Thrustmaster Dual Trigger PlayStation Controller | `030000004f04000023b3000000010000` |  |  | ✓ |  |
+| Thrustmaster eSwap Pro Controller | `030000004f0400000ed0000000000000` | ✓ |  |  |  |
+| Thrustmaster eSwap Pro Controller | `030000004f0400000ed0000000020000` |  | ✓ |  |  |
+| Thrustmaster eSwap Pro Controller | `030000004f0400000ed0000011010000` |  |  | ✓ |  |
+| Thrustmaster eSwap Pro Controller | `050000004f0400000ed00000fffe3f00` |  |  |  | ✓ |
+| Thrustmaster Ferrari 150 PlayStation Controller | `030000004f04000008d0000000000000` | ✓ |  |  |  |
+| Thrustmaster Firestorm Digital 2 | `03000000b50700000399000000010000` |  |  | ✓ |  |
+| Thrustmaster Firestorm Dual Analog 2 | `030000004f04000003b3000010010000` |  |  | ✓ |  |
+| Thrustmaster Firestorm Dual Power | `030000004f04000000b3000000000000` | ✓ | ✓ |  |  |
+| Thrustmaster Firestorm Dual Power | `030000004f04000004b3000000000000` | ✓ |  |  |  |
+| Thrustmaster Firestorm Dual Power | `030000004f04000000b3000010010000` |  |  | ✓ |  |
+| Thrustmaster Firestorm Dual Power | `030000004f04000004b3000010010000` |  |  | ✓ |  |
+| Thrustmaster GP XID | `030000004f04000026b3000002040000` |  |  | ✓ |  |
+| Thrustmaster GPX | `03000000c6240000025b000002020000` |  |  | ✓ |  |
+| Thrustmaster Run N Drive PlayStation Controller | `030000004f04000003d0000000000000` | ✓ |  |  |  |
+| Thrustmaster Run N Drive PlayStation Controller | `030000004f04000009d0000000000000` | ✓ |  |  |  |
+| Thrustmaster Run N Drive PlayStation Controller | `030000004f04000008d0000000010000` |  |  | ✓ |  |
+| Thrustmaster Run N Drive PlayStation Controller | `030000004f04000009d0000000010000` |  |  | ✓ |  |
+| Thrustmaster T Mini | `030000004f04000007d0000000010000` |  |  | ✓ |  |
+| Thrustmaster Vibrating Gamepad | `030000004f04000012b3000010010000` |  |  | ✓ |  |
+| Thunderpad | `030000006d04000088ca000000000000` | ✓ |  |  |  |
+| TigerGame PlayStation Adapter | `03000000666600000288000000000000` | ✓ |  |  |  |
+| TigerGame PlayStation Adapter | `03000000666600000488000000000000` | ✓ |  |  |  |
+| TMini | `030000004f04000007d0000000000000` | ✓ |  |  |  |
+| Tomee NES Controller Adapter | `03000000571d00002100000000000000` | ✓ |  |  |  |
+| Tomee NES Controller Adapter | `03000000571d00002100000021000000` |  | ✓ |  |  |
+| Tomee Retro Controller | `03000000bd12000015d0000000010000` |  | ✓ |  |  |
+| Tomee SNES Adapter | `03000000571d00002000000010010000` |  |  | ✓ |  |
+| Tomee SNES Controller | `03000000bd12000015d0000000000000` |  | ✓ |  |  |
+| Tomee SNES Controller | `03000000bd12000015d0000010010000` |  |  | ✓ |  |
+| Tomee SNES Controller Adapter | `03000000571d00002000000000000000` | ✓ |  |  |  |
+| Tomee SNES Controller Adapter | `03000000571d00002000000021000000` |  | ✓ |  |  |
+| Toodles 2008 Chimp PC PS3 | `03000000d814000007cd000011010000` |  |  | ✓ |  |
+| Torid | `030000005e0400008e02000070050000` |  |  | ✓ |  |
+| Torid | `03000000c01100000591000011010000` |  |  | ✓ |  |
+| Tournament PS3 Controller | `03000000d62000006000000000000000` | ✓ |  |  |  |
+| TRBot Virtual Joypad | `03000000680a00000300000003000000` |  |  | ✓ |  |
+| TRBot Virtual Joypad | `03000000780300000300000003000000` |  |  | ✓ |  |
+| TRBot Virtual Joypad | `03000000e00d00000300000003000000` |  |  | ✓ |  |
+| TRBot Virtual Joypad | `03000000f00600000300000003000000` |  |  | ✓ |  |
+| Tronsmart | `03000000c01100000055000000000000` | ✓ |  |  |  |
+| Trust Gamepad | `030000005f140000c501000000000000` | ✓ |  |  |  |
+| Trust Gamepad | `03000000b80500000210000000000000` | ✓ |  |  |  |
+| Trust Gamepad | `030000005f140000c501000000020000` |  | ✓ |  |  |
+| Trust Gamepad | `030000005f140000c501000010010000` |  |  | ✓ |  |
+| Turtle Beach Recon | `06000000f51000000870000003010000` |  |  | ✓ |  |
+| TWCS Throttle | `030000004f04000087b6000000000000` | ✓ |  |  |  |
+| Twin Joystick | `5477696e20555342204a6f7973746963` |  |  |  | ✓ |
+| Twin PS2 Adapter | `03000000100800000100000010010000` |  |  | ✓ |  |
+| Twin Shock | `03000000411200000450000000000000` | ✓ |  |  |  |
+| Twin USB Joystick | `03000000100800000100000000000000` |  | ✓ |  |  |
+| TwinShock PS2 Controller | `03000000d90400000200000000000000` | ✓ |  |  |  |
+| Uberwith Controller | `03000000632500002605000000010000` |  | ✓ |  |  |
+| Uniplay U6 | `03000000151900005678000000000000` | ✓ |  |  |  |
+| Uniplay U6 | `03000000151900005678000010010000` |  | ✓ | ✓ |  |
+| uRage Gamepad | `03000000101c0000171c000000000000` | ✓ |  |  |  |
+| USB Controller | `030000000b0400003065000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000242f00006e00000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000300f00000701000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000341a00002308000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000666600000188000000000000` | ✓ |  |  |  |
+| USB Controller | `030000006b1400000203000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000790000000a00000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000b404000081c6000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000b50700001503000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000bd12000012d0000000000000` | ✓ |  |  |  |
+| USB Controller | `03000000ff1100004133000000000000` | ✓ |  |  |  |
+| USB gamepad | `03000000790000000600000007010000` |  |  | ✓ |  |
+| USB Gamepad | `03000000100800000300000010010000` |  |  | ✓ |  |
+| USB Gamepad | `03000000790000001100000000010000` |  |  | ✓ |  |
+| USB Vibration Joystick | `03000000632500002305000000000000` | ✓ |  |  |  |
+| V5 Game Pad | `03000000882800000305000000000000` | ✓ |  |  |  |
+| Valve Steam Controller | `30623739343039643830333266346439` |  |  |  | ✓ |
+| Valve Steam Controller | `31643365666432386133346639383937` |  |  |  | ✓ |
+| Venom PS4 Arcade Joystick | `03000000790000001a18000000000000` | ✓ |  |  |  |
+| Venom PS4 Arcade Joystick | `03000000790000001b18000000000000` | ✓ |  |  |  |
+| Venom PS4 Arcade Joystick | `03000000790000001a18000011010000` |  |  | ✓ |  |
+| Venom PS4 Arcade Joystick | `03000000790000001b18000011010000` |  |  | ✓ |  |
+| Victrix Pro Fightstick PS4 | `030000006f0e00000302000011010000` |  |  | ✓ |  |
+| Victrix Pro Fightstick PS4 | `030000006f0e00000702000011010000` |  |  | ✓ |  |
+| Victrix PS4 Pro Fightstick | `030000006f0e00000302000000000000` | ✓ |  |  |  |
+| Victrix PS4 Pro Fightstick | `030000006f0e00000702000000000000` | ✓ |  |  |  |
+| Victrix PS4 Pro Fightstick | `030000006f0e00000302000025040000` |  | ✓ |  |  |
+| Victrix PS4 Pro Fightstick | `030000006f0e00000702000003060000` |  | ✓ |  |  |
+| vJoy Device | `0300000034120000adbe000000000000` | ✓ |  |  |  |
+| VR Box Controller | `05000000ac0500003232000001000000` |  |  | ✓ |  |
+| VX Gaming Command Series | `05000000434f4d4d414e440000000000` |  |  | ✓ |  |
+| Warrior Joypad JS083 | `03000000120c0000ab57000000000000` | ✓ |  |  |  |
+| Wii Classic Adapter | `30386438313564306161393537333663` |  |  |  | ✓ |
+| Wii Classic Adapter | `33333034646336346339646538643633` |  |  |  | ✓ |
+| Wii Remote | `050000005769696d6f74652028303000` |  | ✓ |  |  |
+| Wii U Pro | `030000007e0500003003000000000000` | ✓ |  |  |  |
+| Wii U Pro Controller | `050000005769696d6f74652028313800` |  | ✓ |  |  |
+| Wildcat | `0300000032150000030a000000000000` | ✓ |  |  |  |
+| Wolverine | `0300000032150000140a000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `030000002e160000efbe000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000380700001647000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000380700002045000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000380700002644000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000380700002647000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `030000003807000026b7000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000380700003647000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `030000005e0400001907000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `030000005e0400008e02000000000000` | ✓ | ✓ |  |  |
+| Xbox 360 Controller | `030000005e0400009102000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000ad1b000000fd000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000ad1b000001fd000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000ad1b000016f0000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000ad1b00008e02000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000c62400000053000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `03000000c6240000fdfa000000000000` | ✓ |  |  |  |
+| Xbox 360 Controller | `030000005e0400008e02000010010000` |  | ✓ | ✓ |  |
+| Xbox 360 Controller | `030000006f0e00000104000000000000` |  | ✓ |  |  |
+| Xbox 360 Controller | `03000000c6240000045d000000000000` |  | ✓ |  |  |
+| Xbox 360 Controller | `0000000058626f782033363020576900` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e0400001907000000010000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e0400008e02000014010000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e0400009102000007010000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e040000a102000000010000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e040000a102000007010000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000005e040000a102000030060000` |  |  | ✓ |  |
+| Xbox 360 Controller | `030000006f0e00001503000000020000` |  |  | ✓ |  |
+| Xbox 360 Controller | `050000005e0400008e02000000783f00` |  |  |  | ✓ |
+| Xbox 360 Controller | `30396232393162346330326334636566` |  |  |  | ✓ |
+| Xbox 360 Controller | `38313038323730383864666463383533` |  |  |  | ✓ |
+| Xbox 360 Controller | `58626f782033363020576972656c6573` |  |  |  | ✓ |
+| Xbox 360 Controller | `65353331386662343338643939643636` |  |  |  | ✓ |
+| Xbox 360 Controller | `65613532386633373963616462363038` |  |  |  | ✓ |
+| Xbox 360 EasySMX | `030000005e0400008e02000000010000` |  |  | ✓ |  |
+| Xbox 360 Fightpad | `03000000380700002847000000000000` | ✓ |  |  |  |
+| Xbox 360 Receiver | `030000005e040000a102000014010000` |  |  | ✓ |  |
+| Xbox 360 Wireless Receiver | `030000005e040000a102000000000000` | ✓ |  |  |  |
+| Xbox Adaptive Controller | `030000005e0400000a0b000000000000` | ✓ | ✓ |  |  |
+| Xbox Controller | `03000000120c00000a88000000000000` | ✓ |  |  |  |
+| Xbox Controller | `03000000120c00001088000000000000` | ✓ |  |  |  |
+| Xbox Controller | `030000002a0600002000000000000000` | ✓ |  |  |  |
+| Xbox Controller | `03000000380700001645000000000000` | ✓ |  |  |  |
+| Xbox Controller | `03000000380700002645000000000000` | ✓ |  |  |  |
+| Xbox Controller | `03000000380700003645000000000000` | ✓ |  |  |  |
+| Xbox Controller | `03000000380700008645000000000000` | ✓ |  |  |  |
+| Xbox Controller | `030000005e0400000202000000000000` | ✓ |  |  |  |
+| Xbox Controller | `030000005e0400008502000000000000` | ✓ |  |  |  |
+| Xbox Controller | `030000005e0400008702000000000000` | ✓ |  |  |  |
+| Xbox Controller | `030000005e0400008902000000000000` | ✓ |  |  |  |
+| Xbox Controller | `0000000058626f782047616d65706100` |  |  | ✓ |  |
+| Xbox Controller | `030000005e0400000202000000010000` |  |  | ✓ |  |
+| Xbox Controller | `030000005e0400008e02000072050000` |  |  | ✓ |  |
+| Xbox Controller | `030000006f0e00001304000000010000` |  |  | ✓ |  |
+| Xbox Controller | `03000000ffff0000ffff000000010000` |  |  | ✓ |  |
+| Xbox Controller | `47656e6572696320582d426f78207061` |  |  |  | ✓ |
+| Xbox Controller | `4d6963726f736f667420582d426f7820` |  |  |  | ✓ |
+| Xbox Controller | `64633436313965656664373634323364` |  |  |  | ✓ |
+| Xbox Elite Controller Series 2 | `030000005e040000050b000003090000` |  | ✓ |  |  |
+| Xbox Elite Wireless Controller | `050000005e040000050b0000df070001` |  |  |  |  |
+| Xbox Elite Wireless Controller | `050000005e040000050b0000ff070001` |  |  |  |  |
+| Xbox One Controller | `030000005e0400000c0b000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `030000005e040000d102000000000000` | ✓ | ✓ |  |  |
+| Xbox One Controller | `030000005e040000dd02000000000000` | ✓ | ✓ |  |  |
+| Xbox One Controller | `030000005e040000e002000000000000` | ✓ | ✓ |  |  |
+| Xbox One Controller | `030000005e040000e302000000000000` | ✓ | ✓ |  |  |
+| Xbox One Controller | `030000005e040000ea02000000000000` | ✓ | ✓ | ✓ |  |
+| Xbox One Controller | `030000005e040000fd02000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `030000005e040000ff02000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `030000006f0e0000a802000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `030000006f0e0000c802000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `03000000c62400003a54000000000000` | ✓ |  |  |  |
+| Xbox One Controller | `030000005e040000130b000011050000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e040000200b000011050000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e040000200b000013050000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e040000200b000015050000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e040000e002000003090000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e040000fd02000003090000` |  | ✓ |  |  |
+| Xbox One Controller | `030000005e0400000a0b000005040000` |  |  | ✓ |  |
+| Xbox One Controller | `030000005e040000d102000002010000` |  |  | ✓ |  |
+| Xbox One Controller | `030000005e040000ea02000001030000` |  |  | ✓ |  |
+| Xbox One Controller | `050000005e040000e002000003090000` |  |  | ✓ |  |
+| Xbox One Controller | `050000005e040000fd02000003090000` |  |  | ✓ |  |
+| Xbox One Controller | `050000005e040000fd02000030110000` |  |  | ✓ |  |
+| Xbox One Controller | `060000005e040000dd02000003020000` |  |  | ✓ |  |
+| Xbox One Controller | `050000005e04000091020000ff073f00` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e04000091020000ff073f80` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e040000e00200000ffe3f00` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e040000e00200000ffe3f80` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e040000e0020000ffff3f00` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e040000e0020000ffff3f80` |  |  |  | ✓ |
+| Xbox One Controller | `050000005e040000fd020000ffff3f00` |  |  |  | ✓ |
+| Xbox One Controller | `33356661323266333733373865656366` |  |  |  | ✓ |
+| Xbox One Controller | `34356136633366613530316338376136` |  |  |  | ✓ |
+| Xbox One Controller | `35623965373264386238353433656138` |  |  |  | ✓ |
+| Xbox One Controller | `36616131643361333337396261666433` |  |  |  | ✓ |
+| Xbox One Controller | `58626f7820576972656c65737320436f` |  |  |  | ✓ |
+| Xbox One Controller | `65316262316265373335666131623538` |  |  |  | ✓ |
+| Xbox One Elite | `050000005e040000e302000002090000` |  |  | ✓ |  |
+| Xbox One Elite 2 Controller | `030000005e040000220b000013050000` |  | ✓ |  |  |
+| Xbox One Elite 2 Controller | `050000005e040000220b000013050000` |  |  | ✓ |  |
+| Xbox One Elite 2 Controller | `050000005e040000000b000000783f00` |  |  |  | ✓ |
+| Xbox One Elite 2 Controller | `050000005e040000000b000000783f80` |  |  |  | ✓ |
+| Xbox One Elite 2 Controller | `050000005e040000050b0000ffff3f00` |  |  |  | ✓ |
+| Xbox One Elite Series 2 | `050000005e040000050b000002090000` |  |  | ✓ |  |
+| Xbox One PowerA Controller | `03000000c62400003a54000000000000` |  | ✓ |  |  |
+| Xbox One S Controller | `030000005e040000ea02000011050000` |  |  | ✓ |  |
+| Xbox One S Controller | `030000005e040000ea02000015050000` |  |  | ✓ |  |
+| Xbox One S Controller | `030000005e040000ea02000017050000` |  |  | ✓ |  |
+| Xbox One S Controller | `060000005e040000ea0200000b050000` |  |  | ✓ |  |
+| Xbox One S Controller | `060000005e040000ea0200000d050000` |  |  | ✓ |  |
+| Xbox One S Controller | `060000005e040000ea02000016050000` |  |  | ✓ |  |
+| Xbox One S Controller | `050000005e040000e002000000783f00` |  |  |  | ✓ |
+| Xbox One S Controller | `050000005e040000ea02000000783f00` |  |  |  | ✓ |
+| Xbox One S Controller | `050000005e040000fd020000ff7f3f00` |  |  |  | ✓ |
+| Xbox Series Controller | `030000005e040000130b000000000000` | ✓ |  |  |  |
+| Xbox Series Controller | `030000005e040000130b000001050000` |  | ✓ |  |  |
+| Xbox Series Controller | `030000005e040000130b000005050000` |  | ✓ | ✓ |  |
+| Xbox Series Controller | `030000005e040000130b000009050000` |  | ✓ |  |  |
+| Xbox Series Controller | `030000005e040000130b000013050000` |  | ✓ |  |  |
+| Xbox Series Controller | `030000005e040000130b000015050000` |  | ✓ |  |  |
+| Xbox Series Controller | `030000005e040000120b000001050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000005050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000007050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000009050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b00000d050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b00000f050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000011050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000014050000` |  |  | ✓ |  |
+| Xbox Series Controller | `030000005e040000120b000015050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000001050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000005050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000007050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000009050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000011050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000013050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000015050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000130b000017050000` |  |  | ✓ |  |
+| Xbox Series Controller | `060000005e040000120b000007050000` |  |  | ✓ |  |
+| Xbox Series Controller | `060000005e040000120b00000b050000` |  |  | ✓ |  |
+| Xbox Series Controller | `060000005e040000120b00000d050000` |  |  | ✓ |  |
+| Xbox Series Controller | `060000005e040000120b00000f050000` |  |  | ✓ |  |
+| Xbox Series Controller | `050000005e040000120b000000783f00` |  |  |  | ✓ |
+| Xbox Series Controller | `050000005e040000120b000000783f80` |  |  |  | ✓ |
+| Xbox Series Controller | `050000005e040000130b0000ffff3f00` |  |  |  | ✓ |
+| Xbox Series Controller | `65633038363832353634653836396239` |  |  |  | ✓ |
+| Xbox Series X Controller | `050000005e040000130b000022050000` |  |  | ✓ |  |
+| Xbox Series X Controller | `060000005e040000120b000011050000` |  |  | ✓ |  |
+| Xbox Series X Controller | `050000005e040000130b0000df870001` |  |  |  |  |
+| Xbox Series X Controller | `050000005e040000130b0000ff870001` |  |  |  |  |
+| Xbox Wireless Controller | `030000005e040000130b000007050000` |  | ✓ |  |  |
+| Xbox Wireless Controller | `030000005e040000130b000017050000` |  | ✓ |  |  |
+| Xbox Wireless Controller | `030000005e040000130b000022050000` |  | ✓ |  |  |
+| Xbox Wireless Controller | `030000005e040000220b000017050000` |  | ✓ |  |  |
+| Xbox Wireless Controller | `050000005e040000200b000013050000` |  |  | ✓ |  |
+| Xbox Wireless Controller | `050000005e040000200b000017050000` |  |  | ✓ |  |
+| Xbox Wireless Controller | `050000005e040000200b000023050000` |  |  | ✓ |  |
+| Xbox Wireless Controller | `050000005e040000220b000017050000` |  |  | ✓ |  |
+| Xbox Wireless Controller | `050000005e040000e0020000df070000` |  |  |  |  |
+| Xbox Wireless Controller | `050000005e040000e0020000ff070000` |  |  |  |  |
+| Xeox | `03000000341a00000608000000000000` | ✓ |  |  |  |
+| XEOX SL6556 BK | `03000000450c00002043000010010000` |  |  | ✓ |  |
+| Xeox SL6556BK | `03000000450c00002043000000000000` | ✓ |  |  |  |
+| XGear | `030000006f0e00000300000000000000` | ✓ |  |  |  |
+| Xiaomi Black Shark (L) | `03000000e0ff00000201000000000000` | ✓ |  |  |  |
+| Xiaomi Controller | `03000000172700004431000000000000` | ✓ |  |  |  |
+| XiaoMi Controller | `03000000172700004431000029010000` |  | ✓ |  |  |
+| XiaoMi Controller | `05000000172700004431000029010000` |  |  | ✓ |  |
+| XiaoMi Controller | `050000001727000044310000ffff3f00` |  |  |  | ✓ |
+| Xiaomi XMGP01YM | `03000000172700003350000000000000` | ✓ |  |  |  |
+| Xiaomi XMGP01YM | `03000000bc2000005060000000000000` | ✓ |  |  |  |
+| XinMo Dual Arcade | `03000000c0160000e105000001010000` |  |  | ✓ |  |
+| XInput Adapter | `030000005e0400008e02000020010000` |  |  | ✓ |  |
+| XInput Controller | `xinput` | ✓ |  | ✓ |  |
+| Xterminator Digital Gamepad | `030000007d0400000340000000000000` | ✓ |  |  |  |
+| Yawman Arrow | `030000002c3600000100000000000000` | ✓ |  |  |  |
+| ZDT Android Controller | `03000000790000004f18000000000000` | ✓ |  |  |  |
+| Zenaim Arcade Controller | `03000000073500000400000000000000` | ✓ |  |  |  |
+| Zeroplus Adapter | `03000000120c00000500000000000000` | ✓ |  |  |  |
+| Zeroplus P4 | `03000000120c0000100e000000010000` |  | ✓ |  |  |
+| Zeroplus P4 | `03000000120c0000101e000000010000` |  | ✓ |  |  |
+| Zeroplus P4 | `03000000120c0000100e000011010000` |  |  | ✓ |  |
+| Zeroplus P4 | `03000000120c0000101e000011010000` |  |  | ✓ |  |
+| Zeroplus P4 Gamepad | `03000000120c0000101e000000000000` | ✓ |  |  |  |
+| Zeroplus PS4 Controller | `03000000120c0000182e000011010000` |  |  | ✓ |  |
 
 ---
 
-## Tier 3: EmulationStation Database Controllers
+## EmulationStation Database (321 controllers)
 
-These 321 controllers are from the EmulationStation retro gaming databases (Knulli and Batocera). They provide mappings for specialized hardware not found in SDL_GameControllerDB.
+These controllers are from EmulationStation retro gaming databases. They provide mappings for specialized hardware not found in SDL_GameControllerDB.
 
-## Knulli EmulationStation (283 controllers)
+### Knulli EmulationStation (283 controllers)
 
 | Controller Name | GUID | Inputs |
 |----------------|----------------------------------|--------|
@@ -386,7 +2473,7 @@ These 321 controllers are from the EmulationStation retro gaming databases (Knul
 | Xin-Mo Xin-Mo Dual Arcade | `03000000c0160000e105000001010000` | 15 |
 | xin-mo.com Xinmotek Controller | `03000000c0160000e105000010010000` | 15 |
 
-## Batocera EmulationStation (38 controllers)
+### Batocera EmulationStation (38 controllers)
 
 | Controller Name | GUID | Inputs |
 |----------------|----------------------------------|--------|
@@ -445,11 +2532,6 @@ Used for controllers with "sony", "ps4", or "dualshock" in the name:
 - PlayStation button layout (Cross/Circle/Square/Triangle)
 - 2 analog sticks + triggers on axes 2 and 5
 
-### What This Means
-- ✅ Your controller will work even if not listed above
-- ✅ You'll get a reasonable standard button layout
-- ✅ Database mappings provide more precise mapping when available
-
 ---
 
 ## Testing Your Controller
@@ -464,43 +2546,20 @@ npm run test:mapping
 node bin/cli.js
 ```
 
-The test will show:
-- ✅ Database mapping found (uses EmulationStation config)
-- ⚠️ No database mapping (uses fallback)
-- Controller type (SDL_GameController or SDL_Joystick)
-
 ## Adding New Controllers
 
-To add support for a new controller:
+To add support for a new controller to the EmulationStation database:
 
 1. Connect your controller
 2. Run `npm run test:mapping` to get the GUID
-3. Add an entry to `src/javascript/controllers/db.json`:
-
-```json
-{
-  "name": "My New Controller",
-  "guid": "030000001234...",
-  "input": [
-    {"name": "a", "type": "button", "id": "0"},
-    {"name": "b", "type": "button", "id": "1"},
-    ...
-  ],
-  "fromDB": "custom"
-}
-```
-
-4. Run this script to regenerate this document:
-
-```bash
-node scripts/generate-controller-list.mjs
-```
+3. Add an entry to `src/javascript/controllers/db.json`
+4. Run `npm run docs:controllers` to regenerate this document
 
 Pull requests welcome!
 
 ---
 
 *Generated from:*
-- *SDL_GameControllerDB: 6324 total mappings (2108 macOS, 2108 Linux, 2108 Windows)*
+- *SDL_GameControllerDB: 2134 unique controllers*
 - *EmulationStation: 321 controller definitions (283 Knulli, 38 Batocera)*
 - *Last updated: 2025-10-26*
