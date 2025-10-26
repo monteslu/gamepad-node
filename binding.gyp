@@ -1,0 +1,53 @@
+{
+	'targets': [{
+		'target_name': 'gamepad_native',
+		'sources': [
+			'src/native/module.cpp',
+			'src/native/gamepad_manager.cpp',
+		],
+		'dependencies': [
+			"<!(node -p \"require('node-addon-api').targets\"):node_addon_api_except",
+		],
+		'defines': [
+			'NAPI_VERSION=<(napi_build_version)',
+			'NODE_ADDON_API_DISABLE_DEPRECATED',
+		],
+		'cflags': [ '-Werror', '-Wall', '-Wextra' ],
+		'conditions': [
+			['OS == "linux"', {
+				'cflags': [ '-D_REENTRANT' ],
+				'cflags_cc': [ '-std=c++17', '-frtti' ],
+				'include_dirs': [ '$(SDL_INC)' ],
+				'libraries': [ '-L$(SDL_LIB)', '-lSDL2' ],
+				'link_settings': {
+					'libraries': [ "-Wl,-rpath,'$$ORIGIN'" ],
+				},
+			}],
+			['OS == "mac"', {
+				'cflags': [ '-D_THREAD_SAFE' ],
+				'xcode_settings': {
+					'OTHER_CFLAGS': [ '-std=c++17' ],
+					'GCC_ENABLE_CPP_RTTI': 'YES',
+				},
+				'include_dirs': [
+					'$(SDL_INC)',
+					'/opt/X11/include',
+				],
+				'libraries': [ '-L$(SDL_LIB)', '-lSDL2' ],
+				'link_settings': {
+					'libraries': [ '-Wl,-rpath,@loader_path' ],
+				},
+			}],
+			['OS == "win"', {
+				'cflags': [ '-D_REENTRANT' ],
+				'msvs_settings': {
+					'VCCLCompilerTool': {
+						'AdditionalOptions': [ '-std:c++17' ],
+					},
+				},
+				'include_dirs': [ '<!(echo %SDL_INC%)' ],
+				'libraries': [ '-l<!(echo %SDL_LIB%)\\SDL2.lib' ],
+			}],
+		],
+	}],
+}

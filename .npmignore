@@ -1,0 +1,4 @@
+sdl/
+tmp/
+.sdl-env
+test/
