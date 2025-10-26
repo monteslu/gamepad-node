@@ -35,20 +35,33 @@ const statusBox = blessed.box({
     padding: { left: 2 }
 });
 
+// Rumble feedback box
+const rumbleBox = blessed.box({
+    top: 3,
+    right: 0,
+    width: 30,
+    height: 3,
+    content: '',
+    tags: true,
+    padding: { right: 2 },
+    align: 'right'
+});
+
 screen.append(header);
 screen.append(statusBox);
+screen.append(rumbleBox);
 
 // Controller display boxes (up to 4 controllers)
 const controllerBoxes = [];
 
 function createControllerBox(index) {
-    const top = 6 + (index * 26);
+    const top = 6 + (index * 29);
 
     const box = blessed.box({
         top,
         left: 0,
         width: '100%',
-        height: 25,
+        height: 28,
         border: { type: 'line' },
         style: {
             border: { fg: 'green' }
@@ -74,7 +87,7 @@ setInterval(() => {
         statusBox.setContent('{yellow-fg}No gamepads connected. Connect a controller to begin. Press q or Ctrl+C to exit.{/}');
         controllerBoxes.forEach(box => box.hide());
     } else {
-        statusBox.setContent(`{green-fg}${gamepads.length} controller(s) connected. Press q or Ctrl+C to exit.{/}`);
+        statusBox.setContent(`{green-fg}${gamepads.length} controller(s) connected. Press R for rumble | Q or Ctrl+C to exit.{/}`);
 
         gamepads.forEach((gamepad, idx) => {
             if (idx < 4) {
@@ -92,6 +105,39 @@ setInterval(() => {
     screen.render();
 }, 16); // 60 FPS
 
+// Rumble on 'r' key
+screen.key(['r'], () => {
+    const gamepads = navigator.getGamepads().filter(gp => gp !== null);
+    let rumbledCount = 0;
+
+    gamepads.forEach(gamepad => {
+        if (gamepad.hapticActuators && gamepad.hapticActuators.length > 0) {
+            gamepad.hapticActuators[0].playEffect('dual-rumble', {
+                duration: 200,
+                strongMagnitude: 1.0,
+                weakMagnitude: 0.5
+            });
+            rumbledCount++;
+        }
+    });
+
+    if (rumbledCount > 0) {
+        rumbleBox.setContent(`{green-fg}{bold}Rumble! (${rumbledCount} controller${rumbledCount > 1 ? 's' : ''}){/}`);
+        setTimeout(() => {
+            rumbleBox.setContent('');
+            screen.render();
+        }, 500);
+    } else {
+        rumbleBox.setContent('{yellow-fg}No rumble available{/}');
+        setTimeout(() => {
+            rumbleBox.setContent('');
+            screen.render();
+        }, 1000);
+    }
+
+    screen.render();
+});
+
 // Quit on Escape, q, or Ctrl+C
 screen.key(['escape', 'q', 'C-c'], () => {
     return process.exit(0);
@@ -105,7 +151,9 @@ function updateControllerDisplay(box, gamepad) {
 
     // Header with detailed info
     const mappingInfo = gamepad._mappingSource ? ` ({yellow-fg}${gamepad._mappingSource} mapping{/})` : '';
-    lines.push(`{bold}{green-fg}Controller ${gamepad.index}: ${gamepad.id}${mappingInfo}{/}`);
+    const hasRumble = gamepad.hapticActuators && gamepad.hapticActuators.length > 0;
+    const rumbleInfo = hasRumble ? ' {magenta-fg}[Rumble: R key]{/}' : ' {gray-fg}[No Rumble]{/}';
+    lines.push(`{bold}{green-fg}Controller ${gamepad.index}: ${gamepad.id}${mappingInfo}${rumbleInfo}{/}`);
 
     // Show raw data from native layer if available
     if (gamepad._native) {
@@ -121,17 +169,27 @@ function updateControllerDisplay(box, gamepad) {
     const rightStickX = gamepad.axes[2] || 0;
     const rightStickY = gamepad.axes[3] || 0;
 
-    // Shoulder buttons
-    const lb = gamepad.buttons[4]?.pressed ? '{green-fg}{bold}[LB]●{/}' : '{gray-fg}[LB]○{/}';
-    const rb = gamepad.buttons[5]?.pressed ? '{green-fg}{bold}[RB]●{/}' : '{gray-fg}[RB]○{/}';
-    lines.push(`        ${lb}                            ${rb}`);
-
     // Triggers (as progress bars)
     const lt = gamepad.buttons[6]?.value || 0;
     const rt = gamepad.buttons[7]?.value || 0;
     const ltBar = createProgressBar(lt, 10);
     const rtBar = createProgressBar(rt, 10);
     lines.push(`     LT ${ltBar}        ${rtBar} RT`);
+
+    // Shoulder buttons
+    const lb = gamepad.buttons[4]?.pressed ? '{green-fg}{bold}[LB]●{/}' : '{gray-fg}[LB]○{/}';
+    const rb = gamepad.buttons[5]?.pressed ? '{green-fg}{bold}[RB]●{/}' : '{gray-fg}[RB]○{/}';
+    lines.push(`        ${lb}                            ${rb}`);
+    lines.push('');
+
+    // Center buttons (SELECT, START, GUIDE) and stick buttons (L3, R3)
+    const selBtn = buttonState('SELECT', gamepad.buttons[8]);
+    const startBtn = buttonState('START', gamepad.buttons[9]);
+    const guideBtn = buttonState('GUIDE', gamepad.buttons[16]);
+    const l3Btn = buttonState('L3', gamepad.buttons[10]);
+    const r3Btn = buttonState('R3', gamepad.buttons[11]);
+    lines.push(`        ${selBtn}  ${guideBtn}  ${startBtn}`);
+    lines.push(`        ${l3Btn}            ${r3Btn}`);
     lines.push('');
 
     // Main layout - D-Pad on left, buttons on right
@@ -161,21 +219,6 @@ function updateControllerDisplay(box, gamepad) {
     lines.push(`  └───┴───┴───┘`);
     lines.push('');
 
-    // Debug: Show full button and axis state arrays
-    if (gamepad._native) {
-        const rawButtons = gamepad._native.buttons.map(b => b ? 1 : 0);
-        lines.push(`{yellow-fg}RAW buttons: [${rawButtons.join(',')}]{/}`);
-
-        const rawAxes = gamepad._native.axes.map(a => a.toFixed(2));
-        lines.push(`{yellow-fg}RAW axes:    [${rawAxes.join(',')}]{/}`);
-    }
-
-    const mappedButtons = gamepad.buttons.map(b => b?.pressed ? 1 : 0);
-    lines.push(`{cyan-fg}MAPPED buttons: [${mappedButtons.join(',')}]{/}`);
-
-    const mappedAxes = gamepad.axes.map(a => a.toFixed(2));
-    lines.push(`{cyan-fg}MAPPED axes:    [${mappedAxes.join(',')}]{/}`);
-
     // Analog sticks visualization
     lines.push('   Left Stick                      Right Stick');
     lines.push(`   (${leftStickX.toFixed(2)}, ${leftStickY.toFixed(2)})                     (${rightStickX.toFixed(2)}, ${rightStickY.toFixed(2)})`);
@@ -185,16 +228,6 @@ function updateControllerDisplay(box, gamepad) {
         lines.push(`   ${leftLine}                  ${rightLine}`);
     }
     lines.push('');
-
-    // Additional buttons
-    const selBtn = buttonState('SELECT', gamepad.buttons[8]);
-    const startBtn = buttonState('START', gamepad.buttons[9]);
-    const guideBtn = buttonState('GUIDE', gamepad.buttons[16]);
-    const l3Btn = buttonState('L3', gamepad.buttons[10]);
-    const r3Btn = buttonState('R3', gamepad.buttons[11]);
-
-    lines.push(`   ${selBtn}  ${startBtn}  ${guideBtn}`);
-    lines.push(`   ${l3Btn}      ${r3Btn}`);
 
     box.setContent(lines.join('\n'));
 }

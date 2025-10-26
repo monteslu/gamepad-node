@@ -1,4 +1,41 @@
+# Development files
+test/
+scripts/
+.github/
+.git/
+.gitignore
+cli/
+eslint.config.js
+
+# Build artifacts
 sdl/
 tmp/
 .sdl-env
-test/
+
+# Source data files (already processed into JSON)
+src/javascript/controllers/batocera_es_input.cfg
+src/javascript/controllers/knulli_es_input.cfg
+
+# Build scripts (not needed at runtime)
+src/javascript/controllers/build-comprehensive-mappings.js
+src/javascript/controllers/create_db.js
+src/javascript/controllers/parse_cfg.js
+src/javascript/controllers/parse_sdl_db.js
+
+# Platform-specific SDL JSON files (no longer used - replaced by gamecontrollerdb.txt)
+src/javascript/controllers/sdl_mappings_android.json
+src/javascript/controllers/sdl_mappings_darwin.json
+src/javascript/controllers/sdl_mappings_ios.json
+src/javascript/controllers/sdl_mappings_linux.json
+src/javascript/controllers/sdl_mappings_win32.json
+
+# Documentation (internal)
+web_gamepad_api_submission_guide.md
+web_gamepad_api_suggestions.md
+
+# Screenshots
+*.png
+cli_screen.png
+
+# Lock files (users should generate their own)
+package-lock.json

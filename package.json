@@ -8,16 +8,15 @@
     "gamepad-test": "./bin/cli.js"
   },
   "scripts": {
-    "install": "node scripts/install.mjs",
-    "download-sdl": "node scripts/download-sdl.mjs",
-    "build": "node scripts/build.mjs",
-    "build:sdl-mappings": "cd src/javascript/controllers && node build-comprehensive-mappings.js",
-    "build:es-db": "cd src/javascript/controllers && node create_db.js",
+    "build:db": "cd src/javascript/controllers && node create_db.js",
     "test": "node test/basic.js",
+    "test:unit": "node --test test/unit/gamepad-button.test.js test/unit/controller-mapper.test.js test/unit/gamepad.test.js",
+    "test:coverage": "node --test --experimental-test-coverage test/unit/gamepad-button.test.js test/unit/controller-mapper.test.js test/unit/gamepad.test.js",
     "test:smoke": "node test/smoke-test.js",
     "test:events": "node test/events-and-rumble.js",
     "test:mapping": "node test/mapping-test.js",
-    "docs:controllers": "node scripts/generate-controller-list.mjs"
+    "lint": "eslint src/ test/ bin/ index.js",
+    "lint:fix": "eslint src/ test/ bin/ index.js --fix"
   },
   "keywords": [
     "gamepad",
@@ -36,18 +35,16 @@
     "type": "git",
     "url": "https://github.com/monteslu/gamepad-node.git"
   },
-  "gypfile": true,
   "dependencies": {
+    "@kmamal/sdl": "^0.11.13",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.11.0",
-    "xml2js": "^0.6.2",
-    "tar": "^7.4.3"
-  },
-  "devDependencies": {
-    "node-addon-api": "^8.5.0",
-    "node-gyp": "^11.2.0"
+    "xml2js": "^0.6.2"
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.38.0"
   }
 }

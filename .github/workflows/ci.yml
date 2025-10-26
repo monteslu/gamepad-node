@@ -29,12 +29,3 @@ jobs:
 
       - name: Run smoke test
         run: npm run test:smoke
-
-      - name: Check build artifacts
-        shell: bash
-        run: |
-          if [ ! -f build/Release/gamepad_native.node ]; then
-            echo "Error: gamepad_native.node not found"
-            exit 1
-          fi
-          echo "✓ Native addon built successfully"

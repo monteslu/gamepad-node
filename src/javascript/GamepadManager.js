@@ -1,4 +1,4 @@
-import { createRequire } from 'module';
+import sdl from './sdl-init.js';
 import { EventEmitter } from 'events';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -6,15 +6,19 @@ import fs from 'fs';
 import { Gamepad } from './Gamepad.js';
 import { GamepadHapticActuator } from './GamepadHapticActuator.js';
 
-const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const native = require('../../build/Release/gamepad_native.node');
 
 export class GamepadManager extends EventEmitter {
     constructor() {
         super();
 
-        // Load platform-specific SDL mappings for vendor/product matching on joysticks
+        // SDL mappings are loaded in sdl-init.js before device enumeration
+
+        // Build GUID -> mapping data and vendor/product index for joystick fallback
+        this._guidToMapping = new Map(); // GUID -> {name, mapping, source}
+        this._vendorProductIndex = new Map(); // vendor/product ID -> array of {guid, name, mapping, source}
+
+        // Load platform-specific mapping data for joystick vendor/product matching
         const platformMap = {
             'darwin': 'sdl_mappings_darwin.json',
             'linux': 'sdl_mappings_linux.json',
@@ -23,10 +27,6 @@ export class GamepadManager extends EventEmitter {
 
         const platform = process.platform;
         const mappingFile = platformMap[platform];
-
-        // Build GUID -> mapping data and vendor/product index for joystick fallback
-        this._guidToMapping = new Map(); // GUID -> {name, mapping, source}
-        this._vendorProductIndex = new Map(); // vendor/product ID -> array of {guid, name, mapping, source}
 
         if (mappingFile) {
             const mappingPath = path.join(__dirname, 'controllers', mappingFile);
@@ -57,100 +57,297 @@ export class GamepadManager extends EventEmitter {
                             });
                         }
                     });
-
-                    console.log(`Loaded ${mappingsData.length} SDL mappings for joystick vendor/product matching`);
                 } catch (err) {
-                    console.warn('Failed to load SDL mappings:', err.message);
+                    console.warn('Failed to load mapping data:', err.message);
                 }
             }
         }
 
-        // Pass path to gamecontrollerdb.txt for SDL to load natively
-        const gamecontrollerdbPath = path.join(__dirname, 'controllers', 'gamecontrollerdb.txt');
-        this._native = new native.GamepadManager(gamecontrollerdbPath);
-        this._pollInterval = null;
-        this._hapticActuators = new Map();
+        // Track open devices and their instances
+        this._controllerInstances = new Map(); // SDL device id -> {device, instance, isController: true}
+        this._joystickInstances = new Map(); // SDL device id -> {device, instance, isController: false}
+        this._nextGamepadIndex = 0; // W3C gamepad index
+        this._gamepadIndexMap = new Map(); // SDL device id -> W3C gamepad index
+        this._hapticActuators = new Map(); // W3C gamepad index -> GamepadHapticActuator
         this._loggedVendorMatches = new Set(); // Track logged vendor/product matches
 
-        // Set up event callbacks from native layer
-        this._native.setEventCallback('connected', (gamepad) => {
-            this.emit('gamepadconnected', { gamepad: this._wrapGamepad(gamepad) });
+        // Set up controller event handlers
+        sdl.controller.on('deviceAdd', (event) => {
+            const device = event.device;
+            const instance = sdl.controller.openDevice(device);
+            const gamepadIndex = this._nextGamepadIndex++;
+
+            this._controllerInstances.set(device.id, {
+                device,
+                instance,
+                isController: true
+            });
+            this._gamepadIndexMap.set(device.id, gamepadIndex);
+
+            // Create haptic actuator for controllers
+            const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+            this._hapticActuators.set(gamepadIndex, hapticActuator);
+
+            const gamepad = this._createGamepadFromController(device, instance, gamepadIndex, hapticActuator);
+            this.emit('gamepadconnected', { gamepad });
         });
 
-        this._native.setEventCallback('disconnected', (gamepad) => {
-            this._hapticActuators.delete(gamepad.index);
-            this.emit('gamepaddisconnected', { gamepad: this._wrapGamepad(gamepad) });
+        sdl.controller.on('deviceRemove', (event) => {
+            const device = event.device;
+            const entry = this._controllerInstances.get(device.id);
+            if (entry) {
+                const gamepadIndex = this._gamepadIndexMap.get(device.id);
+                entry.instance.close();
+                this._controllerInstances.delete(device.id);
+                this._hapticActuators.delete(gamepadIndex);
+                this._gamepadIndexMap.delete(device.id);
+
+                const gamepad = this._createGamepadFromController(device, null, gamepadIndex, null);
+                this.emit('gamepaddisconnected', { gamepad });
+            }
         });
-    }
 
-    poll() {
-        this._native.poll();
-    }
+        // Set up joystick event handlers
+        sdl.joystick.on('deviceAdd', (event) => {
+            const device = event.device;
 
-    _wrapGamepad(nativeGamepad) {
-        if (!nativeGamepad) return null;
+            // Skip if this is already a controller (SDL recognizes it)
+            if (sdl.controller.devices.some(d => d.id === device.id)) {
+                return;
+            }
 
-        // Get or create haptic actuator
-        let hapticActuator = this._hapticActuators.get(nativeGamepad.index);
-        if (!hapticActuator && nativeGamepad.isController) {
-            hapticActuator = new GamepadHapticActuator(
-                this,
-                nativeGamepad.index,
-                nativeGamepad.isController
-            );
-            this._hapticActuators.set(nativeGamepad.index, hapticActuator);
+            const instance = sdl.joystick.openDevice(device);
+            const gamepadIndex = this._nextGamepadIndex++;
+
+            this._joystickInstances.set(device.id, {
+                device,
+                instance,
+                isController: false
+            });
+            this._gamepadIndexMap.set(device.id, gamepadIndex);
+
+            const gamepad = this._createGamepadFromJoystick(device, instance, gamepadIndex);
+            this.emit('gamepadconnected', { gamepad });
+        });
+
+        sdl.joystick.on('deviceRemove', (event) => {
+            const device = event.device;
+            const entry = this._joystickInstances.get(device.id);
+            if (entry) {
+                const gamepadIndex = this._gamepadIndexMap.get(device.id);
+                entry.instance.close();
+                this._joystickInstances.delete(device.id);
+                this._gamepadIndexMap.delete(device.id);
+
+                const gamepad = this._createGamepadFromJoystick(device, null, gamepadIndex);
+                this.emit('gamepaddisconnected', { gamepad });
+            }
+        });
+
+        // Open existing devices
+        for (const device of sdl.controller.devices) {
+            const instance = sdl.controller.openDevice(device);
+            const gamepadIndex = this._nextGamepadIndex++;
+
+            this._controllerInstances.set(device.id, {
+                device,
+                instance,
+                isController: true
+            });
+            this._gamepadIndexMap.set(device.id, gamepadIndex);
+
+            const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+            this._hapticActuators.set(gamepadIndex, hapticActuator);
         }
 
-        // Look up mapping data
-        let mappingData = this._guidToMapping.get(nativeGamepad.guid);
+        for (const device of sdl.joystick.devices) {
+            // Skip if already opened as controller
+            if (this._controllerInstances.has(device.id)) {
+                continue;
+            }
 
-        // Only apply vendor/product matching to raw joysticks (isController=false)
-        // Don't override SDL's built-in GameController mappings
-        if (!mappingData && !nativeGamepad.isController && nativeGamepad.guid.length >= 20) {
-            const vendorProduct = nativeGamepad.guid.substring(8, 20);
+            const instance = sdl.joystick.openDevice(device);
+            const gamepadIndex = this._nextGamepadIndex++;
+
+            this._joystickInstances.set(device.id, {
+                device,
+                instance,
+                isController: false
+            });
+            this._gamepadIndexMap.set(device.id, gamepadIndex);
+        }
+    }
+
+    _createGamepadFromController(device, instance, gamepadIndex, hapticActuator) {
+        // Convert node-sdl controller format to our native format
+        const nativeGamepad = {
+            index: gamepadIndex,
+            id: device.name,
+            guid: device.guid,
+            isController: true,
+            buttons: instance ? this._convertControllerButtons(instance) : [],
+            axes: instance ? this._convertControllerAxes(instance) : [],
+            timestamp: Date.now()
+        };
+
+        return new Gamepad(nativeGamepad, hapticActuator, null);
+    }
+
+    _createGamepadFromJoystick(device, instance, gamepadIndex) {
+        // Convert node-sdl joystick format to our native format
+        const guid = device.guid || this._generateGUID(device);
+
+        // Look up mapping data
+        let mappingData = this._guidToMapping.get(guid);
+
+        // Vendor/product matching for joysticks
+        if (!mappingData && guid.length >= 20) {
+            const vendorProduct = guid.substring(8, 20);
             const matches = this._vendorProductIndex.get(vendorProduct);
 
             if (matches && matches.length > 0) {
                 const bestMatch = matches[0];
 
-                // Log vendor/product match once
-                if (!this._loggedVendorMatches.has(nativeGamepad.guid)) {
-                    console.log(`Vendor/product match for ${nativeGamepad.guid}: using ${bestMatch.source} mapping`);
-                    this._loggedVendorMatches.add(nativeGamepad.guid);
+                if (!this._loggedVendorMatches.has(guid)) {
+                    console.log(`Vendor/product match for ${guid}: using ${bestMatch.source} mapping`);
+                    this._loggedVendorMatches.add(guid);
                 }
 
                 mappingData = {
                     name: bestMatch.name,
                     mapping: bestMatch.mapping,
                     source: bestMatch.source + ' (vendor/product match)',
-                    guid: nativeGamepad.guid
+                    guid: guid
                 };
             }
         }
 
-        return new Gamepad(nativeGamepad, hapticActuator, mappingData || null);
+        const nativeGamepad = {
+            index: gamepadIndex,
+            id: device.name,
+            guid: guid,
+            isController: false,
+            buttons: instance ? this._convertJoystickButtons(instance) : [],
+            axes: instance ? this._convertJoystickAxes(instance) : [],
+            timestamp: Date.now()
+        };
+
+        return new Gamepad(nativeGamepad, null, mappingData);
+    }
+
+    _convertControllerButtons(instance) {
+        const buttons = instance.buttons;
+        return [
+            { pressed: buttons.a, value: buttons.a ? 1.0 : 0.0 },
+            { pressed: buttons.b, value: buttons.b ? 1.0 : 0.0 },
+            { pressed: buttons.x, value: buttons.x ? 1.0 : 0.0 },
+            { pressed: buttons.y, value: buttons.y ? 1.0 : 0.0 },
+            { pressed: buttons.leftShoulder, value: buttons.leftShoulder ? 1.0 : 0.0 },
+            { pressed: buttons.rightShoulder, value: buttons.rightShoulder ? 1.0 : 0.0 },
+            { pressed: instance.axes.leftTrigger > 0.5, value: instance.axes.leftTrigger },
+            { pressed: instance.axes.rightTrigger > 0.5, value: instance.axes.rightTrigger },
+            { pressed: buttons.back, value: buttons.back ? 1.0 : 0.0 },
+            { pressed: buttons.start, value: buttons.start ? 1.0 : 0.0 },
+            { pressed: buttons.leftStick, value: buttons.leftStick ? 1.0 : 0.0 },
+            { pressed: buttons.rightStick, value: buttons.rightStick ? 1.0 : 0.0 },
+            { pressed: buttons.dpadUp, value: buttons.dpadUp ? 1.0 : 0.0 },
+            { pressed: buttons.dpadDown, value: buttons.dpadDown ? 1.0 : 0.0 },
+            { pressed: buttons.dpadLeft, value: buttons.dpadLeft ? 1.0 : 0.0 },
+            { pressed: buttons.dpadRight, value: buttons.dpadRight ? 1.0 : 0.0 },
+            { pressed: buttons.guide, value: buttons.guide ? 1.0 : 0.0 },
+        ];
+    }
+
+    _convertControllerAxes(instance) {
+        const axes = instance.axes;
+        return [
+            axes.leftStickX,
+            axes.leftStickY,
+            axes.rightStickX,
+            axes.rightStickY,
+        ];
+    }
+
+    _convertJoystickButtons(instance) {
+        const buttons = [];
+        for (let i = 0; i < instance.numButtons; i++) {
+            const pressed = instance.buttons[i];
+            buttons.push({ pressed, value: pressed ? 1.0 : 0.0 });
+        }
+        return buttons;
+    }
+
+    _convertJoystickAxes(instance) {
+        const axes = [];
+        for (let i = 0; i < instance.numAxes; i++) {
+            axes.push(instance.axes[i]);
+        }
+        return axes;
+    }
+
+    _generateGUID(device) {
+        // Generate a GUID-like identifier for devices without one
+        return `unknown-${device.id}`;
+    }
+
+    poll() {
+        // node-sdl polls automatically via events, but we keep this for compatibility
+        // W3C Gamepad API expects manual polling in browsers
     }
 
     getGamepads() {
-        const nativeGamepads = this._native.getGamepads();
-        return nativeGamepads.map(gp => {
-            if (gp === null) return null;
-            return this._wrapGamepad(gp);
-        });
+        const gamepads = [];
+
+        // Add controllers
+        for (const [deviceId, entry] of this._controllerInstances) {
+            const gamepadIndex = this._gamepadIndexMap.get(deviceId);
+            const hapticActuator = this._hapticActuators.get(gamepadIndex);
+            const gamepad = this._createGamepadFromController(entry.device, entry.instance, gamepadIndex, hapticActuator);
+            gamepads[gamepadIndex] = gamepad;
+        }
+
+        // Add joysticks
+        for (const [deviceId, entry] of this._joystickInstances) {
+            const gamepadIndex = this._gamepadIndexMap.get(deviceId);
+            const gamepad = this._createGamepadFromJoystick(entry.device, entry.instance, gamepadIndex);
+            gamepads[gamepadIndex] = gamepad;
+        }
+
+        return gamepads;
+    }
+
+    playVibration(gamepadIndex, strongMagnitude, weakMagnitude, duration) {
+        // Find the controller instance
+        for (const [deviceId, entry] of this._controllerInstances) {
+            if (this._gamepadIndexMap.get(deviceId) === gamepadIndex) {
+                if (!entry.instance || !entry.isController) {
+                    return false;
+                }
+
+                // node-sdl uses different rumble API
+                const instance = entry.instance;
+                const lowFreq = Math.floor(weakMagnitude * 0xFFFF);
+                const highFreq = Math.floor(strongMagnitude * 0xFFFF);
+
+                try {
+                    instance.rumble(lowFreq, highFreq, duration);
+                    return true;
+                } catch (err) {
+                    console.error('Rumble failed:', err);
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 
     startPolling(hz = 60) {
-        if (this._pollInterval) {
-            this.stopPolling();
-        }
-        const interval = Math.floor(1000 / hz);
-        this._pollInterval = setInterval(() => this.poll(), interval);
+        // node-sdl handles polling via event loop, but keep for compatibility
+        // Just do nothing - events will fire automatically
     }
 
     stopPolling() {
-        if (this._pollInterval) {
-            clearInterval(this._pollInterval);
-            this._pollInterval = null;
-        }
+        // node-sdl handles polling via event loop, but keep for compatibility
     }
 }
