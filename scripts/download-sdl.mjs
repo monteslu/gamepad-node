@@ -62,7 +62,7 @@ async function main() {
 	fs.mkdirSync(tmpDir, { recursive: true });
 
 	const tarballPath = path.join(tmpDir, 'sdl.tar.gz');
-	const url = `https://github.com/${SDL_CONFIG.owner}/${SDL_CONFIG.repo}/releases/download/${SDL_CONFIG.version}/${platformString}.tar.gz`;
+	const url = `https://github.com/${SDL_CONFIG.owner}/${SDL_CONFIG.repo}/releases/download/v${SDL_CONFIG.version}/SDL-v${SDL_CONFIG.version}-${platformString}.tar.gz`;
 
 	console.log(`Downloading SDL from: ${url}`);
 	await download(url, tarballPath);
