@@ -147,14 +147,14 @@ function generateTable(controllers, title) {
 
   let table = `## ${title}\n\n`;
   table += `| Controller Name | GUID | Inputs |\n`;
-  table += `|----------------|------|--------|\n`;
+  table += `|----------------|----------------------------------|--------|\n`;
 
   // Sort by name
   const sorted = [...controllers].sort((a, b) => a.name.localeCompare(b.name));
 
   sorted.forEach(c => {
     const name = c.name.replace(/\|/g, '\\|'); // Escape pipes in names
-    const guid = c.guid.substring(0, 16) + '...'; // Truncate GUID for readability
+    const guid = c.guid.length > 32 ? c.guid.substring(0, 32) : c.guid; // Show full GUID (32 chars)
     const inputs = c.input.length;
     table += `| ${name} | \`${guid}\` | ${inputs} |\n`;
   });
