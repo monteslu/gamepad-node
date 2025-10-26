@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import { fileURLToPath } from 'url';
-import { pipeline } from 'stream/promises';
-import * as tar from 'tar';
+import { extract } from 'tar';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, '..');
@@ -69,7 +68,7 @@ async function main() {
 	await download(url, tarballPath);
 
 	console.log('Extracting SDL...');
-	await tar.x({
+	await extract({
 		file: tarballPath,
 		cwd: sdlDir,
 	});
