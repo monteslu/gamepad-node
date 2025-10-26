@@ -38,7 +38,6 @@
   },
   "gypfile": true,
   "dependencies": {
-    "@kmamal/build-sdl": "file:../build-sdl",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.11.0",
     "xml2js": "^0.6.2",

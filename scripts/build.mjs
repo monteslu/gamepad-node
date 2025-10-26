@@ -1,16 +1,21 @@
 import { execSync } from 'child_process';
-import { createRequire } from 'module';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, '..');
 
-// Get SDL paths from build-sdl
-const sdlDist = require('@kmamal/build-sdl');
-const SDL_INC = path.join(sdlDist, 'include');
-const SDL_LIB = path.join(sdlDist, 'lib');
+// Download SDL first if not present
+const sdlDir = path.join(rootDir, 'sdl');
+if (!fs.existsSync(sdlDir)) {
+	console.log('SDL not found, downloading...');
+	execSync('node scripts/download-sdl.mjs', { cwd: rootDir, stdio: 'inherit' });
+}
+
+// Get SDL paths from our downloaded SDL
+const SDL_INC = path.join(sdlDir, 'include');
+const SDL_LIB = path.join(sdlDir, 'lib');
 
 console.log('Building native addon...');
 console.log(`SDL_INC=${SDL_INC}`);
