@@ -2,11 +2,23 @@
 
 W3C Gamepad API for Node.js using SDL2. Works exactly like the browser API, but better - every controller gets `mapping: "standard"`, not just the handful browsers recognize.
 
+## Features
+
+- Browser-compatible API - `navigator.getGamepads()` works exactly like in browsers
+- Every controller gets `mapping: "standard"` - not just the 20-30 browsers recognize
+- 2100+ controllers via SDL2's community database
+- 321 more via EmulationStation configs (Knulli + Batocera)
+- Generic fallback for everything else
+- Hot-plug support with connect/disconnect events
+- Vibration/rumble support (dual-rumble via GamepadHapticActuator)
+- CLI tester with real-time visualization
+- Zero config - SDL2 downloads automatically
+
 ## Why this exists
 
 Browsers only give `mapping: "standard"` to about 20-30 controllers. Everyone else gets unpredictable button mappings and has to implement config screens. That sucks for game developers.
 
-This library ensures **every controller** gets standard mappings through SDL2's massive database (2100+ controllers), plus EmulationStation configs (321 more), plus fallback remapping for anything else. Your game code stays simple.
+This library ensures **every controller** gets standard mappings. Your game code stays simple.
 
 ## Install
 
