@@ -1,5 +1,9 @@
 # gamepad-node
 
+[![npm version](https://img.shields.io/npm/v/gamepad-node.svg)](https://www.npmjs.com/package/gamepad-node)
+[![CI](https://github.com/monteslu/gamepad-node/actions/workflows/ci.yml/badge.svg)](https://github.com/monteslu/gamepad-node/actions/workflows/ci.yml)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+
 W3C Gamepad API for Node.js using SDL2. Works exactly like the browser API, but better - every controller gets `mapping: "standard"`, not just the handful browsers recognize.
 
 ## Features
