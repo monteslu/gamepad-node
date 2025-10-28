@@ -112,7 +112,7 @@ export class GamepadManager extends EventEmitter {
             const device = event.device;
 
             // Skip if this is already a controller (SDL recognizes it)
-            if (sdl.controller.devices.some(d => d.id === device.id)) {
+            if (sdl.controller.devices.some(d => d.id === device.id) || device.type === 'gamecontroller') {
                 return;
             }
 
@@ -161,8 +161,8 @@ export class GamepadManager extends EventEmitter {
         }
 
         for (const device of sdl.joystick.devices) {
-            // Skip if already opened as controller
-            if (this._controllerInstances.has(device.id)) {
+            // Skip if already opened as controller OR if SDL recognizes it as a controller
+            if (this._controllerInstances.has(device.id) || device.type === 'gamecontroller') {
                 continue;
             }
 
@@ -185,12 +185,16 @@ export class GamepadManager extends EventEmitter {
             id: device.name,
             guid: device.guid,
             isController: true,
+            connected: instance !== null,
             buttons: instance ? this._convertControllerButtons(instance) : [],
             axes: instance ? this._convertControllerAxes(instance) : [],
             timestamp: Date.now()
         };
 
-        return new Gamepad(nativeGamepad, hapticActuator, null);
+        // Pass SDL mapping for dpad synthesis detection
+        const mappingData = device.mapping ? { mapping: device.mapping, source: 'SDL' } : null;
+
+        return new Gamepad(nativeGamepad, hapticActuator, mappingData);
     }
 
     _createGamepadFromJoystick(device, instance, gamepadIndex) {
@@ -227,6 +231,7 @@ export class GamepadManager extends EventEmitter {
             id: device.name,
             guid: guid,
             isController: false,
+            connected: instance !== null,
             buttons: instance ? this._convertJoystickButtons(instance) : [],
             axes: instance ? this._convertJoystickAxes(instance) : [],
             timestamp: Date.now()

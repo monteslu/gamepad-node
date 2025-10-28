@@ -86,11 +86,12 @@ export class Gamepad {
         // Store which platform the mapping came from (for debugging)
         this._mappingSource = mappingData ? mappingData.source : null;
 
-        // Check if we have SDL mapping data from GamepadManager (vendor/product match)
-        const hasSDLMapping = mappingData && mappingData.mapping;
+        // Check if we have SDL mapping data from GamepadManager (vendor/product match for joysticks)
+        // Don't treat SDL's auto-generated controller mappings as needing remapping
+        const needsRemapping = mappingData && mappingData.mapping && mappingData.source !== 'SDL';
 
-        // For SDL_GameController: use data as-is ONLY if we don't have our own SDL mapping
-        if (native_data.isController && !hasSDLMapping) {
+        // For SDL_GameController: use data as-is (SDL already mapped it)
+        if (native_data.isController && !needsRemapping) {
             this.buttons = (native_data.buttons || []).map((btn, i) => {
                 // Button data is already { pressed, value } from GamepadManager
                 return new GamepadButton(btn.pressed, btn.value);
@@ -99,12 +100,12 @@ export class Gamepad {
             // Only use first 4 axes for standard gamepad (left stick, right stick)
             this.axes = (native_data.axes || []).slice(0, 4);
         }
-        // For SDL_Joystick OR SDL_GameController with our own SDL mapping: apply manual mapping
+        // For SDL_Joystick with manual mapping: apply remapping
         else {
             let jsMap;
 
             // If we have SDL mapping from vendor/product match, parse it
-            if (hasSDLMapping) {
+            if (needsRemapping) {
                 jsMap = parseSDLMapping(mappingData.mapping);
             } else {
                 // Look up mapping from EmulationStation controller database
@@ -135,6 +136,24 @@ export class Gamepad {
 
             // Store mapping for debugging
             this._mapping = jsMap;
+        }
+
+        // Fix for Apple MFi / macOS controllers that report dpad as axes instead of buttons
+        // Synthesize dpad buttons from left stick axes if mapping is missing dpad
+        if (mappingData && mappingData.mapping) {
+            const mappingStr = mappingData.mapping.toLowerCase();
+            const hasDpad = mappingStr.includes('dpup') || mappingStr.includes('dpdown') ||
+                           mappingStr.includes('dpleft') || mappingStr.includes('dpright');
+            const hasLeftStick = mappingStr.includes('leftx') && mappingStr.includes('lefty');
+
+            if (!hasDpad && hasLeftStick && this.axes.length >= 2) {
+                // Synthesize dpad buttons from axes[0] and axes[1]
+                const threshold = 0.5;
+                this.buttons[12] = new GamepadButton(this.axes[1] < -threshold, this.axes[1] < -threshold ? 1.0 : 0.0); // dpup
+                this.buttons[13] = new GamepadButton(this.axes[1] > threshold, this.axes[1] > threshold ? 1.0 : 0.0);    // dpdown
+                this.buttons[14] = new GamepadButton(this.axes[0] < -threshold, this.axes[0] < -threshold ? 1.0 : 0.0); // dpleft
+                this.buttons[15] = new GamepadButton(this.axes[0] > threshold, this.axes[0] > threshold ? 1.0 : 0.0);    // dpright
+            }
         }
     }
 }
