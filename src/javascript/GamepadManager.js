@@ -74,22 +74,27 @@ export class GamepadManager extends EventEmitter {
         // Set up controller event handlers
         sdl.controller.on('deviceAdd', (event) => {
             const device = event.device;
-            const instance = sdl.controller.openDevice(device);
-            const gamepadIndex = this._nextGamepadIndex++;
 
-            this._controllerInstances.set(device.id, {
-                device,
-                instance,
-                isController: true
-            });
-            this._gamepadIndexMap.set(device.id, gamepadIndex);
+            try {
+                const instance = sdl.controller.openDevice(device);
+                const gamepadIndex = this._nextGamepadIndex++;
 
-            // Create haptic actuator for controllers
-            const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
-            this._hapticActuators.set(gamepadIndex, hapticActuator);
+                this._controllerInstances.set(device.id, {
+                    device,
+                    instance,
+                    isController: true
+                });
+                this._gamepadIndexMap.set(device.id, gamepadIndex);
 
-            const gamepad = this._createGamepadFromController(device, instance, gamepadIndex, hapticActuator);
-            this.emit('gamepadconnected', { gamepad });
+                // Create haptic actuator for controllers
+                const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+                this._hapticActuators.set(gamepadIndex, hapticActuator);
+
+                const gamepad = this._createGamepadFromController(device, instance, gamepadIndex, hapticActuator);
+                this.emit('gamepadconnected', { gamepad });
+            } catch (err) {
+                console.warn(`Failed to open controller ${device.name}:`, err.message);
+            }
         });
 
         sdl.controller.on('deviceRemove', (event) => {
@@ -97,7 +102,12 @@ export class GamepadManager extends EventEmitter {
             const entry = this._controllerInstances.get(device.id);
             if (entry) {
                 const gamepadIndex = this._gamepadIndexMap.get(device.id);
-                entry.instance.close();
+
+                // Only close if not already closed
+                if (!entry.instance.closed) {
+                    entry.instance.close();
+                }
+
                 this._controllerInstances.delete(device.id);
                 this._hapticActuators.delete(gamepadIndex);
                 this._gamepadIndexMap.delete(device.id);
@@ -116,18 +126,22 @@ export class GamepadManager extends EventEmitter {
                 return;
             }
 
-            const instance = sdl.joystick.openDevice(device);
-            const gamepadIndex = this._nextGamepadIndex++;
+            try {
+                const instance = sdl.joystick.openDevice(device);
+                const gamepadIndex = this._nextGamepadIndex++;
 
-            this._joystickInstances.set(device.id, {
-                device,
-                instance,
-                isController: false
-            });
-            this._gamepadIndexMap.set(device.id, gamepadIndex);
+                this._joystickInstances.set(device.id, {
+                    device,
+                    instance,
+                    isController: false
+                });
+                this._gamepadIndexMap.set(device.id, gamepadIndex);
 
-            const gamepad = this._createGamepadFromJoystick(device, instance, gamepadIndex);
-            this.emit('gamepadconnected', { gamepad });
+                const gamepad = this._createGamepadFromJoystick(device, instance, gamepadIndex);
+                this.emit('gamepadconnected', { gamepad });
+            } catch (err) {
+                console.warn(`Failed to open joystick ${device.name}:`, err.message);
+            }
         });
 
         sdl.joystick.on('deviceRemove', (event) => {
@@ -135,7 +149,12 @@ export class GamepadManager extends EventEmitter {
             const entry = this._joystickInstances.get(device.id);
             if (entry) {
                 const gamepadIndex = this._gamepadIndexMap.get(device.id);
-                entry.instance.close();
+
+                // Only close if not already closed
+                if (!entry.instance.closed) {
+                    entry.instance.close();
+                }
+
                 this._joystickInstances.delete(device.id);
                 this._gamepadIndexMap.delete(device.id);
 
@@ -146,18 +165,22 @@ export class GamepadManager extends EventEmitter {
 
         // Open existing devices
         for (const device of sdl.controller.devices) {
-            const instance = sdl.controller.openDevice(device);
-            const gamepadIndex = this._nextGamepadIndex++;
+            try {
+                const instance = sdl.controller.openDevice(device);
+                const gamepadIndex = this._nextGamepadIndex++;
 
-            this._controllerInstances.set(device.id, {
-                device,
-                instance,
-                isController: true
-            });
-            this._gamepadIndexMap.set(device.id, gamepadIndex);
+                this._controllerInstances.set(device.id, {
+                    device,
+                    instance,
+                    isController: true
+                });
+                this._gamepadIndexMap.set(device.id, gamepadIndex);
 
-            const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
-            this._hapticActuators.set(gamepadIndex, hapticActuator);
+                const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+                this._hapticActuators.set(gamepadIndex, hapticActuator);
+            } catch (err) {
+                console.warn(`Failed to open controller ${device.name}:`, err.message);
+            }
         }
 
         for (const device of sdl.joystick.devices) {
@@ -166,15 +189,19 @@ export class GamepadManager extends EventEmitter {
                 continue;
             }
 
-            const instance = sdl.joystick.openDevice(device);
-            const gamepadIndex = this._nextGamepadIndex++;
+            try {
+                const instance = sdl.joystick.openDevice(device);
+                const gamepadIndex = this._nextGamepadIndex++;
 
-            this._joystickInstances.set(device.id, {
-                device,
-                instance,
-                isController: false
-            });
-            this._gamepadIndexMap.set(device.id, gamepadIndex);
+                this._joystickInstances.set(device.id, {
+                    device,
+                    instance,
+                    isController: false
+                });
+                this._gamepadIndexMap.set(device.id, gamepadIndex);
+            } catch (err) {
+                console.warn(`Failed to open joystick ${device.name}:`, err.message);
+            }
         }
     }
 
@@ -329,13 +356,11 @@ export class GamepadManager extends EventEmitter {
                     return false;
                 }
 
-                // node-sdl uses different rumble API
+                // node-sdl rumble API expects values between 0 and 1
                 const instance = entry.instance;
-                const lowFreq = Math.floor(weakMagnitude * 0xFFFF);
-                const highFreq = Math.floor(strongMagnitude * 0xFFFF);
 
                 try {
-                    instance.rumble(lowFreq, highFreq, duration);
+                    instance.rumble(weakMagnitude, strongMagnitude, duration);
                     return true;
                 } catch (err) {
                     console.error('Rumble failed:', err);

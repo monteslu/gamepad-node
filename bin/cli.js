@@ -1,23 +1,34 @@
 #!/usr/bin/env node
 import blessed from 'blessed';
 import { installNavigatorShim } from '../index.js';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
 
 installNavigatorShim();
 
 // Create screen
 const screen = blessed.screen({
     smartCSR: true,
-    title: 'Gamepad Tester v1.0',
+    title: `Gamepad Tester v${pkg.version}`,
     fullUnicode: true
 });
 
 // Header box
+const headerText = `GAMEPAD TESTER v${pkg.version}`;
+const headerWidth = 33;
+const padding = Math.floor((headerWidth - 2 - headerText.length) / 2);
+const headerLine = `║${' '.repeat(padding)}${headerText}${' '.repeat(headerWidth - 2 - padding - headerText.length)}║`;
+
 const header = blessed.box({
     top: 0,
     left: 'center',
     width: '100%',
     height: 3,
-    content: '{center}{bold}{cyan-fg}╔═══════════════════════════════╗\n║   GAMEPAD TESTER v1.0   ║\n╚═══════════════════════════════╝{/}',
+    content: `{center}{bold}{cyan-fg}╔═══════════════════════════════╗\n${headerLine}\n╚═══════════════════════════════╝{/}`,
     tags: true,
     style: {
         fg: 'cyan'
@@ -29,7 +40,7 @@ const statusBox = blessed.box({
     top: 3,
     left: 0,
     width: '100%',
-    height: 3,
+    height: 1,
     content: '{yellow-fg}Waiting for controllers...{/}',
     tags: true,
     padding: { left: 2 }
@@ -55,13 +66,13 @@ screen.append(rumbleBox);
 const controllerBoxes = [];
 
 function createControllerBox(index) {
-    const top = 6 + (index * 29);
+    const top = 4 + (index * 25);
 
     const box = blessed.box({
         top,
         left: 0,
         width: '100%',
-        height: 28,
+        height: 24,
         border: { type: 'line' },
         style: {
             border: { fg: 'green' }
@@ -106,20 +117,20 @@ setInterval(() => {
 }, 16); // 60 FPS
 
 // Rumble on 'r' key
-screen.key(['r'], () => {
+screen.key(['r'], async () => {
     const gamepads = navigator.getGamepads().filter(gp => gp !== null);
     let rumbledCount = 0;
 
-    gamepads.forEach(gamepad => {
-        if (gamepad.hapticActuators && gamepad.hapticActuators.length > 0) {
-            gamepad.hapticActuators[0].playEffect('dual-rumble', {
-                duration: 200,
-                strongMagnitude: 1.0,
-                weakMagnitude: 0.5
-            });
+    for (const gamepad of gamepads) {
+        if (gamepad.vibrationActuator) {
             rumbledCount++;
+            gamepad.vibrationActuator.playEffect('dual-rumble', {
+                duration: 500,
+                strongMagnitude: 1.0,
+                weakMagnitude: 0.8
+            });
         }
-    });
+    }
 
     if (rumbledCount > 0) {
         rumbleBox.setContent(`{green-fg}{bold}Rumble! (${rumbledCount} controller${rumbledCount > 1 ? 's' : ''}){/}`);
@@ -150,18 +161,17 @@ function updateControllerDisplay(box, gamepad) {
     const lines = [];
 
     // Header with detailed info
-    const mappingInfo = gamepad._mappingSource ? ` ({yellow-fg}${gamepad._mappingSource} mapping{/})` : '';
-    const hasRumble = gamepad.hapticActuators && gamepad.hapticActuators.length > 0;
+    const hasRumble = gamepad.vibrationActuator !== null;
     const rumbleInfo = hasRumble ? ' {magenta-fg}[Rumble: R key]{/}' : ' {gray-fg}[No Rumble]{/}';
-    lines.push(`{bold}{green-fg}Controller ${gamepad.index}: ${gamepad.id}${mappingInfo}${rumbleInfo}{/}`);
+    lines.push(`{bold}{green-fg}Controller ${gamepad.index}: ${gamepad.id}${rumbleInfo}{/}`);
 
     // Show raw data from native layer if available
     if (gamepad._native) {
         const type = gamepad._native.isController ? 'SDL_GameController' : 'SDL_Joystick';
-        lines.push(`{cyan-fg}Type: ${type} | GUID: ${gamepad._native.guid}{/}`);
-        lines.push(`{cyan-fg}Raw: ${gamepad._native.buttons.length} buttons, ${gamepad._native.axes.length} axes{/}`);
+        const mappingInfo = gamepad._mappingSource ? ` ({yellow-fg}${gamepad._mappingSource} mapping{/})` : '';
+        lines.push(`{cyan-fg}${type} | ${gamepad._native.buttons.length} buttons, ${gamepad._native.axes.length} axes{/}`);
+        lines.push(`{cyan-fg}${gamepad._native.guid}${mappingInfo}{/}`);
     }
-    lines.push('');
 
     // Layout: Buttons (left column) | Sticks (middle) | D-Pad (right)
     const leftStickX = gamepad.axes[0] || 0;
@@ -176,24 +186,22 @@ function updateControllerDisplay(box, gamepad) {
     const rtBar = createProgressBar(rt, 10);
     lines.push(`     LT ${ltBar}        ${rtBar} RT`);
 
-    // Shoulder buttons
-    const lb = gamepad.buttons[4]?.pressed ? '{green-fg}{bold}[LB]●{/}' : '{gray-fg}[LB]○{/}';
-    const rb = gamepad.buttons[5]?.pressed ? '{green-fg}{bold}[RB]●{/}' : '{gray-fg}[RB]○{/}';
-    lines.push(`        ${lb}                            ${rb}`);
-    lines.push('');
+    // Shoulder and stick buttons combined
+    const lb = gamepad.buttons[4]?.pressed ? '{green-fg}{bold}[LB]{/}' : '{gray-fg}[LB]{/}';
+    const rb = gamepad.buttons[5]?.pressed ? '{green-fg}{bold}[RB]{/}' : '{gray-fg}[RB]{/}';
+    const l3Btn = buttonState('L3', gamepad.buttons[10]);
+    const r3Btn = buttonState('R3', gamepad.buttons[11]);
+    lines.push(`        ${lb} ${l3Btn}            ${r3Btn} ${rb}`);
 
-    // Center buttons (SELECT, START, GUIDE) and stick buttons (L3, R3)
+    // Center buttons (SELECT, START, GUIDE)
     const selBtn = buttonState('SELECT', gamepad.buttons[8]);
     const startBtn = buttonState('START', gamepad.buttons[9]);
     const guideBtn = buttonState('GUIDE', gamepad.buttons[16]);
-    const l3Btn = buttonState('L3', gamepad.buttons[10]);
-    const r3Btn = buttonState('R3', gamepad.buttons[11]);
     lines.push(`        ${selBtn}  ${guideBtn}  ${startBtn}`);
-    lines.push(`        ${l3Btn}            ${r3Btn}`);
     lines.push('');
 
     // Main layout - D-Pad on left, buttons on right
-    lines.push('    D-Pad                                     Face Buttons');
+    lines.push('    D-Pad');
 
     const dpadUp = gamepad.buttons[12]?.pressed;
     const dpadDown = gamepad.buttons[13]?.pressed;
@@ -210,24 +218,22 @@ function updateControllerDisplay(box, gamepad) {
     const aBtn = buttonChar('A', gamepad.buttons[0]);
     const xBtn = buttonChar('X', gamepad.buttons[2]);
 
-    lines.push(`  ┌───┬───┬───┐                                      ${yBtn}`);
-    lines.push(`  │   │ ${upChar} │   │                                ${xBtn}       ${bBtn}`);
-    lines.push(`  ├───┼───┼───┤                                      ${aBtn}`);
-    lines.push(`  │ ${leftChar} │   │ ${rightChar} │`);
-    lines.push(`  ├───┼───┼───┤`);
+    lines.push(`  ┌───┬───┬───┐`);
+    lines.push(`  │   │ ${upChar} │   │            Face Buttons`);
+    lines.push(`  ├───┼───┼───┤                 ${yBtn}`);
+    lines.push(`  │ ${leftChar} │   │ ${rightChar} │            ${xBtn}       ${bBtn}`);
+    lines.push(`  ├───┼───┼───┤                 ${aBtn}`);
     lines.push(`  │   │ ${downChar} │   │`);
     lines.push(`  └───┴───┴───┘`);
-    lines.push('');
 
     // Analog sticks visualization
-    lines.push('   Left Stick                      Right Stick');
-    lines.push(`   (${leftStickX.toFixed(2)}, ${leftStickY.toFixed(2)})                     (${rightStickX.toFixed(2)}, ${rightStickY.toFixed(2)})`);
+    lines.push('   Left Stick              Right Stick');
+    lines.push(`   (${leftStickX.toFixed(2)}, ${leftStickY.toFixed(2)})           (${rightStickX.toFixed(2)}, ${rightStickY.toFixed(2)})`);
     for (let row = 0; row < 5; row++) {
         const leftLine = createStickRow(leftStickX, leftStickY, row);
         const rightLine = createStickRow(rightStickX, rightStickY, row);
-        lines.push(`   ${leftLine}                  ${rightLine}`);
+        lines.push(`   ${leftLine}               ${rightLine}`);
     }
-    lines.push('');
 
     box.setContent(lines.join('\n'));
 }
@@ -244,8 +250,7 @@ function buttonChar(label, button) {
 function buttonState(name, button) {
     const pressed = button?.pressed || false;
     const color = pressed ? 'green' : 'gray';
-    const symbol = pressed ? '●' : '○';
-    return `{${color}-fg}[${name.padEnd(6)}] ${symbol}{/}`;
+    return `{${color}-fg}[${name}]{/}`;
 }
 
 function createProgressBar(value, width) {

@@ -27,11 +27,11 @@ export class GamepadHapticActuator {
         }
 
         // Play the vibration effect
-        const success = this._manager._native.playVibration(
+        const success = this._manager.playVibration(
             this._gamepadIndex,
-            duration,
             strongMagnitude,
-            weakMagnitude
+            weakMagnitude,
+            duration
         );
 
         return success ? 'complete' : 'preempted';
@@ -47,7 +47,8 @@ export class GamepadHapticActuator {
 
     reset() {
         if (this._isController) {
-            this._manager._native.stopVibration(this._gamepadIndex);
+            // Stop rumble by playing with 0 magnitude
+            this._manager.playVibration(this._gamepadIndex, 0, 0, 0);
         }
         return Promise.resolve();
     }
