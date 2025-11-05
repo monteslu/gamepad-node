@@ -8,12 +8,13 @@ const require = createRequire(import.meta.url);
 // Load controller database
 const controllerList = require('./controllers/db.json');
 
-// EmulationStation button map (Nintendo-style button IDs)
+// EmulationStation button map (POSITIONAL, not label-based!)
+// 'b' = south position, 'a' = east position, 'y' = west position, 'x' = north position
 const esButtonMap = {
-  'b': 0,
-  'a': 1,
-  'y': 2,
-  'x': 3,
+  'b': 0,  // South position
+  'a': 1,  // East position
+  'y': 2,  // West position
+  'x': 3,  // North position
   'pageup': 4,
   'pagedown': 5,
   'l2': 6,
@@ -30,6 +31,39 @@ const esButtonMap = {
 };
 
 const AXIS_THRESHOLD = 0.11;
+
+/**
+ * Check if db.json has a mapping for this controller
+ * Checks in priority order: GUID, name, vendor/product
+ */
+export function hasDbJsonMapping(guid, name) {
+  if (!guid || !name) return false;
+
+  // 1. Check GUID exact match
+  const guidMatch = controllerList.find(c => c.guid === guid);
+  if (guidMatch) return true;
+
+  // 2. Check name match (fuzzy - contains)
+  const nameMatch = controllerList.find(c => {
+    return c.name.toLowerCase().includes(name.toLowerCase()) ||
+           name.toLowerCase().includes(c.name.toLowerCase());
+  });
+  if (nameMatch) return true;
+
+  // 3. Check vendor/product match (characters 8-19 of GUID)
+  if (guid.length >= 20) {
+    const vendorProduct = guid.substring(8, 20);
+    const vpMatch = controllerList.find(c => {
+      if (c.guid.length >= 20) {
+        return c.guid.substring(8, 20) === vendorProduct;
+      }
+      return false;
+    });
+    if (vpMatch) return true;
+  }
+
+  return false;
+}
 
 /**
  * Find controller definition from database by GUID and name

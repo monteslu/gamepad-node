@@ -213,16 +213,16 @@ function updateControllerDisplay(box, gamepad) {
     const leftChar = dpadLeft ? '{green-fg}{bold}◀{/}' : '{gray-fg}◁{/}';
     const rightChar = dpadRight ? '{green-fg}{bold}▶{/}' : '{gray-fg}▷{/}';
 
-    const yBtn = buttonChar('Y', gamepad.buttons[3]);
-    const bBtn = buttonChar('B', gamepad.buttons[1]);
-    const aBtn = buttonChar('A', gamepad.buttons[0]);
-    const xBtn = buttonChar('X', gamepad.buttons[2]);
+    const nBtn = buttonChar('N', gamepad.buttons[3]);  // North (top)
+    const eBtn = buttonChar('E', gamepad.buttons[1]);  // East (right)
+    const sBtn = buttonChar('S', gamepad.buttons[0]);  // South (bottom)
+    const wBtn = buttonChar('W', gamepad.buttons[2]);  // West (left)
 
     lines.push(`  ┌───┬───┬───┐`);
-    lines.push(`  │   │ ${upChar} │   │            Face Buttons`);
-    lines.push(`  ├───┼───┼───┤                 ${yBtn}`);
-    lines.push(`  │ ${leftChar} │   │ ${rightChar} │            ${xBtn}       ${bBtn}`);
-    lines.push(`  ├───┼───┼───┤                 ${aBtn}`);
+    lines.push(`  │   │ ${upChar} │   │            Face Buttons (positional)`);
+    lines.push(`  ├───┼───┼───┤                 ${nBtn}`);
+    lines.push(`  │ ${leftChar} │   │ ${rightChar} │            ${wBtn}       ${eBtn}`);
+    lines.push(`  ├───┼───┼───┤                 ${sBtn}`);
     lines.push(`  │   │ ${downChar} │   │`);
     lines.push(`  └───┴───┴───┘`);
 

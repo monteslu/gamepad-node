@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { Gamepad } from './Gamepad.js';
 import { GamepadHapticActuator } from './GamepadHapticActuator.js';
+import { hasDbJsonMapping } from './ControllerMapper.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -77,6 +78,34 @@ export class GamepadManager extends EventEmitter {
 
             try {
                 const instance = sdl.controller.openDevice(device);
+
+                // If controller has no rumble AND db.json has a positional mapping, use joystick mode
+                if (!instance.hasRumble && hasDbJsonMapping(device.guid, device.name)) {
+                    console.log(`Controller "${device.name}" has no rumble but has db.json mapping - using joystick mode for positional mappings`);
+                    instance.close();
+                    this._forceJoystickMode.add(device.id);
+
+                    // Manually open as joystick for db.json positional mapping
+                    try {
+                        const joystickInstance = sdl.joystick.openDevice(device);
+                        const gamepadIndex = this._nextGamepadIndex++;
+
+                        this._joystickInstances.set(device.id, {
+                            device,
+                            instance: joystickInstance,
+                            isController: false
+                        });
+                        this._gamepadIndexMap.set(device.id, gamepadIndex);
+
+                        const gamepad = this._createGamepadFromJoystick(device, joystickInstance, gamepadIndex);
+                        this.emit('gamepadconnected', { gamepad });
+                    } catch (jsErr) {
+                        console.warn(`Failed to open as joystick ${device.name}:`, jsErr.message);
+                    }
+                    return;
+                }
+
+                // Has rumble OR no db.json mapping - keep as controller
                 const gamepadIndex = this._nextGamepadIndex++;
 
                 this._controllerInstances.set(device.id, {
@@ -86,9 +115,12 @@ export class GamepadManager extends EventEmitter {
                 });
                 this._gamepadIndexMap.set(device.id, gamepadIndex);
 
-                // Create haptic actuator for controllers
-                const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
-                this._hapticActuators.set(gamepadIndex, hapticActuator);
+                // Create haptic actuator only if controller supports rumble
+                let hapticActuator = null;
+                if (instance.hasRumble) {
+                    hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+                    this._hapticActuators.set(gamepadIndex, hapticActuator);
+                }
 
                 const gamepad = this._createGamepadFromController(device, instance, gamepadIndex, hapticActuator);
                 this.emit('gamepadconnected', { gamepad });
@@ -176,8 +208,11 @@ export class GamepadManager extends EventEmitter {
                 });
                 this._gamepadIndexMap.set(device.id, gamepadIndex);
 
-                const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
-                this._hapticActuators.set(gamepadIndex, hapticActuator);
+                // Create haptic actuator only if controller supports rumble
+                if (instance.hasRumble) {
+                    const hapticActuator = new GamepadHapticActuator(this, gamepadIndex, true);
+                    this._hapticActuators.set(gamepadIndex, hapticActuator);
+                }
             } catch (err) {
                 console.warn(`Failed to open controller ${device.name}:`, err.message);
             }
@@ -320,6 +355,12 @@ export class GamepadManager extends EventEmitter {
     _generateGUID(device) {
         // Generate a GUID-like identifier for devices without one
         return `unknown-${device.id}`;
+    }
+
+    _hasVendorProductMatch(guid) {
+        if (!guid || guid.length < 20) return false;
+        const vendorProduct = guid.substring(8, 20);
+        return this._vendorProductIndex.has(vendorProduct);
     }
 
     poll() {

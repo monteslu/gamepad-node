@@ -10,12 +10,13 @@ W3C Gamepad API for Node.js using SDL2. Works exactly like the browser API, but 
 
 - Browser-compatible API - `navigator.getGamepads()` works exactly like in browsers
 - Every controller gets `mapping: "standard"` - not just the 20-30 browsers recognize
+- **Positional button mapping** - buttons mapped by physical position (N/S/E/W), not labels (A/B/X/Y)
 - 2100+ controllers via SDL2's community database
-- 321 more via EmulationStation configs (Knulli + Batocera)
+- 321 more via EmulationStation configs (Knulli + Batocera - position-aware!)
 - Generic fallback for everything else
 - Hot-plug support with connect/disconnect events
-- Vibration/rumble support (dual-rumble via GamepadHapticActuator)
-- CLI tester with real-time visualization
+- Vibration/rumble support with automatic hardware detection
+- CLI tester with positional labels (N/S/E/W)
 - Zero config - SDL2 downloads automatically
 
 ## Why this exists
@@ -75,6 +76,7 @@ manager.on('gamepaddisconnected', (event) => {
 ```javascript
 const gamepad = navigator.getGamepads()[0];
 
+// vibrationActuator is null if controller doesn't support rumble
 if (gamepad?.vibrationActuator) {
     await gamepad.vibrationActuator.playEffect('dual-rumble', {
         duration: 200,
@@ -90,17 +92,27 @@ if (gamepad?.vibrationActuator) {
 npx gamepad-node
 ```
 
-Shows all buttons, triggers, sticks, and d-pad in real-time. Press R to test rumble.
+Shows all buttons, triggers, sticks, and d-pad in real-time. Face buttons labeled **N/S/E/W** (North/South/East/West) for positional clarity. Press R to test rumble (if supported).
 
 ## How it works
 
-Three-tier fallback system:
+Four-tier fallback system with **positional mapping** priority:
 
-1. **SDL_GameController** (2100+ controllers) - SDL recognizes it and handles mapping natively
-2. **EmulationStation database** (321 controllers) - We remap it using community configs
-3. **Fallback** (everything else) - Generic Xbox 360 / PS4 style mapping
+1. **SDL_GameController with rumble** - Keep as-is for rumble support
+2. **SDL_GameController without rumble + db.json match** - Force joystick mode for position-aware EmulationStation mappings
+3. **EmulationStation database** (321 controllers) - Position-based remapping using community configs
+4. **Fallback** - Generic Xbox 360 / PS4 style mapping
 
-End result: `mapping: "standard"` for literally every controller, with predictable button indices.
+### Why positional mapping matters
+
+The W3C Gamepad API spec defines buttons by **physical position** (0=bottom, 1=right, 2=left, 3=top), not by label. But manufacturers print different labels at the same positions:
+
+- **Xbox**: South=A, East=B, West=X, North=Y
+- **Nintendo/8BitDo**: South=B, East=A, West=Y, North=X
+
+SDL's mapping database uses **label-based** matching (maps "A button"), which breaks for Nintendo-layout controllers. EmulationStation's database uses **position-based** matching (maps "south button"), which works universally.
+
+When possible, we use position-aware mappings from EmulationStation. This ensures button 0 is always the **bottom** button, regardless of what letter is printed on it.
 
 See [docs/CONTROLLER_VS_JOYSTICK.md](./docs/CONTROLLER_VS_JOYSTICK.md) for technical details, or [docs/MAPPED_CONTROLLERS.md](./docs/MAPPED_CONTROLLERS.md) for the full controller list.
 
@@ -112,7 +124,9 @@ Works on macOS (Intel + Apple Silicon), Linux (x64 + arm64), and Windows (x64). 
 
 Most browsers only recognize about 20-30 controllers for standard mapping. Try plugging in a Logitech Precision or some retro USB adapter - you'll get `mapping: ""` and buttons all over the place.
 
-This library gives **every controller** standard mappings. Your game works with anything, zero config required.
+This library gives **every controller** standard mappings using position-aware databases. Your game works with anything, zero config required.
+
+**Bonus:** We also correctly detect rumble support. Browsers often expose `vibrationActuator` even when hardware doesn't support it - we set it to `null` if rumble isn't available.
 
 ## Development
 
