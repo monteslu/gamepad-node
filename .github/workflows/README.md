@@ -5,10 +5,15 @@
 Runs on every push and PR. Tests with Node 20 & 22 on Linux:
 
 - ESLint
-- 37 unit tests
-- Smoke test (makes sure the API actually works)
+- 55 unit tests (pure JavaScript, no hardware required)
 
-Since we're just wrapping @kmamal/sdl (which has its own platform-specific builds), we only test on one platform. Cross-platform stuff is their problem, not ours.
+The unit tests cover:
+- `GamepadButton` class (W3C compliance)
+- `Gamepad` class (button/axis mapping, controller vs joystick handling)
+- `ControllerMapper` (button mapping, axis mapping, fallback mappings)
+- Additional controller config loading (EmulationStation es_input.cfg parsing)
+
+Tests that require hardware (smoke test, basic test, mapping test, events test) are not run in CI - use them locally with a connected controller.
 
 ## Publishing
 

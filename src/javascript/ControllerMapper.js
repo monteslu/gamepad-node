@@ -1,12 +1,48 @@
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import parseCfg from './controllers/parse_cfg.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
 // Load controller database
 const controllerList = require('./controllers/db.json');
+
+// Additional controller configs loaded at runtime
+let additionalControllerList = [];
+
+/**
+ * Load additional controller configs from an EmulationStation es_input.cfg file
+ * @param {string} cfgFile - Path to the EmulationStation config file
+ * @returns {Promise<Array>} - Array of loaded controller definitions
+ */
+export async function loadAdditionalControllerConfig(cfgFile) {
+  try {
+    const configs = await parseCfg(cfgFile);
+    additionalControllerList = additionalControllerList.concat(configs);
+    console.log(`Loaded ${configs.length} additional controller configs from ${cfgFile}`);
+    return configs;
+  } catch (err) {
+    console.error(`Error loading additional controller config from ${cfgFile}:`, err.message);
+    return [];
+  }
+}
+
+/**
+ * Get the current additional controller list
+ * @returns {Array} - Array of additional controller definitions
+ */
+export function getAdditionalControllerList() {
+  return additionalControllerList;
+}
+
+/**
+ * Clear all additional controller configs
+ */
+export function clearAdditionalControllerConfigs() {
+  additionalControllerList = [];
+}
 
 // EmulationStation button map (POSITIONAL, not label-based!)
 // 'b' = south position, 'a' = east position, 'y' = west position, 'x' = north position
@@ -70,6 +106,18 @@ export function hasDbJsonMapping(guid, name) {
  */
 export function getControllerDef(guid, name) {
   name = ('' + name).trim();
+
+  // 0. Check additional controller list first (highest priority)
+  if (additionalControllerList.length > 0) {
+    const matchedAdditional = additionalControllerList.filter((c) =>
+      c.guid === guid && c.name === name
+    );
+    if (matchedAdditional.length > 0) {
+      const def = matchedAdditional[matchedAdditional.length - 1];
+      def.fromAdditional = true;
+      return def;
+    }
+  }
 
   // 1. Check by GUID + name (most accurate)
   const matchedGuidAndName = controllerList.filter((c) =>
