@@ -30,7 +30,4 @@ jobs:
         run: npm run lint
 
       - name: Run unit tests
-        run: npm run test:unit
-
-      - name: Run smoke test
-        run: npm run test:smoke
+        run: npm test

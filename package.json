@@ -7,9 +7,9 @@
   "bin": "./bin/cli.js",
   "scripts": {
     "build:db": "cd src/javascript/controllers && node create_db.js",
-    "test": "node test/basic.js",
-    "test:unit": "node --test test/unit/gamepad-button.test.js test/unit/controller-mapper.test.js test/unit/gamepad.test.js",
-    "test:coverage": "node --test --experimental-test-coverage test/unit/gamepad-button.test.js test/unit/controller-mapper.test.js test/unit/gamepad.test.js",
+    "test": "node --test test/unit/*.test.js",
+    "test:coverage": "node --test --experimental-test-coverage test/unit/*.test.js",
+    "test:hardware": "node test/basic.js",
     "test:smoke": "node test/smoke-test.js",
     "test:events": "node test/events-and-rumble.js",
     "test:mapping": "node test/mapping-test.js",
