@@ -449,5 +449,6 @@ export class GamepadManager extends EventEmitter {
 
         this._gamepadIndexMap.clear();
         this._hapticActuators.clear();
+        this._destroyed = true;
     }
 }

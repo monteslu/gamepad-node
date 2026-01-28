@@ -11,7 +11,8 @@ export function installNavigatorShim() {
         globalThis.window = globalThis;
     }
 
-    if (!manager) {
+    // Check if manager exists and is still valid (not destroyed)
+    if (!manager || manager._destroyed) {
         manager = new GamepadManager();
 
         // Forward events to window

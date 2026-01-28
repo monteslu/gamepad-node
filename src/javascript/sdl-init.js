@@ -13,7 +13,8 @@ try {
     const mappings = dbText
         .split('\n')
         .map(line => line.trim())
-        .filter(line => line && !line.startsWith('#')); // Skip empty lines and comments
+        .filter(line => line && !line.startsWith('#')) // Skip empty lines and comments
+        .filter(line => !line.includes(',crc:')); // Skip mappings with crc: (unsupported by older SDL)
 
     if (mappings.length > 0) {
         sdl.controller.addMappings(mappings);

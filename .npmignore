@@ -19,7 +19,6 @@ src/javascript/controllers/knulli_es_input.cfg
 # Build scripts (not needed at runtime)
 src/javascript/controllers/build-comprehensive-mappings.js
 src/javascript/controllers/create_db.js
-src/javascript/controllers/parse_cfg.js
 src/javascript/controllers/parse_sdl_db.js
 
 # Platform-specific SDL JSON files (no longer used - replaced by gamecontrollerdb.txt)
