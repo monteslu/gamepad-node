@@ -1,6 +1,6 @@
 {
   "name": "gamepad-node",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Browser Gamepad API implementation for Node.js with native SDL2 bindings",
   "main": "index.js",
   "type": "module",

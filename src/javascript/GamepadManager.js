@@ -421,4 +421,33 @@ export class GamepadManager extends EventEmitter {
     stopPolling() {
         // node-sdl handles polling via event loop, but keep for compatibility
     }
+
+    destroy() {
+        // Close all open controller instances
+        for (const [deviceId, entry] of this._controllerInstances) {
+            try {
+                if (entry.instance && !entry.instance.closed) {
+                    entry.instance.close();
+                }
+            } catch {
+                // Ignore close errors during cleanup
+            }
+        }
+        this._controllerInstances.clear();
+
+        // Close all open joystick instances
+        for (const [deviceId, entry] of this._joystickInstances) {
+            try {
+                if (entry.instance && !entry.instance.closed) {
+                    entry.instance.close();
+                }
+            } catch {
+                // Ignore close errors during cleanup
+            }
+        }
+        this._joystickInstances.clear();
+
+        this._gamepadIndexMap.clear();
+        this._hapticActuators.clear();
+    }
 }
