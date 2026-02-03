@@ -1,0 +1,35 @@
+# gamepad-node
+
+> W3C Gamepad API for Node.js using SDL2
+
+Full browser-compatible Gamepad API implementation for Node.js. Every controller gets `mapping: "standard"`, not just the handful browsers recognize.
+
+## What it does
+- Browser-compatible API: `navigator.getGamepads()` works exactly like browsers
+- Standard mapping for ALL controllers (2100+ via SDL2, 321+ via EmulationStation configs)
+- Positional button mapping (N/S/E/W) instead of labels (A/B/X/Y)
+- Hot-plug support with connect/disconnect events
+- Vibration/rumble with automatic hardware detection
+- CLI tester included
+
+## Install
+```bash
+npm install gamepad-node
+```
+
+## Quick Start
+```javascript
+import { installNavigatorShim } from 'gamepad-node';
+installNavigatorShim();
+
+setInterval(() => {
+  const gamepads = navigator.getGamepads();
+  for (const gamepad of gamepads) {
+    if (gamepad?.buttons[0].pressed) console.log('A pressed');
+  }
+}, 16);
+```
+
+## Links
+- Repository: https://github.com/monteslu/gamepad-node
+- npm: https://www.npmjs.com/package/gamepad-node
