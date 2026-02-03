@@ -71,6 +71,7 @@ export class GamepadManager extends EventEmitter {
         this._gamepadIndexMap = new Map(); // SDL device id -> W3C gamepad index
         this._hapticActuators = new Map(); // W3C gamepad index -> GamepadHapticActuator
         this._loggedVendorMatches = new Set(); // Track logged vendor/product matches
+        this._forceJoystickMode = new Set(); // Track devices forced to joystick mode
 
         // Set up controller event handlers
         sdl.controller.on('deviceAdd', (event) => {
