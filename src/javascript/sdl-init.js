@@ -1,27 +1,44 @@
-import sdl from '@kmamal/sdl';
+import defaultSdl from '@kmamal/sdl';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Load SDL mappings from gamecontrollerdb.txt BEFORE any device enumeration
-const dbPath = path.join(__dirname, 'controllers', 'gamecontrollerdb.txt');
+let sdl = defaultSdl;
+const loadedInstances = new WeakSet();
 
-try {
-    const dbText = fs.readFileSync(dbPath, 'utf-8');
-    const mappings = dbText
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line && !line.startsWith('#')) // Skip empty lines and comments
-        .filter(line => !line.includes(',crc:')); // Skip mappings with crc: (unsupported by older SDL)
+function loadMappings(sdlInstance) {
+    if (loadedInstances.has(sdlInstance)) return;
+    const dbPath = path.join(__dirname, 'controllers', 'gamecontrollerdb.txt');
+    try {
+        const dbText = fs.readFileSync(dbPath, 'utf-8');
+        const mappings = dbText
+            .split('\n')
+            .map(line => line.trim())
+            .filter(line => line && !line.startsWith('#'))
+            .filter(line => !line.includes(',crc:'));
 
-    if (mappings.length > 0) {
-        sdl.controller.addMappings(mappings);
-        console.log(`Loaded ${mappings.length} SDL controller mappings from gamecontrollerdb.txt`);
+        if (mappings.length > 0) {
+            sdlInstance.controller.addMappings(mappings);
+            console.log(`Loaded ${mappings.length} SDL controller mappings from gamecontrollerdb.txt`);
+        }
+    } catch (err) {
+        console.warn('Failed to load SDL controller database:', err.message);
     }
-} catch (err) {
-    console.warn('Failed to load SDL controller database:', err.message);
+    loadedInstances.add(sdlInstance);
+}
+
+// Load mappings for the default instance immediately
+loadMappings(sdl);
+
+export function setSdl(externalSdl) {
+    sdl = externalSdl;
+    loadMappings(sdl);
+}
+
+export function getSdl() {
+    return sdl;
 }
 
 export default sdl;

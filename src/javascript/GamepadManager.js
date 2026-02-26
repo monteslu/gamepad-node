@@ -1,4 +1,4 @@
-import sdl from './sdl-init.js';
+import { getSdl } from './sdl-init.js';
 import { EventEmitter } from 'events';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -12,6 +12,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export class GamepadManager extends EventEmitter {
     constructor() {
         super();
+
+        const sdl = getSdl();
 
         // SDL mappings are loaded in sdl-init.js before device enumeration
 

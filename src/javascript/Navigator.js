@@ -1,8 +1,13 @@
 import { GamepadManager } from './GamepadManager.js';
+import { setSdl } from './sdl-init.js';
 
 let manager = null;
 
-export function installNavigatorShim() {
+export function installNavigatorShim(options = {}) {
+    if (options.sdl) {
+        setSdl(options.sdl);
+    }
+
     if (!globalThis.navigator) {
         globalThis.navigator = {};
     }
