@@ -6,6 +6,7 @@ import fs from 'fs';
 import { Gamepad } from './Gamepad.js';
 import { GamepadHapticActuator } from './GamepadHapticActuator.js';
 import { hasDbJsonMapping } from './ControllerMapper.js';
+import { debugLog, debugWarn } from './debug.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -61,7 +62,7 @@ export class GamepadManager extends EventEmitter {
                         }
                     });
                 } catch (err) {
-                    console.warn('Failed to load mapping data:', err.message);
+                    debugWarn('Failed to load mapping data:', err.message);
                 }
             }
         }
@@ -84,7 +85,7 @@ export class GamepadManager extends EventEmitter {
 
                 // If controller has no rumble AND db.json has a positional mapping, use joystick mode
                 if (!instance.hasRumble && hasDbJsonMapping(device.guid, device.name)) {
-                    console.log(`Controller "${device.name}" has no rumble but has db.json mapping - using joystick mode for positional mappings`);
+                    debugLog(`Controller "${device.name}" has no rumble but has db.json mapping - using joystick mode for positional mappings`);
                     instance.close();
                     this._forceJoystickMode.add(device.id);
 
@@ -103,7 +104,7 @@ export class GamepadManager extends EventEmitter {
                         const gamepad = this._createGamepadFromJoystick(device, joystickInstance, gamepadIndex);
                         this.emit('gamepadconnected', { gamepad });
                     } catch (jsErr) {
-                        console.warn(`Failed to open as joystick ${device.name}:`, jsErr.message);
+                        debugWarn(`Failed to open as joystick ${device.name}:`, jsErr.message);
                     }
                     return;
                 }
@@ -128,7 +129,7 @@ export class GamepadManager extends EventEmitter {
                 const gamepad = this._createGamepadFromController(device, instance, gamepadIndex, hapticActuator);
                 this.emit('gamepadconnected', { gamepad });
             } catch (err) {
-                console.warn(`Failed to open controller ${device.name}:`, err.message);
+                debugWarn(`Failed to open controller ${device.name}:`, err.message);
             }
         });
 
@@ -175,7 +176,7 @@ export class GamepadManager extends EventEmitter {
                 const gamepad = this._createGamepadFromJoystick(device, instance, gamepadIndex);
                 this.emit('gamepadconnected', { gamepad });
             } catch (err) {
-                console.warn(`Failed to open joystick ${device.name}:`, err.message);
+                debugWarn(`Failed to open joystick ${device.name}:`, err.message);
             }
         });
 
@@ -217,7 +218,7 @@ export class GamepadManager extends EventEmitter {
                     this._hapticActuators.set(gamepadIndex, hapticActuator);
                 }
             } catch (err) {
-                console.warn(`Failed to open controller ${device.name}:`, err.message);
+                debugWarn(`Failed to open controller ${device.name}:`, err.message);
             }
         }
 
@@ -238,7 +239,7 @@ export class GamepadManager extends EventEmitter {
                 });
                 this._gamepadIndexMap.set(device.id, gamepadIndex);
             } catch (err) {
-                console.warn(`Failed to open joystick ${device.name}:`, err.message);
+                debugWarn(`Failed to open joystick ${device.name}:`, err.message);
             }
         }
     }
@@ -278,7 +279,7 @@ export class GamepadManager extends EventEmitter {
                 const bestMatch = matches[0];
 
                 if (!this._loggedVendorMatches.has(guid)) {
-                    console.log(`Vendor/product match for ${guid}: using ${bestMatch.source} mapping`);
+                    debugLog(`Vendor/product match for ${guid}: using ${bestMatch.source} mapping`);
                     this._loggedVendorMatches.add(guid);
                 }
 
@@ -407,7 +408,7 @@ export class GamepadManager extends EventEmitter {
                     instance.rumble(weakMagnitude, strongMagnitude, duration);
                     return true;
                 } catch (err) {
-                    console.error('Rumble failed:', err);
+                    debugWarn('Rumble failed:', err);
                     return false;
                 }
             }

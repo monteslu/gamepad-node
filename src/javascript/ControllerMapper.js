@@ -2,6 +2,7 @@ import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import parseCfg from './controllers/parse_cfg.js';
+import { debugLog, debugWarn } from './debug.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
@@ -21,10 +22,10 @@ export async function loadAdditionalControllerConfig(cfgFile) {
   try {
     const configs = await parseCfg(cfgFile);
     additionalControllerList = additionalControllerList.concat(configs);
-    console.log(`Loaded ${configs.length} additional controller configs from ${cfgFile}`);
+    debugLog(`Loaded ${configs.length} additional controller configs from ${cfgFile}`);
     return configs;
   } catch (err) {
-    console.error(`Error loading additional controller config from ${cfgFile}:`, err.message);
+    debugWarn(`Error loading additional controller config from ${cfgFile}:`, err.message);
     return [];
   }
 }
@@ -171,7 +172,7 @@ export function getControllerDef(guid, name) {
     });
 
     if (matchedVendorProduct.length > 0) {
-      console.log(`Vendor/product match for ${guid}: using mapping from ${matchedVendorProduct[0].guid}`);
+      debugLog(`Vendor/product match for ${guid}: using mapping from ${matchedVendorProduct[0].guid}`);
       let def = matchedVendorProduct[0];
       for (const c of matchedVendorProduct) {
         if (c.input.length > def.input.length) {

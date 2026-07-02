@@ -1,3 +1,4 @@
+import { debugLog, debugWarn } from './debug.js';
 export class GamepadButton {
     constructor(pressed = false, value = 0.0) {
         this.pressed = pressed;
@@ -117,7 +118,7 @@ export class Gamepad {
                 jsMap = getFallbackMapping(native_data.id);
                 // Only warn once per controller GUID to avoid spam
                 if (!warnedControllers.has(native_data.guid)) {
-                    console.log(`No database mapping for "${native_data.id}" (${native_data.guid}), using fallback`);
+                    debugLog(`No database mapping for "${native_data.id}" (${native_data.guid}), using fallback`);
                     warnedControllers.add(native_data.guid);
                 }
             }
